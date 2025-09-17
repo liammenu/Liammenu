@@ -23,11 +23,12 @@
   @keyframes slideInfinito{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
   header h1{position:relative;z-index:1;font-family:var(--fuente-tit);font-size:4.5rem;color:var(--rojo);text-transform:uppercase;letter-spacing:3px;text-shadow:3px 3px 0 #000;font-weight:900;}
   header p{position:relative;z-index:1;margin-top:.5rem;font-size:1.2rem;}
-  .accordion{width:100%;max-width:100%;margin:auto;padding:0 0 3rem;position:relative;}
+  .accordion{width:100%;max-width:100%;margin:auto;padding:0 0 1rem;position:relative;}
+  .accordion.ofertas-accordion{padding:0 0 1rem;}
   .accordion input{position:absolute;opacity:0;z-index:-1;}
   .accordion-label{position:relative;display:flex;justify-content:space-between;align-items:center;padding:1rem;font-family:var(--fuente-tit);font-size:1.6rem;background:var(--amarillo);border-bottom:3px solid var(--rojo);cursor:pointer;z-index:2;overflow:hidden;}
   .accordion-label.ofertas{background:var(--rojo);color:var(--amarillo);font-size:1.8rem;font-weight:900;}
-  .labelImagen{position:absolute;inset:0;z-index:-1;width:100%;height:100%;object-fit:cover;opacity:.3;}
+  .labelImagen{position:absolute;inset:0;z-index:-1;width:100%;height:100%;object-fit:cover;opacity:.1;}
   .section-background{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;overflow:hidden;opacity:0;transition:opacity 0.5s ease;}
   .accordion input:checked ~ .section-background{opacity:1;}
   .section-background .carrusel{position:absolute;top:0;left:0;width:100%;height:100%;}
@@ -83,6 +84,9 @@
   /* Estilo para la leyenda de patys */
   .leyendaPatys{background:rgba(255,199,44,0.7);color:#e4002b;padding:0.8rem;margin-top:1rem;border-radius:8px;text-align:center;font-weight:900;font-size:1rem;box-shadow:0 2px 5px rgba(0,0,0,0.2);}
   
+  /* Estilo para separador de categorías */
+  .separadorCategoria{margin:1rem 0;text-align:center;font-family:var(--fuente-tit);font-size:1.2rem;color:var(--rojo);font-weight:900;}
+  
   /* Mejoras para móviles */
   @media (max-width: 600px) {
     header h1{font-size:3.5rem;}
@@ -104,7 +108,7 @@
 </header>
 
 <!-- OFERTAS -->
-<div class="accordion">
+<div class="accordion ofertas-accordion">
   <input type="checkbox" id="ofertas">
   <label for="ofertas" class="accordion-label ofertas">OFERTAS</label>
   <div class="section-background">
@@ -367,12 +371,12 @@
   </div>
 </div>
 
-<!-- HAMBURGUESAS ZAPPIN -->
+<!-- ZAPPIN Y PAPAS -->
 <div class="accordion">
   <input type="checkbox" id="zappin">
   <label for="zappin" class="accordion-label">
-    Hamburguesas Zappin y papas
-    <img class="labelImagen" src="images/hamb_1.jpg" alt="zappin">
+    Zappin y Papas
+    <img class="labelImagen" src="images/hamb_2.jpg" alt="zappin">
   </label>
   <div class="section-background">
     <div class="carrusel" id="hambCarrusel">
@@ -383,19 +387,19 @@
   <div class="accordion-content">
     <div class="item">
       <div>
-        <span class="itemNombre">Hamburg. Zapping común</span>
+        <span class="itemNombre">Zapping común</span>
       </div>
       <span class="puntos"></span>
       <span class="precioBox">$6.500</span>
-      <button class="btnAgregar" onclick="confirmar('Hamburg. Zapping común',6500)">+</button>
+      <button class="btnAgregar" onclick="confirmar('Zapping común',6500)">+</button>
     </div>
     <div class="item">
       <div>
-        <span class="itemNombre">Hamburg. Zapping especial</span>
+        <span class="itemNombre">Zapping especial</span>
       </div>
       <span class="puntos"></span>
       <span class="precioBox">$7.500</span>
-      <button class="btnAgregar" onclick="confirmar('Hamburg. Zapping especial',7500)">+</button>
+      <button class="btnAgregar" onclick="confirmar('Zapping especial',7500)">+</button>
     </div>
     <div class="item">
       <div>
@@ -413,6 +417,9 @@
       <span class="precioBox">$11.000</span>
       <button class="btnAgregar" onclick="confirmar('Nueva Zapping Doble Super Especial',11000)">+</button>
     </div>
+    
+    <div class="separadorCategoria">PAPAS</div>
+    
     <div class="item">
       <div>
         <span class="itemNombre">Papas comunes</span>
