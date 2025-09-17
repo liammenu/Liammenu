@@ -18,15 +18,17 @@
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--fondo);color:var(--letra);font-family:var(--fuente-cuerpo);font-weight:700;letter-spacing:.5px;}
   header{position:relative;text-align:center;padding:2rem 1rem 1.5rem;background:var(--amarillo);border-bottom:4px solid var(--rojo);overflow:hidden;}
-  header .fondoCarrusel{position:absolute;inset:0;z-index:0;display:flex;animation:slideInfinito 18s infinite linear;}
+  header .fondoCarrusel{position:absolute;inset:0;z-index:0;display:flex;animation:slideInfinito 13.68s infinite linear;}
   header .fondoCarrusel img{width:100%;height:100%;object-fit:cover;opacity:.25;flex-shrink:0;}
   @keyframes slideInfinito{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
   header h1{position:relative;z-index:1;font-family:var(--fuente-tit);font-size:4.5rem;color:var(--rojo);text-transform:uppercase;letter-spacing:3px;text-shadow:3px 3px 0 #000;font-weight:900;}
   header p{position:relative;z-index:1;margin-top:.5rem;font-size:1.2rem;}
   .accordion{width:100%;max-width:720px;margin:auto;padding:0 1rem 3rem;position:relative;}
   .accordion input{position:absolute;opacity:0;z-index:-1;}
-  .accordion-label{position:relative;display:flex;justify-content:space-between;align-items:center;padding:1rem;font-family:var(--fuente-tit);font-size:1.6rem;background:var(--amarillo);border-bottom:3px solid var(--rojo);cursor:pointer;z-index:2;}
-  .section-background{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;overflow:hidden;border-radius:8px;opacity:0;transition:opacity 0.5s ease;}
+  .accordion-label{position:relative;display:flex;justify-content:space-between;align-items:center;padding:1rem;font-family:var(--fuente-tit);font-size:1.6rem;background:var(--amarillo);border-bottom:3px solid var(--rojo);cursor:pointer;z-index:2;overflow:hidden;}
+  .accordion-label.ofertas{background:var(--rojo);color:var(--amarillo);font-size:1.8rem;font-weight:900;}
+  .labelImagen{position:absolute;inset:0;z-index:-1;width:100%;height:100%;object-fit:cover;opacity:.3;}
+  .section-background{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;overflow:hidden;opacity:0;transition:opacity 0.5s ease;}
   .accordion input:checked ~ .section-background{opacity:1;}
   .section-background .carrusel{position:absolute;top:0;left:0;width:100%;height:100%;}
   .section-background .carrusel img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0;animation:fadeImages 12s infinite;}
@@ -35,13 +37,15 @@
   .section-background .carrusel img:nth-child(3){animation-delay:6s;}
   .section-background .carrusel img:nth-child(4){animation-delay:9s;}
   @keyframes fadeImages{
-    0%,25%{opacity:1;}
-    25.01%,100%{opacity:0;}
+    0%,20%{opacity:1;transition: opacity 1s ease-in-out;}
+    25%,95%{opacity:0;transition: opacity 1s ease-in-out;}
+    100%{opacity:1;}
   }
   .section-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(245,240,225,0);z-index:2;}
   .accordion-label::after{content:"+";font-size:1.8rem;transition:transform .3s;z-index:2;color:var(--rojo);background:rgba(255,255,255,0.7);width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:50%;}
+  .accordion-label.ofertas::after{color:var(--amarillo);background:rgba(0,0,0,0.3);}
   .accordion input:checked + .accordion-label::after{transform:rotate(45deg);}
-  .accordion-content{max-height:0;overflow:hidden;transition:max-height .4s ease;padding:0 1rem;position:relative;z-index:3;background:rgba(245,240,225,0.8);border-radius:0 0 8px 8px;}
+  .accordion-content{max-height:0;overflow:hidden;transition:max-height .4s ease;padding:0 1rem;position:relative;z-index:3;background:rgba(245,240,225,0.8);}
   .accordion input:checked ~ .accordion-content{max-height:2000px;padding:1rem 0;}
   .item{display:flex;align-items:flex-start;justify-content:space-between;padding:.5rem 0;border-bottom:1px dashed var(--letra);background:rgba(255,255,255,0.6);margin-bottom:5px;border-radius:5px;padding:10px;}
   .itemNombre{flex:1;font-family:var(--fuente-tit);font-size:1.1rem;}
@@ -76,6 +80,9 @@
   .editorItem button{background:#000;color:var(--amarillo);border:none;padding:.2rem .5rem;border-radius:4px;cursor:pointer;transition:background 0.2s;}
   .editorItem button:hover{background:#333;}
   
+  /* Estilo para la leyenda de patys */
+  .leyendaPatys{background:rgba(255,199,44,0.7);color:#e4002b;padding:0.8rem;margin-top:1rem;border-radius:8px;text-align:center;font-weight:900;font-size:1rem;box-shadow:0 2px 5px rgba(0,0,0,0.2);}
+  
   /* Mejoras para móviles */
   @media (max-width: 600px) {
     header h1{font-size:3.5rem;}
@@ -96,10 +103,54 @@
   <p>Pedidos: (383) 461-9831</p>
 </header>
 
+<!-- OFERTAS -->
+<div class="accordion">
+  <input type="checkbox" id="ofertas">
+  <label for="ofertas" class="accordion-label ofertas">OFERTAS</label>
+  <div class="section-background">
+    <div class="carrusel" id="ofertasCarrusel">
+      <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
+    </div>
+    <div class="section-overlay"></div>
+  </div>
+  <div class="accordion-content">
+    <div class="item">
+      <div>
+        <span class="itemNombre">Combo Familiar</span>
+        <div class="itemDesc">2 Pizzas grandes + 4 bebidas</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$20.000</span>
+      <button class="btnAgregar" onclick="confirmar('Combo Familiar',20000)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Hamburguesa + Papas</span>
+        <div class="itemDesc">Hamburguesa especial con porción de papas</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$8.500</span>
+      <button class="btnAgregar" onclick="confirmar('Hamburguesa + Papas',8500)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">2 Lomos Especiales</span>
+        <div class="itemDesc">Llevate 2 lomos especiales y ahorra</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$14.000</span>
+      <button class="btnAgregar" onclick="confirmar('2 Lomos Especiales',14000)">+</button>
+    </div>
+  </div>
+</div>
+
 <!-- PIZZAS -->
 <div class="accordion">
   <input type="checkbox" id="pizzas" checked>
-  <label for="pizzas" class="accordion-label">Pizzas</label>
+  <label for="pizzas" class="accordion-label">
+    Pizzas
+    <img class="labelImagen" src="images/pizza_1.jpg" alt="pizza">
+  </label>
   <div class="section-background">
     <div class="carrusel" id="pizzaCarrusel">
       <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
@@ -169,7 +220,10 @@
 <!-- LOMOS -->
 <div class="accordion">
   <input type="checkbox" id="lomos">
-  <label for="lomos" class="accordion-label">Lomos</label>
+  <label for="lomos" class="accordion-label">
+    Lomos
+    <img class="labelImagen" src="images/lomo_1.jpg" alt="lomo">
+  </label>
   <div class="section-background">
     <div class="carrusel" id="lomoCarrusel">
       <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
@@ -231,7 +285,10 @@
 <!-- MILANESAS -->
 <div class="accordion">
   <input type="checkbox" id="milas">
-  <label for="milas" class="accordion-label">Milanesas</label>
+  <label for="milas" class="accordion-label">
+    Milanesas
+    <img class="labelImagen" src="images/mila_1.jpg" alt="mila">
+  </label>
   <div class="section-background">
     <div class="carrusel" id="milaCarrusel">
       <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
@@ -277,7 +334,10 @@
 <!-- HAMBURGUESAS ZAPPIN -->
 <div class="accordion">
   <input type="checkbox" id="zappin">
-  <label for="zappin" class="accordion-label">Hamburguesas Zappin</label>
+  <label for="zappin" class="accordion-label">
+    Hamburguesas Zappin
+    <img class="labelImagen" src="images/hamb_1.jpg" alt="zappin">
+  </label>
   <div class="section-background">
     <div class="carrusel" id="hambCarrusel">
       <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
@@ -323,7 +383,10 @@
 <!-- PATYS -->
 <div class="accordion">
   <input type="checkbox" id="patys">
-  <label for="patys" class="accordion-label">Patys</label>
+  <label for="patys" class="accordion-label">
+    Patys
+    <img class="labelImagen" src="images/patys_1.jpg" alt="patys">
+  </label>
   <div class="section-background">
     <div class="carrusel" id="patysCarrusel">
       <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
@@ -385,7 +448,7 @@
       <span class="precioBox">$4.500</span>
       <button class="btnAgregar" onclick="confirmar('Paty Criolla',4500)">+</button>
     </div>
-    <p style="margin-top:1rem;font-size:.8rem;font-weight:400;">Todo con papas + pote de mayo</p>
+    <div class="leyendaPatys">¡Todo con papas + pote de mayo!</div>
   </div>
 </div>
 
@@ -471,7 +534,7 @@ async function cargarImagenesCarrusel(contenedorId, prefijo, max = 6) {
     
     // Ajustar la animación según la cantidad de imágenes
     const porcentaje = 100 / imagenesValidas.length;
-    contenedor.style.animation = `slideInfinito ${18 * imagenesValidas.length / 6}s infinite linear`;
+    contenedor.style.animation = `slideInfinito ${13.68 * imagenesValidas.length / 6}s infinite linear`;
     document.documentElement.style.setProperty('--slide-distance', `-${porcentaje}%`);
   } else {
     // Para las secciones, cargar imágenes con animación de desvanecimiento
@@ -497,6 +560,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   await cargarImagenesCarrusel('headerCarrusel', 'pizza', 6);
   
   // Cargar carruseles de las secciones
+  await cargarImagenesCarrusel('ofertasCarrusel', 'oferta', 3);
   await cargarImagenesCarrusel('pizzaCarrusel', 'pizza', 6);
   await cargarImagenesCarrusel('lomoCarrusel', 'lomo', 6);
   await cargarImagenesCarrusel('milaCarrusel', 'mila', 6);
