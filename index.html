@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <title>LIAM BURGER - Carta 70's</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Carta retro 70's de LIAM BURGER - Delivery de hamburguesas, pizzas, lomos y milanesas." />
+  <meta name="description" content="Carta retro 70's de LIAM BURGER - Delivery de hamburguesas, pizzas, lomos, milanesas y patys." />
   <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Oswald:wght@700&display=swap" rel="stylesheet" />
   <style>
   :root{
@@ -17,15 +17,17 @@
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--fondo);color:var(--letra);font-family:var(--fuente-cuerpo);font-weight:700;letter-spacing:.5px;}
-  header{text-align:center;padding:3rem 1rem 2rem;background:var(--amarillo);border-bottom:4px solid var(--rojo);}
-  header h1{font-family:var(--fuente-tit);font-size:4rem;color:var(--rojo);text-transform:uppercase;letter-spacing:3px;text-shadow:3px 3px 0 #000;}
-  header p{margin-top:.5rem;font-size:1.2rem;}
+  header{position:relative;text-align:center;padding:3rem 1rem 2rem;background:var(--amarillo);border-bottom:4px solid var(--rojo);overflow:hidden;}
+  header .fondoCarrusel{position:absolute;inset:0;z-index:0;display:flex;animation:slide 9s infinite;}
+  header .fondoCarrusel img{width:100%;height:100%;object-fit:cover;opacity:.25;}
+  @keyframes slide{0%{transform:translateX(0)}16.66%{transform:translateX(-100%)}33.33%{transform:translateX(-200%)}50%{transform:translateX(-300%)}66.66%{transform:translateX(-400%)}83.33%{transform:translateX(-500%)}100%{transform:translateX(0)}}
+  header h1{position:relative;z-index:1;font-family:var(--fuente-tit);font-size:4rem;color:var(--rojo);text-transform:uppercase;letter-spacing:3px;text-shadow:3px 3px 0 #000;}
+  header p{position:relative;z-index:1;margin-top:.5rem;font-size:1.2rem;}
   .accordion{width:100%;max-width:720px;margin:auto;padding:0 1rem 3rem;}
   .accordion input{position:absolute;opacity:0;z-index:-1;}
   .accordion-label{position:relative;display:flex;justify-content:space-between;align-items:center;padding:1rem;font-family:var(--fuente-tit);font-size:1.6rem;background:var(--amarillo);border-bottom:3px solid var(--rojo);cursor:pointer;overflow:hidden;}
-  .carrusel{position:absolute;inset:0;z-index:-1;display:flex;animation:slide 12s infinite;}
+  .carrusel{position:absolute;inset:0;z-index:-1;display:flex;animation:slide 9s infinite;}
   .carrusel img{width:100%;height:100%;object-fit:cover;}
-  @keyframes slide{0%{transform:translateX(0)}16.66%{transform:translateX(-100%)}33.33%{transform:translateX(-200%)}50%{transform:translateX(-300%)}66.66%{transform:translateX(-400%)}83.33%{transform:translateX(-500%)}100%{transform:translateX(0)}}
   .accordion-label::after{content:"+";font-size:1.8rem;transition:transform .3s;}
   .accordion input:checked + .accordion-label::after{transform:rotate(45deg);}
   .accordion-content{max-height:0;overflow:hidden;transition:max-height .4s ease;padding:0 1rem;}
@@ -38,10 +40,9 @@
   .btnAgregar:hover{background:#c20023;}
   .carrito{position:fixed;bottom:1rem;right:1rem;background:#000;color:var(--amarillo);padding:.7rem 1rem;border-radius:30px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3);}
   .carrito span{background:var(--amarillo);color:#000;border-radius:50%;padding:.2rem .5rem;margin-left:.3rem;}
-  .editarBtn{background:var(--rojo);color:#fff;border:none;padding:.4rem .8rem;border-radius:20px;margin-right:.5rem;cursor:pointer;font-weight:700;}
-  .editarBtn:hover{background:#c20023;}
-  footer{text-align:center;padding:2rem 1rem;font-size:.8rem;font-family:var(--fuente-tit);}
-  /* Modal confirmación */
+  .editarBtn{position:fixed;bottom:1rem;right:8rem;background:var(--rojo);color:#fff;border:none;padding:.4rem .8rem;border-radius:20px;font-weight:700;cursor:pointer;display:none;}
+  .totalBadge{position:fixed;bottom:1rem;left:1rem;background:var(--amarillo);color:#000;padding:.4rem .8rem;border-radius:20px;font-weight:700;}
+  footer{position:relative;z-index:1;text-align:center;padding:2rem 1rem;font-size:.8rem;font-family:var(--fuente-tit);}
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:9999;}
   .modal.oculto{display:none;}
   .modalContent{background:var(--fondo);padding:1.5rem 2rem;border-radius:8px;text-align:center;font-family:var(--fuente-tit);}
@@ -49,7 +50,6 @@
   .modalContent button{margin:.5rem;padding:.5rem 1rem;font-size:1rem;border:none;border-radius:4px;cursor:pointer;}
   .modalContent .si{background:var(--rojo);color:#fff;}
   .modalContent .no{background:#ccc;color:#000;}
-  /* Modal editor carrito */
   .editorModal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:9999;}
   .editorModal.oculto{display:none;}
   .editorContent{background:var(--fondo);padding:1.5rem;border-radius:8px;max-width:400px;width:90%;max-height:70vh;overflow-y:auto;font-family:var(--fuente-cuerpo);}
@@ -61,6 +61,14 @@
 <body>
 
 <header>
+  <div class="fondoCarrusel">
+    <img src="images/pizza_1.jpg" alt="pizza_1">
+    <img src="images/lomo_1.jpg" alt="lomo_1">
+    <img src="images/mila_1.jpg" alt="mila_1">
+    <img src="images/hamb_1.jpg" alt="hamb_1">
+    <img src="images/patys_1.jpg" alt="patys_1">
+    <img src="images/pizza_2.jpg" alt="pizza_2">
+  </div>
   <h1>LIAM BURGER</h1>
   <p>Pedidos: (383) 461-9831</p>
 </header>
@@ -69,7 +77,7 @@
 <div class="accordion">
   <input type="checkbox" id="pizzas" checked>
   <label for="pizzas" class="accordion-label">
-    Pizzas 🍕
+    Pizzas
     <div class="carrusel">
       <img src="images/pizza_1.jpg" alt="pizza_1">
       <img src="images/pizza_2.jpg" alt="pizza_2">
@@ -94,7 +102,7 @@
 <div class="accordion">
   <input type="checkbox" id="lomos">
   <label for="lomos" class="accordion-label">
-    Lomos 🥖🍟
+    Lomos
     <div class="carrusel">
       <img src="images/lomo_1.jpg" alt="lomo_1">
       <img src="images/lomo_2.jpg" alt="lomo_2">
@@ -118,7 +126,7 @@
 <div class="accordion">
   <input type="checkbox" id="milas">
   <label for="milas" class="accordion-label">
-    Milanesas 🍞🥖🍟
+    Milanesas
     <div class="carrusel">
       <img src="images/mila_1.jpg" alt="mila_1">
       <img src="images/mila_2.jpg" alt="mila_2">
@@ -136,40 +144,59 @@
   </div>
 </div>
 
-<!-- HAMBURGUESAS -->
+<!-- HAMBURGUESAS ZAPPIN -->
 <div class="accordion">
-  <input type="checkbox" id="hamburguesas">
-  <label for="hamburguesas" class="accordion-label">
-    Hamburguesas 🍔🍟
+  <input type="checkbox" id="zappin">
+  <label for="zappin" class="accordion-label">
+    Hamburguesas Zappin
     <div class="carrusel">
-      <img src="images/hamb_1.jpg" alt="hamb_1">
-      <img src="images/hamb_2.jpg" alt="hamb_2">
-      <img src="images/hamb_3.jpg" alt="hamb_3">
-      <img src="images/hamb_4.jpg" alt="hamb_4">
-      <img src="images/hamb_5.jpg" alt="hamb_5">
-      <img src="images/hamb_6.jpg" alt="hamb_6">
+      <img src="images/hamb_1.jpg" alt="zappin_1">
+      <img src="images/hamb_2.jpg" alt="zappin_2">
+      <img src="images/hamb_3.jpg" alt="zappin_3">
+      <img src="images/hamb_4.jpg" alt="zappin_4">
+      <img src="images/hamb_5.jpg" alt="zappin_5">
+      <img src="images/hamb_6.jpg" alt="zappin_6">
     </div>
   </label>
   <div class="accordion-content">
     <div class="item"><span class="itemNombre">Hamburg. Zapping común</span><span class="puntos"></span><span class="precioBox">$6.500</span><button class="btnAgregar" onclick="confirmar('Hamburg. Zapping común',6500)">+</button></div>
     <div class="item"><span class="itemNombre">Hamburg. Zapping especial</span><span class="puntos"></span><span class="precioBox">$7.500</span><button class="btnAgregar" onclick="confirmar('Hamburg. Zapping especial',7500)">+</button></div>
-    <div class="item"><span class="itemNombre">Paty Especial</span><span class="puntos"></span><span class="precioBox">$5.000</span><button class="btnAgregar" onclick="confirmar('Paty Especial',5000)">+</button></div>
-    <div class="item"><span class="itemNombre">Hamburpizza</span><span class="puntos"></span><span class="precioBox">$9.000</span><button class="btnAgregar" onclick="confirmar('Hamburpizza',9000)">+</button></div>
     <div class="item"><span class="itemNombre">Nueva Zapping Doble Super Especial</span><span class="puntos"></span><span class="precioBox">$11.000</span><button class="btnAgregar" onclick="confirmar('Nueva Zapping Doble Super Especial',11000)">+</button></div>
   </div>
 </div>
 
-<!-- CARRITO -->
+<!-- PATYS -->
+<div class="accordion">
+  <input type="checkbox" id="patys">
+  <label for="patys" class="accordion-label">
+    Patys
+    <div class="carrusel">
+      <img src="images/patys_1.jpg" alt="patys_1">
+      <img src="images/patys_2.jpg" alt="patys_2">
+      <img src="images/patys_3.jpg" alt="patys_3">
+      <img src="images/patys_4.jpg" alt="patys_4">
+      <img src="images/patys_5.jpg" alt="patys_5">
+      <img src="images/patys_6.jpg" alt="patys_6">
+    </div>
+  </label>
+  <div class="accordion-content">
+    <div class="item"><span class="itemNombre">Paty Especial</span><span class="puntos"></span><span class="precioBox">$5.000</span><button class="btnAgregar" onclick="confirmar('Paty Especial',5000)">+</button></div>
+    <div class="item"><span class="itemNombre">Hamburpizza</span><span class="puntos"></span><span class="precioBox">$9.000</span><button class="btnAgregar" onclick="confirmar('Hamburpizza',9000)">+</button></div>
+  </div>
+</div>
+
+<!-- CARRITO + EDITAR + TOTAL -->
+<div class="totalBadge" id="totalBadge">Total: $0</div>
+<div class="editarBtn" id="editarBtn" onclick="mostrarEditor()">Editar</div>
 <div class="carrito" onclick="enviarWhatsApp()">
   🛒 Pedir por WhatsApp <span id="carritoCant">0</span>
 </div>
-<button class="editarBtn" onclick="mostrarEditor()">Editar</button>
 
 <footer>
   LIAM BURGER · Alsina Sur · (383) 461-9831 · Todos los días
 </footer>
 
-<!-- MODAL CONFIRMACIÓN -->
+<!-- MODALES -->
 <div id="modalConfirm" class="modal oculto">
   <div class="modalContent">
     <h3>¿Agregar al carrito?</h3>
@@ -178,7 +205,6 @@
   </div>
 </div>
 
-<!-- MODAL EDITOR -->
 <div id="editorModal" class="editorModal oculto">
   <div class="editorContent">
     <h3>Editar carrito</h3>
@@ -199,7 +225,7 @@ function confirmar(nombre, precio) {
 function confirmarSi() {
   if (tempProducto) {
     carrito.push(tempProducto);
-    actualizarBadge();
+    actualizarUI();
     tempProducto = null;
   }
   document.getElementById('modalConfirm').classList.add('oculto');
@@ -208,8 +234,12 @@ function confirmarNo() {
   tempProducto = null;
   document.getElementById('modalConfirm').classList.add('oculto');
 }
-function actualizarBadge() {
-  document.getElementById('carritoCant').textContent = carrito.length;
+function actualizarUI() {
+  const cant = carrito.length;
+  const total = carrito.reduce((sum, p) => sum + p.precio, 0);
+  document.getElementById('carritoCant').textContent = cant;
+  document.getElementById('totalBadge').textContent = `Total: $${total.toLocaleString()}`;
+  document.getElementById('editarBtn').style.display = cant > 0 ? 'block' : 'none';
 }
 function enviarWhatsApp() {
   if (carrito.length === 0) { alert('El carrito está vacío'); return; }
@@ -240,12 +270,14 @@ function mostrarEditor() {
 }
 function quitarDelCarrito(index) {
   carrito.splice(index, 1);
-  actualizarBadge();
+  actualizarUI();
   mostrarEditor(); // refrescar lista
 }
 function cerrarEditor() {
   document.getElementById('editorModal').classList.add('oculto');
 }
+// Inicializar
+actualizarUI();
 </script>
 </body>
 </html>
