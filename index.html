@@ -17,24 +17,26 @@
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--fondo);color:var(--letra);font-family:var(--fuente-cuerpo);font-weight:700;letter-spacing:.5px;}
-  header{position:relative;text-align:center;padding:3rem 1rem 2rem;background:var(--amarillo);border-bottom:4px solid var(--rojo);overflow:hidden;}
+  header{position:relative;text-align:center;padding:2rem 1rem 1.5rem;background:var(--amarillo);border-bottom:4px solid var(--rojo);overflow:hidden;}
   header .fondoCarrusel{position:absolute;inset:0;z-index:0;display:flex;animation:slideInfinito 18s infinite linear;}
   header .fondoCarrusel img{width:100%;height:100%;object-fit:cover;opacity:.25;}
   @keyframes slideInfinito{0%{transform:translateX(0)}100%{transform:translateX(-600%)}}
-  header h1{position:relative;z-index:1;font-family:var(--fuente-tit);font-size:4rem;color:var(--rojo);text-transform:uppercase;letter-spacing:3px;text-shadow:3px 3px 0 #000;}
+  header h1{position:relative;z-index:1;font-family:var(--fuente-tit);font-size:4.5rem;color:var(--rojo);text-transform:uppercase;letter-spacing:3px;text-shadow:3px 3px 0 #000;font-weight:900;}
   header p{position:relative;z-index:1;margin-top:.5rem;font-size:1.2rem;}
   .accordion{width:100%;max-width:720px;margin:auto;padding:0 1rem 3rem;position:relative;}
   .accordion input{position:absolute;opacity:0;z-index:-1;}
   .accordion-label{position:relative;display:flex;justify-content:space-between;align-items:center;padding:1rem;font-family:var(--fuente-tit);font-size:1.6rem;background:var(--amarillo);border-bottom:3px solid var(--rojo);cursor:pointer;z-index:2;}
   .section-background{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;overflow:hidden;border-radius:8px;opacity:0;transition:opacity 0.5s ease;}
   .accordion input:checked ~ .section-background{opacity:1;}
-  .section-background img{width:100%;height:100%;object-fit:cover;}
-  .section-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(245,240,225,0.85);z-index:2;}
+  .section-background .carrusel{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;animation:carruselSeccion 15s infinite linear;}
+  .section-background .carrusel img{width:100%;height:100%;object-fit:cover;min-width:100%;}
+  @keyframes carruselSeccion{0%{transform:translateX(0)}25%{transform:translateX(-100%)}50%{transform:translateX(-200%)}75%{transform:translateX(-300%)}100%{transform:translateX(0)}}
+  .section-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(245,240,225,0.7);z-index:2;}
   .accordion-label::after{content:"+";font-size:1.8rem;transition:transform .3s;z-index:2;color:var(--rojo);background:rgba(255,255,255,0.7);width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:50%;}
   .accordion input:checked + .accordion-label::after{transform:rotate(45deg);}
-  .accordion-content{max-height:0;overflow:hidden;transition:max-height .4s ease;padding:0 1rem;position:relative;z-index:3;}
-  .accordion input:checked ~ .accordion-content{max-height:2000px;padding:1rem 0;background:rgba(245,240,225,0.95);border-radius:0 0 8px 8px;}
-  .item{display:flex;align-items:flex-start;justify-content:space-between;padding:.5rem 0;border-bottom:1px dashed var(--letra);}
+  .accordion-content{max-height:0;overflow:hidden;transition:max-height .4s ease;padding:0 1rem;position:relative;z-index:3;background:rgba(245,240,225,0.8);border-radius:0 0 8px 8px;}
+  .accordion input:checked ~ .accordion-content{max-height:2000px;padding:1rem 0;}
+  .item{display:flex;align-items:flex-start;justify-content:space-between;padding:.5rem 0;border-bottom:1px dashed var(--letra);background:rgba(255,255,255,0.6);margin-bottom:5px;border-radius:5px;padding:10px;}
   .itemNombre{flex:1;font-family:var(--fuente-tit);font-size:1.1rem;}
   .itemDesc{font-size:.8rem;font-weight:400;margin-top:.2rem;color:#444;}
   .puntos{border-bottom:2px dotted var(--letra);flex:1;margin:0 .5rem;opacity:.6;align-self:center;}
@@ -69,7 +71,7 @@
   
   /* Mejoras para móviles */
   @media (max-width: 600px) {
-    header h1{font-size:3rem;}
+    header h1{font-size:3.5rem;}
     .accordion-label{font-size:1.4rem;}
     .itemNombre{font-size:1rem;}
     .precioBox{font-size:1.1rem;}
@@ -97,7 +99,12 @@
   <input type="checkbox" id="pizzas" checked>
   <label for="pizzas" class="accordion-label">Pizzas</label>
   <div class="section-background">
-    <img src="images/pizza_1.jpg" alt="pizza">
+    <div class="carrusel">
+      <img src="images/pizza_1.jpg" alt="pizza_1">
+      <img src="images/pizza_2.jpg" alt="pizza_2">
+      <img src="images/pizza_3.jpg" alt="pizza_3">
+      <img src="images/pizza_4.jpg" alt="pizza_4">
+    </div>
     <div class="section-overlay"></div>
   </div>
   <div class="accordion-content">
@@ -172,7 +179,12 @@
   <input type="checkbox" id="lomos">
   <label for="lomos" class="accordion-label">Lomos</label>
   <div class="section-background">
-    <img src="images/lomo_1.jpg" alt="lomo">
+    <div class="carrusel">
+      <img src="images/lomo_1.jpg" alt="lomo_1">
+      <img src="images/lomo_2.jpg" alt="lomo_2">
+      <img src="images/lomo_3.jpg" alt="lomo_3">
+      <img src="images/lomo_4.jpg" alt="lomo_4">
+    </div>
     <div class="section-overlay"></div>
   </div>
   <div class="accordion-content">
@@ -238,7 +250,12 @@
   <input type="checkbox" id="milas">
   <label for="milas" class="accordion-label">Milanesas</label>
   <div class="section-background">
-    <img src="images/mila_1.jpg" alt="mila">
+    <div class="carrusel">
+      <img src="images/mila_1.jpg" alt="mila_1">
+      <img src="images/mila_2.jpg" alt="mila_2">
+      <img src="images/mila_3.jpg" alt="mila_3">
+      <img src="images/mila_4.jpg" alt="mila_4">
+    </div>
     <div class="section-overlay"></div>
   </div>
   <div class="accordion-content">
@@ -286,7 +303,12 @@
   <input type="checkbox" id="zappin">
   <label for="zappin" class="accordion-label">Hamburguesas Zappin</label>
   <div class="section-background">
-    <img src="images/hamb_1.jpg" alt="zappin">
+    <div class="carrusel">
+      <img src="images/hamb_1.jpg" alt="hamb_1">
+      <img src="images/hamb_2.jpg" alt="hamb_2">
+      <img src="images/hamb_3.jpg" alt="hamb_3">
+      <img src="images/hamb_4.jpg" alt="hamb_4">
+    </div>
     <div class="section-overlay"></div>
   </div>
   <div class="accordion-content">
@@ -334,7 +356,12 @@
   <input type="checkbox" id="patys">
   <label for="patys" class="accordion-label">Patys</label>
   <div class="section-background">
-    <img src="images/patys_1.jpg" alt="patys">
+    <div class="carrusel">
+      <img src="images/patys_1.jpg" alt="patys_1">
+      <img src="images/patys_2.jpg" alt="patys_2">
+      <img src="images/patys_3.jpg" alt="patys_3">
+      <img src="images/patys_4.jpg" alt="patys_4">
+    </div>
     <div class="section-overlay"></div>
   </div>
   <div class="accordion-content">
