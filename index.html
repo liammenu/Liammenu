@@ -19,8 +19,8 @@
   body{background:var(--fondo);color:var(--letra);font-family:var(--fuente-cuerpo);font-weight:700;letter-spacing:.5px;}
   header{position:relative;text-align:center;padding:2rem 1rem 1.5rem;background:var(--amarillo);border-bottom:4px solid var(--rojo);overflow:hidden;}
   header .fondoCarrusel{position:absolute;inset:0;z-index:0;display:flex;animation:slideInfinito 18s infinite linear;}
-  header .fondoCarrusel img{width:100%;height:100%;object-fit:cover;opacity:.25;}
-  @keyframes slideInfinito{0%{transform:translateX(0)}100%{transform:translateX(-600%)}}
+  header .fondoCarrusel img{width:100%;height:100%;object-fit:cover;opacity:.25;flex-shrink:0;}
+  @keyframes slideInfinito{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
   header h1{position:relative;z-index:1;font-family:var(--fuente-tit);font-size:4.5rem;color:var(--rojo);text-transform:uppercase;letter-spacing:3px;text-shadow:3px 3px 0 #000;font-weight:900;}
   header p{position:relative;z-index:1;margin-top:.5rem;font-size:1.2rem;}
   .accordion{width:100%;max-width:720px;margin:auto;padding:0 1rem 3rem;position:relative;}
@@ -28,9 +28,16 @@
   .accordion-label{position:relative;display:flex;justify-content:space-between;align-items:center;padding:1rem;font-family:var(--fuente-tit);font-size:1.6rem;background:var(--amarillo);border-bottom:3px solid var(--rojo);cursor:pointer;z-index:2;}
   .section-background{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;overflow:hidden;border-radius:8px;opacity:0;transition:opacity 0.5s ease;}
   .accordion input:checked ~ .section-background{opacity:1;}
-  .section-background .carrusel{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;animation:carruselSeccion 15s infinite linear;}
-  .section-background .carrusel img{width:100%;height:100%;object-fit:cover;min-width:100%;}
-  @keyframes carruselSeccion{0%{transform:translateX(0)}25%{transform:translateX(-100%)}50%{transform:translateX(-200%)}75%{transform:translateX(-300%)}100%{transform:translateX(0)}}
+  .section-background .carrusel{position:absolute;top:0;left:0;width:100%;height:100%;}
+  .section-background .carrusel img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0;animation:fadeImages 12s infinite;}
+  .section-background .carrusel img:nth-child(1){animation-delay:0s;}
+  .section-background .carrusel img:nth-child(2){animation-delay:3s;}
+  .section-background .carrusel img:nth-child(3){animation-delay:6s;}
+  .section-background .carrusel img:nth-child(4){animation-delay:9s;}
+  @keyframes fadeImages{
+    0%,25%{opacity:1;}
+    25.01%,100%{opacity:0;}
+  }
   .section-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(245,240,225,0);z-index:2;}
   .accordion-label::after{content:"+";font-size:1.8rem;transition:transform .3s;z-index:2;color:var(--rojo);background:rgba(255,255,255,0.7);width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:50%;}
   .accordion input:checked + .accordion-label::after{transform:rotate(45deg);}
@@ -82,13 +89,8 @@
 <body>
 
 <header>
-  <div class="fondoCarrusel">
-    <img src="images/pizza_1.jpg" alt="pizza_1">
-    <img src="images/lomo_1.jpg" alt="lomo_1">
-    <img src="images/mila_1.jpg" alt="mila_1">
-    <img src="images/hamb_1.jpg" alt="hamb_1">
-    <img src="images/patys_1.jpg" alt="patys_1">
-    <img src="images/pizza_2.jpg" alt="pizza_2">
+  <div class="fondoCarrusel" id="headerCarrusel">
+    <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
   </div>
   <h1>LIAM BURGER</h1>
   <p>Pedidos: (383) 461-9831</p>
@@ -99,11 +101,8 @@
   <input type="checkbox" id="pizzas" checked>
   <label for="pizzas" class="accordion-label">Pizzas</label>
   <div class="section-background">
-    <div class="carrusel">
-      <img src="images/pizza_1.jpg" alt="pizza_1">
-      <img src="images/pizza_2.jpg" alt="pizza_2">
-      <img src="images/pizza_3.jpg" alt="pizza_3">
-      <img src="images/pizza_4.jpg" alt="pizza_4">
+    <div class="carrusel" id="pizzaCarrusel">
+      <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
     </div>
     <div class="section-overlay"></div>
   </div>
@@ -172,11 +171,8 @@
   <input type="checkbox" id="lomos">
   <label for="lomos" class="accordion-label">Lomos</label>
   <div class="section-background">
-    <div class="carrusel">
-      <img src="images/lomo_1.jpg" alt="lomo_1">
-      <img src="images/lomo_2.jpg" alt="lomo_2">
-      <img src="images/lomo_3.jpg" alt="lomo_3">
-      <img src="images/lomo_4.jpg" alt="lomo_4">
+    <div class="carrusel" id="lomoCarrusel">
+      <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
     </div>
     <div class="section-overlay"></div>
   </div>
@@ -237,11 +233,8 @@
   <input type="checkbox" id="milas">
   <label for="milas" class="accordion-label">Milanesas</label>
   <div class="section-background">
-    <div class="carrusel">
-      <img src="images/mila_1.jpg" alt="mila_1">
-      <img src="images/mila_2.jpg" alt="mila_2">
-      <img src="images/mila_3.jpg" alt="mila_3">
-      <img src="images/mila_4.jpg" alt="mila_4">
+    <div class="carrusel" id="milaCarrusel">
+      <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
     </div>
     <div class="section-overlay"></div>
   </div>
@@ -286,11 +279,8 @@
   <input type="checkbox" id="zappin">
   <label for="zappin" class="accordion-label">Hamburguesas Zappin</label>
   <div class="section-background">
-    <div class="carrusel">
-      <img src="images/hamb_1.jpg" alt="hamb_1">
-      <img src="images/hamb_2.jpg" alt="hamb_2">
-      <img src="images/hamb_3.jpg" alt="hamb_3">
-      <img src="images/hamb_4.jpg" alt="hamb_4">
+    <div class="carrusel" id="hambCarrusel">
+      <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
     </div>
     <div class="section-overlay"></div>
   </div>
@@ -335,11 +325,8 @@
   <input type="checkbox" id="patys">
   <label for="patys" class="accordion-label">Patys</label>
   <div class="section-background">
-    <div class="carrusel">
-      <img src="images/patys_1.jpg" alt="patys_1">
-      <img src="images/patys_2.jpg" alt="patys_2">
-      <img src="images/patys_3.jpg" alt="patys_3">
-      <img src="images/patys_4.jpg" alt="patys_4">
+    <div class="carrusel" id="patysCarrusel">
+      <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
     </div>
     <div class="section-overlay"></div>
   </div>
@@ -435,6 +422,88 @@ const NUMERO_WHATSAPP = 543834619831;
 let carrito = [];
 let tempProducto = null;
 
+// Función para verificar si una imagen existe
+function imagenExiste(url) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => resolve(true);
+    img.onerror = () => resolve(false);
+    img.src = url;
+  });
+}
+
+// Función para cargar imágenes existentes en un carrusel
+async function cargarImagenesCarrusel(contenedorId, prefijo, max = 6) {
+  const contenedor = document.getElementById(contenedorId);
+  const imagenesValidas = [];
+  
+  // Verificar qué imágenes existen
+  for (let i = 1; i <= max; i++) {
+    const url = `images/${prefijo}_${i}.jpg`;
+    if (await imagenExiste(url)) {
+      imagenesValidas.push(url);
+    }
+  }
+  
+  // Si no hay imágenes válidas, ocultar el carrusel
+  if (imagenesValidas.length === 0) {
+    contenedor.style.display = 'none';
+    return;
+  }
+  
+  // Cargar imágenes válidas en el carrusel
+  if (contenedorId === 'headerCarrusel') {
+    // Para el header, necesitamos duplicar las imágenes para el bucle infinito
+    imagenesValidas.forEach(url => {
+      const img = document.createElement('img');
+      img.src = url;
+      img.alt = url.split('/').pop().split('.')[0];
+      contenedor.appendChild(img);
+    });
+    
+    // Duplicar las imágenes para el bucle infinito
+    imagenesValidas.forEach(url => {
+      const img = document.createElement('img');
+      img.src = url;
+      img.alt = url.split('/').pop().split('.')[0];
+      contenedor.appendChild(img);
+    });
+    
+    // Ajustar la animación según la cantidad de imágenes
+    const porcentaje = 100 / imagenesValidas.length;
+    contenedor.style.animation = `slideInfinito ${18 * imagenesValidas.length / 6}s infinite linear`;
+    document.documentElement.style.setProperty('--slide-distance', `-${porcentaje}%`);
+  } else {
+    // Para las secciones, cargar imágenes con animación de desvanecimiento
+    imagenesValidas.forEach((url, index) => {
+      const img = document.createElement('img');
+      img.src = url;
+      img.alt = url.split('/').pop().split('.')[0];
+      img.style.animationDelay = `${index * 3}s`;
+      contenedor.appendChild(img);
+    });
+    
+    // Ajustar la duración de la animación según la cantidad de imágenes
+    const duracion = 3 * imagenesValidas.length;
+    Array.from(contenedor.children).forEach(img => {
+      img.style.animationDuration = `${duracion}s`;
+    });
+  }
+}
+
+// Inicializar carruseles cuando se carga la página
+window.addEventListener('DOMContentLoaded', async () => {
+  // Cargar carrusel del header
+  await cargarImagenesCarrusel('headerCarrusel', 'pizza', 6);
+  
+  // Cargar carruseles de las secciones
+  await cargarImagenesCarrusel('pizzaCarrusel', 'pizza', 6);
+  await cargarImagenesCarrusel('lomoCarrusel', 'lomo', 6);
+  await cargarImagenesCarrusel('milaCarrusel', 'mila', 6);
+  await cargarImagenesCarrusel('hambCarrusel', 'hamb', 6);
+  await cargarImagenesCarrusel('patysCarrusel', 'patys', 6);
+});
+
 // ---------- CARRITO ----------
 function confirmar(nombre, precio) {
   tempProducto = { nombre, precio };
@@ -457,7 +526,9 @@ function actualizarUI() {
   const total = carrito.reduce((sum, p) => sum + p.precio, 0);
   document.getElementById('carritoCant').textContent = cant;
   document.getElementById('totalBadge').textContent = `Total: $${total.toLocaleString()}`;
-  document.getElementById('editarBtn').style.display = cant > 0 ? 'block' : 'none';
+  const editarBtn = document.getElementById('editarBtn');
+  editarBtn.style.display = cant > 0 ? 'block' : 'none';
+  editarBtn.style.zIndex = '10'; // Asegurar que esté por encima de otros elementos
 }
 function enviarWhatsApp() {
   if (carrito.length === 0) { alert('El carrito está vacío'); return; }
