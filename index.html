@@ -31,7 +31,7 @@
   .section-background .carrusel{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;animation:carruselSeccion 15s infinite linear;}
   .section-background .carrusel img{width:100%;height:100%;object-fit:cover;min-width:100%;}
   @keyframes carruselSeccion{0%{transform:translateX(0)}25%{transform:translateX(-100%)}50%{transform:translateX(-200%)}75%{transform:translateX(-300%)}100%{transform:translateX(0)}}
-  .section-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(245,240,225,0.7);z-index:2;}
+  .section-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(245,240,225,0);z-index:2;}
   .accordion-label::after{content:"+";font-size:1.8rem;transition:transform .3s;z-index:2;color:var(--rojo);background:rgba(255,255,255,0.7);width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:50%;}
   .accordion input:checked + .accordion-label::after{transform:rotate(45deg);}
   .accordion-content{max-height:0;overflow:hidden;transition:max-height .4s ease;padding:0 1rem;position:relative;z-index:3;background:rgba(245,240,225,0.8);border-radius:0 0 8px 8px;}
@@ -41,7 +41,7 @@
   .itemDesc{font-size:.8rem;font-weight:400;margin-top:.2rem;color:#444;}
   .puntos{border-bottom:2px dotted var(--letra);flex:1;margin:0 .5rem;opacity:.6;align-self:center;}
   .precioBox{background:#000;color:var(--amarillo);padding:.2rem .6rem;border-radius:4px;font-weight:700;font-size:1.3rem;white-space:nowrap;align-self:center;}
-  .btnAgregar{background:var(--rojo);color:#fff;border:none;padding:.3rem .6rem;border-radius:4px;margin-left:.5rem;cursor:pointer;font-family:var(--fuente-cuerpo);transition:background 0.2s;}
+  .btnAgregar{background:var(--rojo);color:#fff;border:none;padding:.3rem .6rem;border-radius:4px;margin-left:.5rem;cursor:pointer;font-family:var(--fuente-cuerpo);transition:background 0.2s;align-self:center;}
   .btnAgregar:hover{background:#c20023;}
   .carrito{position:fixed;bottom:1rem;right:1rem;background:#000;color:var(--amarillo);padding:.7rem 1rem;border-radius:30px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3);z-index:10;transition:transform 0.2s;}
   .carrito:hover{transform:scale(1.05);}
@@ -111,7 +111,6 @@
     <div class="item">
       <div>
         <span class="itemNombre">Muzzarela</span>
-        <div class="itemDesc">Muzzarella y salsa de tomate</div>
       </div>
       <span class="puntos"></span>
       <span class="precioBox">$7.000</span>
@@ -120,7 +119,6 @@
     <div class="item">
       <div>
         <span class="itemNombre">Especial</span>
-        <div class="itemDesc">Jamón, morrones y queso</div>
       </div>
       <span class="puntos"></span>
       <span class="precioBox">$8.000</span>
@@ -129,7 +127,6 @@
     <div class="item">
       <div>
         <span class="itemNombre">Napolitana</span>
-        <div class="itemDesc">Tomate, ajo y orégano</div>
       </div>
       <span class="puntos"></span>
       <span class="precioBox">$7.500</span>
@@ -138,7 +135,6 @@
     <div class="item">
       <div>
         <span class="itemNombre">Napolitana Especial</span>
-        <div class="itemDesc">Extra tomate y queso</div>
       </div>
       <span class="puntos"></span>
       <span class="precioBox">$8.000</span>
@@ -147,7 +143,6 @@
     <div class="item">
       <div>
         <span class="itemNombre">Argentina</span>
-        <div class="itemDesc">Jamón, morrones y huevo</div>
       </div>
       <span class="puntos"></span>
       <span class="precioBox">$10.000</span>
@@ -156,7 +151,6 @@
     <div class="item">
       <div>
         <span class="itemNombre">Calabresa</span>
-        <div class="itemDesc">Salame calabresa y aceitunas</div>
       </div>
       <span class="puntos"></span>
       <span class="precioBox">$8.000</span>
@@ -165,7 +159,6 @@
     <div class="item">
       <div>
         <span class="itemNombre">Fugazzeta</span>
-        <div class="itemDesc">Cebolla y queso</div>
       </div>
       <span class="puntos"></span>
       <span class="precioBox">$8.000</span>
@@ -191,7 +184,6 @@
     <div class="item">
       <div>
         <span class="itemNombre">Lomo común</span>
-        <div class="itemDesc">Carne, lechuga, tomate</div>
       </div>
       <span class="puntos"></span>
       <span class="precioBox">$7.000</span>
@@ -200,7 +192,6 @@
     <div class="item">
       <div>
         <span class="itemNombre">Lomo especial</span>
-        <div class="itemDesc">Carne, jamón, queso, huevo</div>
       </div>
       <span class="puntos"></span>
       <span class="precioBox">$8.000</span>
@@ -209,7 +200,6 @@
     <div class="item">
       <div>
         <span class="itemNombre">Lomazo especial</span>
-        <div class="itemDesc">Doble carne, queso, huevo</div>
       </div>
       <span class="puntos"></span>
       <span class="precioBox">$15.000</span>
@@ -218,7 +208,6 @@
     <div class="item">
       <div>
         <span class="itemNombre">Lomo pizza Completo</span>
-        <div class="itemDesc">Para compartir: pizza + lomo</div>
       </div>
       <span class="puntos"></span>
       <span class="precioBox">$27.000</span>
@@ -227,7 +216,6 @@
     <div class="item">
       <div>
         <span class="itemNombre">1/2 Lomo Pizza</span>
-        <div class="itemDesc">Media pizza con lomo</div>
       </div>
       <span class="puntos"></span>
       <span class="precioBox">$15.000</span>
@@ -236,7 +224,6 @@
     <div class="item">
       <div>
         <span class="itemNombre">Lomo montado</span>
-        <div class="itemDesc">Papas encima del lomo</div>
       </div>
       <span class="puntos"></span>
       <span class="precioBox">$9.000</span>
@@ -262,7 +249,6 @@
     <div class="item">
       <div>
         <span class="itemNombre">Mila especial</span>
-        <div class="itemDesc">Con papas y huevo</div>
       </div>
       <span class="puntos"></span>
       <span class="precioBox">$8.000</span>
@@ -271,7 +257,6 @@
     <div class="item">
       <div>
         <span class="itemNombre">Mila Grande</span>
-        <div class="itemDesc">Tamaño familiar</div>
       </div>
       <span class="puntos"></span>
       <span class="precioBox">$15.000</span>
@@ -280,7 +265,6 @@
     <div class="item">
       <div>
         <span class="itemNombre">Mila Napo</span>
-        <div class="itemDesc">Salsa napolitana</div>
       </div>
       <span class="puntos"></span>
       <span class="precioBox">$8.500</span>
@@ -289,7 +273,6 @@
     <div class="item">
       <div>
         <span class="itemNombre">Mila a caballo</span>
-        <div class="itemDesc">Huevos encima</div>
       </div>
       <span class="puntos"></span>
       <span class="precioBox">$8.000</span>
@@ -315,7 +298,6 @@
     <div class="item">
       <div>
         <span class="itemNombre">Hamburg. Zapping común</span>
-        <div class="itemDesc">Carne, lechuga, tomate, mayonesa</div>
       </div>
       <span class="puntos"></span>
       <span class="precioBox">$6.500</span>
@@ -324,7 +306,6 @@
     <div class="item">
       <div>
         <span class="itemNombre">Hamburg. Zapping especial</span>
-        <div class="itemDesc">Carne, jamón, queso, huevo, lechuga, tomate</div>
       </div>
       <span class="puntos"></span>
       <span class="precioBox">$7.500</span>
@@ -333,7 +314,6 @@
     <div class="item">
       <div>
         <span class="itemNombre">Hamburpizza</span>
-        <div class="itemDesc">Hamburguesa con salsa de tomate y queso derretido</div>
       </div>
       <span class="puntos"></span>
       <span class="precioBox">$9.000</span>
@@ -342,7 +322,6 @@
     <div class="item">
       <div>
         <span class="itemNombre">Nueva Zapping Doble Super Especial</span>
-        <div class="itemDesc">Doble carne, doble queso, doble bacon, cebolla caramelizada</div>
       </div>
       <span class="puntos"></span>
       <span class="precioBox">$11.000</span>
