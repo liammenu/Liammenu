@@ -18,31 +18,31 @@
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--fondo);color:var(--letra);font-family:var(--fuente-cuerpo);font-weight:700;letter-spacing:.5px;}
   header{position:relative;text-align:center;padding:3rem 1rem 2rem;background:var(--amarillo);border-bottom:4px solid var(--rojo);overflow:hidden;}
-  header .fondoCarrusel{position:absolute;inset:0;z-index:0;display:flex;animation:slide 9s infinite;}
+  header .fondoCarrusel{position:absolute;inset:0;z-index:0;display:flex;animation:slideInfinito 18s infinite linear;}
   header .fondoCarrusel img{width:100%;height:100%;object-fit:cover;opacity:.25;}
-  @keyframes slide{0%{transform:translateX(0)}16.66%{transform:translateX(-100%)}33.33%{transform:translateX(-200%)}50%{transform:translateX(-300%)}66.66%{transform:translateX(-400%)}83.33%{transform:translateX(-500%)}100%{transform:translateX(0)}}
+  @keyframes slideInfinito{0%{transform:translateX(0)}100%{transform:translateX(-600%)}}
   header h1{position:relative;z-index:1;font-family:var(--fuente-tit);font-size:4rem;color:var(--rojo);text-transform:uppercase;letter-spacing:3px;text-shadow:3px 3px 0 #000;}
   header p{position:relative;z-index:1;margin-top:.5rem;font-size:1.2rem;}
   .accordion{width:100%;max-width:720px;margin:auto;padding:0 1rem 3rem;}
   .accordion input{position:absolute;opacity:0;z-index:-1;}
   .accordion-label{position:relative;display:flex;justify-content:space-between;align-items:center;padding:1rem;font-family:var(--fuente-tit);font-size:1.6rem;background:var(--amarillo);border-bottom:3px solid var(--rojo);cursor:pointer;overflow:hidden;}
-  .carrusel{position:absolute;inset:0;z-index:-1;display:flex;animation:slide 9s infinite;}
-  .carrusel img{width:100%;height:100%;object-fit:cover;}
   .accordion-label::after{content:"+";font-size:1.8rem;transition:transform .3s;}
   .accordion input:checked + .accordion-label::after{transform:rotate(45deg);}
   .accordion-content{max-height:0;overflow:hidden;transition:max-height .4s ease;padding:0 1rem;}
   .accordion input:checked ~ .accordion-content{max-height:2000px;padding:1rem 0;}
-  .item{display:flex;align-items:center;justify-content:space-between;padding:.5rem 0;border-bottom:1px dashed var(--letra);}
+  .item{display:flex;align-items:flex-start;justify-content:space-between;padding:.5rem 0;border-bottom:1px dashed var(--letra);}
   .itemNombre{flex:1;font-family:var(--fuente-tit);font-size:1.1rem;}
-  .puntos{border-bottom:2px dotted var(--letra);flex:1;margin:0 .5rem;opacity:.6;}
-  .precioBox{background:#000;color:var(--amarillo);padding:.2rem .6rem;border-radius:4px;font-weight:700;font-size:1.3rem;white-space:nowrap;}
+  .itemDesc{font-size:.8rem;font-weight:400;margin-top:.2rem;color:#444;}
+  .puntos{border-bottom:2px dotted var(--letra);flex:1;margin:0 .5rem;opacity:.6;align-self:center;}
+  .precioBox{background:#000;color:var(--amarillo);padding:.2rem .6rem;border-radius:4px;font-weight:700;font-size:1.3rem;white-space:nowrap;align-self:center;}
   .btnAgregar{background:var(--rojo);color:#fff;border:none;padding:.3rem .6rem;border-radius:4px;margin-left:.5rem;cursor:pointer;font-family:var(--fuente-cuerpo);}
   .btnAgregar:hover{background:#c20023;}
   .carrito{position:fixed;bottom:1rem;right:1rem;background:#000;color:var(--amarillo);padding:.7rem 1rem;border-radius:30px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3);}
   .carrito span{background:var(--amarillo);color:#000;border-radius:50%;padding:.2rem .5rem;margin-left:.3rem;}
-  .editarBtn{position:fixed;bottom:1rem;right:8rem;background:var(--rojo);color:#fff;border:none;padding:.4rem .8rem;border-radius:20px;font-weight:700;cursor:pointer;display:none;}
+  .editarBtn{position:fixed;bottom:1rem;right:8.5rem;background:var(--rojo);color:#fff;border:none;padding:.4rem .8rem;border-radius:20px;font-weight:700;cursor:pointer;display:none;}
   .totalBadge{position:fixed;bottom:1rem;left:1rem;background:var(--amarillo);color:#000;padding:.4rem .8rem;border-radius:20px;font-weight:700;}
   footer{position:relative;z-index:1;text-align:center;padding:2rem 1rem;font-size:.8rem;font-family:var(--fuente-tit);}
+  /* Modal confirmación */
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:9999;}
   .modal.oculto{display:none;}
   .modalContent{background:var(--fondo);padding:1.5rem 2rem;border-radius:8px;text-align:center;font-family:var(--fuente-tit);}
@@ -50,12 +50,18 @@
   .modalContent button{margin:.5rem;padding:.5rem 1rem;font-size:1rem;border:none;border-radius:4px;cursor:pointer;}
   .modalContent .si{background:var(--rojo);color:#fff;}
   .modalContent .no{background:#ccc;color:#000;}
+  /* Editor carrito */
   .editorModal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:9999;}
   .editorModal.oculto{display:none;}
   .editorContent{background:var(--fondo);padding:1.5rem;border-radius:8px;max-width:400px;width:90%;max-height:70vh;overflow-y:auto;font-family:var(--fuente-cuerpo);}
   .editorContent h3{margin-bottom:1rem;font-family:var(--fuente-tit);}
   .editorItem{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;}
   .editorItem button{background:#000;color:var(--amarillo);border:none;padding:.2rem .5rem;border-radius:4px;cursor:pointer;}
+  /* Carrusel dentro del acordeón */
+  .innerCarrusel{position:relative;width:100%;height:160px;display:flex;overflow:hidden;border-radius:8px;margin-bottom:.5rem;}
+  .innerCarrusel .track{display:flex;width:600%;animation:innerSlide 18s infinite linear;}
+  .innerCarrusel .track img{width:calc(100% / 6);height:100%;object-fit:cover;}
+  @keyframes innerSlide{0%{transform:translateX(0)}100%{transform:translateX(-83.333%)}}
   </style>
 </head>
 <body>
@@ -78,23 +84,81 @@
   <input type="checkbox" id="pizzas" checked>
   <label for="pizzas" class="accordion-label">
     Pizzas
-    <div class="carrusel">
-      <img src="images/pizza_1.jpg" alt="pizza_1">
-      <img src="images/pizza_2.jpg" alt="pizza_2">
-      <img src="images/pizza_3.jpg" alt="pizza_3">
-      <img src="images/pizza_4.jpg" alt="pizza_4">
-      <img src="images/pizza_5.jpg" alt="pizza_5">
-      <img src="images/pizza_6.jpg" alt="pizza_6">
-    </div>
   </label>
   <div class="accordion-content">
-    <div class="item"><span class="itemNombre">Muzzarela</span><span class="puntos"></span><span class="precioBox">$7.000</span><button class="btnAgregar" onclick="confirmar('Muzzarela',7000)">+</button></div>
-    <div class="item"><span class="itemNombre">Especial</span><span class="puntos"></span><span class="precioBox">$8.000</span><button class="btnAgregar" onclick="confirmar('Especial',8000)">+</button></div>
-    <div class="item"><span class="itemNombre">Napolitana</span><span class="puntos"></span><span class="precioBox">$7.500</span><button class="btnAgregar" onclick="confirmar('Napolitana',7500)">+</button></div>
-    <div class="item"><span class="itemNombre">Napolitana Especial</span><span class="puntos"></span><span class="precioBox">$8.000</span><button class="btnAgregar" onclick="confirmar('Napolitana Especial',8000)">+</button></div>
-    <div class="item"><span class="itemNombre">Argentina</span><span class="puntos"></span><span class="precioBox">$10.000</span><button class="btnAgregar" onclick="confirmar('Argentina',10000)">+</button></div>
-    <div class="item"><span class="itemNombre">Calabresa</span><span class="puntos"></span><span class="precioBox">$8.000</span><button class="btnAgregar" onclick="confirmar('Calabresa',8000)">+</button></div>
-    <div class="item"><span class="itemNombre">Fugazzeta</span><span class="puntos"></span><span class="precioBox">$8.000</span><button class="btnAgregar" onclick="confirmar('Fugazzeta',8000)">+</button></div>
+    <div class="innerCarrusel">
+      <div class="track">
+        <img src="images/pizza_1.jpg" alt="pizza_1">
+        <img src="images/pizza_2.jpg" alt="pizza_2">
+        <img src="images/pizza_3.jpg" alt="pizza_3">
+        <img src="images/pizza_4.jpg" alt="pizza_4">
+        <img src="images/pizza_5.jpg" alt="pizza_5">
+        <img src="images/pizza_6.jpg" alt="pizza_6">
+      </div>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Muzzarela</span>
+        <div class="itemDesc">Muzzarella y salsa de tomate</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$7.000</span>
+      <button class="btnAgregar" onclick="confirmar('Muzzarela',7000)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Especial</span>
+        <div class="itemDesc">Jamón, morrones y queso</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$8.000</span>
+      <button class="btnAgregar" onclick="confirmar('Especial',8000)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Napolitana</span>
+        <div class="itemDesc">Tomate, ajo y orégano</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$7.500</span>
+      <button class="btnAgregar" onclick="confirmar('Napolitana',7500)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Napolitana Especial</span>
+        <div class="itemDesc">Extra tomate y queso</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$8.000</span>
+      <button class="btnAgregar" onclick="confirmar('Napolitana Especial',8000)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Argentina</span>
+        <div class="itemDesc">Jamón, morrones y huevo</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$10.000</span>
+      <button class="btnAgregar" onclick="confirmar('Argentina',10000)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Calabresa</span>
+        <div class="itemDesc">Salame calabresa y aceitunas</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$8.000</span>
+      <button class="btnAgregar" onclick="confirmar('Calabresa',8000)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Fugazzeta</span>
+        <div class="itemDesc">Cebolla y queso</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$8.000</span>
+      <button class="btnAgregar" onclick="confirmar('Fugazzeta',8000)">+</button>
+    </div>
   </div>
 </div>
 
@@ -103,22 +167,72 @@
   <input type="checkbox" id="lomos">
   <label for="lomos" class="accordion-label">
     Lomos
-    <div class="carrusel">
-      <img src="images/lomo_1.jpg" alt="lomo_1">
-      <img src="images/lomo_2.jpg" alt="lomo_2">
-      <img src="images/lomo_3.jpg" alt="lomo_3">
-      <img src="images/lomo_4.jpg" alt="lomo_4">
-      <img src="images/lomo_5.jpg" alt="lomo_5">
-      <img src="images/lomo_6.jpg" alt="lomo_6">
-    </div>
   </label>
   <div class="accordion-content">
-    <div class="item"><span class="itemNombre">Lomo común</span><span class="puntos"></span><span class="precioBox">$7.000</span><button class="btnAgregar" onclick="confirmar('Lomo común',7000)">+</button></div>
-    <div class="item"><span class="itemNombre">Lomo especial</span><span class="puntos"></span><span class="precioBox">$8.000</span><button class="btnAgregar" onclick="confirmar('Lomo especial',8000)">+</button></div>
-    <div class="item"><span class="itemNombre">Lomazo especial</span><span class="puntos"></span><span class="precioBox">$15.000</span><button class="btnAgregar" onclick="confirmar('Lomazo especial',15000)">+</button></div>
-    <div class="item"><span class="itemNombre">Lomo pizza Completo</span><span class="puntos"></span><span class="precioBox">$27.000</span><button class="btnAgregar" onclick="confirmar('Lomo pizza Completo',27000)">+</button></div>
-    <div class="item"><span class="itemNombre">1/2 Lomo Pizza</span><span class="puntos"></span><span class="precioBox">$15.000</span><button class="btnAgregar" onclick="confirmar('1/2 Lomo Pizza',15000)">+</button></div>
-    <div class="item"><span class="itemNombre">Lomo montado</span><span class="puntos"></span><span class="precioBox">$9.000</span><button class="btnAgregar" onclick="confirmar('Lomo montado',9000)">+</button></div>
+    <div class="innerCarrusel">
+      <div class="track">
+        <img src="images/lomo_1.jpg" alt="lomo_1">
+        <img src="images/lomo_2.jpg" alt="lomo_2">
+        <img src="images/lomo_3.jpg" alt="lomo_3">
+        <img src="images/lomo_4.jpg" alt="lomo_4">
+        <img src="images/lomo_5.jpg" alt="lomo_5">
+        <img src="images/lomo_6.jpg" alt="lomo_6">
+      </div>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Lomo común</span>
+        <div class="itemDesc">Carne, lechuga, tomate</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$7.000</span>
+      <button class="btnAgregar" onclick="confirmar('Lomo común',7000)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Lomo especial</span>
+        <div class="itemDesc">Carne, jamón, queso, huevo</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$8.000</span>
+      <button class="btnAgregar" onclick="confirmar('Lomo especial',8000)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Lomazo especial</span>
+        <div class="itemDesc">Doble carne, queso, huevo</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$15.000</span>
+      <button class="btnAgregar" onclick="confirmar('Lomazo especial',15000)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Lomo pizza Completo</span>
+        <div class="itemDesc">Para compartir: pizza + lomo</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$27.000</span>
+      <button class="btnAgregar" onclick="confirmar('Lomo pizza Completo',27000)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">1/2 Lomo Pizza</span>
+        <div class="itemDesc">Media pizza con lomo</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$15.000</span>
+      <button class="btnAgregar" onclick="confirmar('1/2 Lomo Pizza',15000)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Lomo montado</span>
+        <div class="itemDesc">Papas encima del lomo</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$9.000</span>
+      <button class="btnAgregar" onclick="confirmar('Lomo montado',9000)">+</button>
+    </div>
   </div>
 </div>
 
@@ -127,20 +241,54 @@
   <input type="checkbox" id="milas">
   <label for="milas" class="accordion-label">
     Milanesas
-    <div class="carrusel">
-      <img src="images/mila_1.jpg" alt="mila_1">
-      <img src="images/mila_2.jpg" alt="mila_2">
-      <img src="images/mila_3.jpg" alt="mila_3">
-      <img src="images/mila_4.jpg" alt="mila_4">
-      <img src="images/mila_5.jpg" alt="mila_5">
-      <img src="images/mila_6.jpg" alt="mila_6">
-    </div>
   </label>
   <div class="accordion-content">
-    <div class="item"><span class="itemNombre">Mila especial</span><span class="puntos"></span><span class="precioBox">$8.000</span><button class="btnAgregar" onclick="confirmar('Mila especial',8000)">+</button></div>
-    <div class="item"><span class="itemNombre">Mila Grande</span><span class="puntos"></span><span class="precioBox">$15.000</span><button class="btnAgregar" onclick="confirmar('Mila Grande',15000)">+</button></div>
-    <div class="item"><span class="itemNombre">Mila Napo</span><span class="puntos"></span><span class="precioBox">$8.500</span><button class="btnAgregar" onclick="confirmar('Mila Napo',8500)">+</button></div>
-    <div class="item"><span class="itemNombre">Mila a caballo</span><span class="puntos"></span><span class="precioBox">$8.000</span><button class="btnAgregar" onclick="confirmar('Mila a caballo',8000)">+</button></div>
+    <div class="innerCarrusel">
+      <div class="track">
+        <img src="images/mila_1.jpg" alt="mila_1">
+        <img src="images/mila_2.jpg" alt="mila_2">
+        <img src="images/mila_3.jpg" alt="mila_3">
+        <img src="images/mila_4.jpg" alt="mila_4">
+        <img src="images/mila_5.jpg" alt="mila_5">
+        <img src="images/mila_6.jpg" alt="mila_6">
+      </div>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Mila especial</span>
+        <div class="itemDesc">Con papas y huevo</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$8.000</span>
+      <button class="btnAgregar" onclick="confirmar('Mila especial',8000)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Mila Grande</span>
+        <div class="itemDesc">Tamaño familiar</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$15.000</span>
+      <button class="btnAgregar" onclick="confirmar('Mila Grande',15000)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Mila Napo</span>
+        <div class="itemDesc">Salsa napolitana</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$8.500</span>
+      <button class="btnAgregar" onclick="confirmar('Mila Napo',8500)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Mila a caballo</span>
+        <div class="itemDesc">Huevos encima</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$8.000</span>
+      <button class="btnAgregar" onclick="confirmar('Mila a caballo',8000)">+</button>
+    </div>
   </div>
 </div>
 
@@ -149,19 +297,54 @@
   <input type="checkbox" id="zappin">
   <label for="zappin" class="accordion-label">
     Hamburguesas Zappin
-    <div class="carrusel">
-      <img src="images/hamb_1.jpg" alt="zappin_1">
-      <img src="images/hamb_2.jpg" alt="zappin_2">
-      <img src="images/hamb_3.jpg" alt="zappin_3">
-      <img src="images/hamb_4.jpg" alt="zappin_4">
-      <img src="images/hamb_5.jpg" alt="zappin_5">
-      <img src="images/hamb_6.jpg" alt="zappin_6">
-    </div>
   </label>
   <div class="accordion-content">
-    <div class="item"><span class="itemNombre">Hamburg. Zapping común</span><span class="puntos"></span><span class="precioBox">$6.500</span><button class="btnAgregar" onclick="confirmar('Hamburg. Zapping común',6500)">+</button></div>
-    <div class="item"><span class="itemNombre">Hamburg. Zapping especial</span><span class="puntos"></span><span class="precioBox">$7.500</span><button class="btnAgregar" onclick="confirmar('Hamburg. Zapping especial',7500)">+</button></div>
-    <div class="item"><span class="itemNombre">Nueva Zapping Doble Super Especial</span><span class="puntos"></span><span class="precioBox">$11.000</span><button class="btnAgregar" onclick="confirmar('Nueva Zapping Doble Super Especial',11000)">+</button></div>
+    <div class="innerCarrusel">
+      <div class="track">
+        <img src="images/hamb_1.jpg" alt="zappin_1">
+        <img src="images/hamb_2.jpg" alt="zappin_2">
+        <img src="images/hamb_3.jpg" alt="zappin_3">
+        <img src="images/hamb_4.jpg" alt="zappin_4">
+        <img src="images/hamb_5.jpg" alt="zappin_5">
+        <img src="images/hamb_6.jpg" alt="zappin_6">
+      </div>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Hamburg. Zapping común</span>
+        <div class="itemDesc">Carne, lechuga, tomate, mayonesa</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$6.500</span>
+      <button class="btnAgregar" onclick="confirmar('Hamburg. Zapping común',6500)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Hamburg. Zapping especial</span>
+        <div class="itemDesc">Carne, jamón, queso, huevo, lechuga, tomate</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$7.500</span>
+      <button class="btnAgregar" onclick="confirmar('Hamburg. Zapping especial',7500)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Hamburpizza</span>
+        <div class="itemDesc">Hamburguesa con salsa de tomate y queso derretido</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$9.000</span>
+      <button class="btnAgregar" onclick="confirmar('Hamburpizza',9000)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Nueva Zapping Doble Super Especial</span>
+        <div class="itemDesc">Doble carne, doble queso, doble bacon, cebolla caramelizada</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$11.000</span>
+      <button class="btnAgregar" onclick="confirmar('Nueva Zapping Doble Super Especial',11000)">+</button>
+    </div>
   </div>
 </div>
 
@@ -170,18 +353,73 @@
   <input type="checkbox" id="patys">
   <label for="patys" class="accordion-label">
     Patys
-    <div class="carrusel">
-      <img src="images/patys_1.jpg" alt="patys_1">
-      <img src="images/patys_2.jpg" alt="patys_2">
-      <img src="images/patys_3.jpg" alt="patys_3">
-      <img src="images/patys_4.jpg" alt="patys_4">
-      <img src="images/patys_5.jpg" alt="patys_5">
-      <img src="images/patys_6.jpg" alt="patys_6">
-    </div>
   </label>
   <div class="accordion-content">
-    <div class="item"><span class="itemNombre">Paty Especial</span><span class="puntos"></span><span class="precioBox">$5.000</span><button class="btnAgregar" onclick="confirmar('Paty Especial',5000)">+</button></div>
-    <div class="item"><span class="itemNombre">Hamburpizza</span><span class="puntos"></span><span class="precioBox">$9.000</span><button class="btnAgregar" onclick="confirmar('Hamburpizza',9000)">+</button></div>
+    <div class="innerCarrusel">
+      <div class="track">
+        <img src="images/patys_1.jpg" alt="patys_1">
+        <img src="images/patys_2.jpg" alt="patys_2">
+        <img src="images/patys_3.jpg" alt="patys_3">
+        <img src="images/patys_4.jpg" alt="patys_4">
+        <img src="images/patys_5.jpg" alt="patys_5">
+        <img src="images/patys_6.jpg" alt="patys_6">
+      </div>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Paty Especial</span>
+        <div class="itemDesc">Lechuga, tomate, medallón de Paty, jamón, queso, huevo, mayo casera</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$5.000</span>
+      <button class="btnAgregar" onclick="confirmar('Paty Especial',5000)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Paty Liam</span>
+        <div class="itemDesc">Lechuga, tomate, medallón de Paty, cebolla caramelizada, bacon, huevo, cheddar, mayo casera</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$6.500</span>
+      <button class="btnAgregar" onclick="confirmar('Paty Liam',6500)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Paty Cheddar</span>
+        <div class="itemDesc">Lechuga, tomate, medallón de Paty, doble cheddar, mayo casera</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$5.000</span>
+      <button class="btnAgregar" onclick="confirmar('Paty Cheddar',5000)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Paty Bacon</span>
+        <div class="itemDesc">Lechuga, tomate, medallón de Paty, cheddar, bacon, cebolla morada, mayo casera</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$6.000</span>
+      <button class="btnAgregar" onclick="confirmar('Paty Bacon',6000)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Paty BBQ</span>
+        <div class="itemDesc">Salsa BBQ, cheddar, salteado de morrón, medallón de Paty, huevo</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$5.500</span>
+      <button class="btnAgregar" onclick="confirmar('Paty BBQ',5500)">+</button>
+    </div>
+    <div class="item">
+      <div>
+        <span class="itemNombre">Paty Criolla</span>
+        <div class="itemDesc">Lechuga, tomate, salsa criolla, medallón de Paty, mostaza, mayo casera</div>
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$4.500</span>
+      <button class="btnAgregar" onclick="confirmar('Paty Criolla',4500)">+</button>
+    </div>
+    <p style="margin-top:1rem;font-size:.8rem;font-weight:400;">Todo con papas + pote de mayo</p>
   </div>
 </div>
 
