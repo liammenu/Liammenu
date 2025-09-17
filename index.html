@@ -2,9 +2,9 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <title>Liam Burger - Carta 70's</title>
+  <title>LIAM BURGER - Carta 70's</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Carta retro 70's de Liam Burger - Delivery de hamburguesas, pizzas, lomos y milanesas." />
+  <meta name="description" content="Carta retro 70's de LIAM BURGER - Delivery de hamburguesas, pizzas, lomos y milanesas." />
   <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Oswald:wght@700&display=swap" rel="stylesheet" />
   <style>
   :root{
@@ -17,9 +17,9 @@
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--fondo);color:var(--letra);font-family:var(--fuente-cuerpo);font-weight:700;letter-spacing:.5px;}
-  header{text-align:center;padding:3rem 1rem 2rem;}
-  header h1{font-family:var(--fuente-tit);font-size:3.2rem;color:var(--rojo);}
-  header p{margin-top:.5rem;font-size:1.1rem;}
+  header{text-align:center;padding:3rem 1rem 2rem;background:var(--amarillo);border-bottom:4px solid var(--rojo);}
+  header h1{font-family:var(--fuente-tit);font-size:4rem;color:var(--rojo);text-transform:uppercase;letter-spacing:3px;text-shadow:3px 3px 0 #000;}
+  header p{margin-top:.5rem;font-size:1.2rem;}
   .accordion{width:100%;max-width:720px;margin:auto;padding:0 1rem 3rem;}
   .accordion input{position:absolute;opacity:0;z-index:-1;}
   .accordion-label{position:relative;display:flex;justify-content:space-between;align-items:center;padding:1rem;font-family:var(--fuente-tit);font-size:1.6rem;background:var(--amarillo);border-bottom:3px solid var(--rojo);cursor:pointer;overflow:hidden;}
@@ -38,13 +38,30 @@
   .btnAgregar:hover{background:#c20023;}
   .carrito{position:fixed;bottom:1rem;right:1rem;background:#000;color:var(--amarillo);padding:.7rem 1rem;border-radius:30px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3);}
   .carrito span{background:var(--amarillo);color:#000;border-radius:50%;padding:.2rem .5rem;margin-left:.3rem;}
+  .editarBtn{background:var(--rojo);color:#fff;border:none;padding:.4rem .8rem;border-radius:20px;margin-right:.5rem;cursor:pointer;font-weight:700;}
+  .editarBtn:hover{background:#c20023;}
   footer{text-align:center;padding:2rem 1rem;font-size:.8rem;font-family:var(--fuente-tit);}
+  /* Modal confirmación */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:9999;}
+  .modal.oculto{display:none;}
+  .modalContent{background:var(--fondo);padding:1.5rem 2rem;border-radius:8px;text-align:center;font-family:var(--fuente-tit);}
+  .modalContent h3{margin-bottom:1rem;font-size:1.3rem;}
+  .modalContent button{margin:.5rem;padding:.5rem 1rem;font-size:1rem;border:none;border-radius:4px;cursor:pointer;}
+  .modalContent .si{background:var(--rojo);color:#fff;}
+  .modalContent .no{background:#ccc;color:#000;}
+  /* Modal editor carrito */
+  .editorModal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:9999;}
+  .editorModal.oculto{display:none;}
+  .editorContent{background:var(--fondo);padding:1.5rem;border-radius:8px;max-width:400px;width:90%;max-height:70vh;overflow-y:auto;font-family:var(--fuente-cuerpo);}
+  .editorContent h3{margin-bottom:1rem;font-family:var(--fuente-tit);}
+  .editorItem{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;}
+  .editorItem button{background:#000;color:var(--amarillo);border:none;padding:.2rem .5rem;border-radius:4px;cursor:pointer;}
   </style>
 </head>
 <body>
 
 <header>
-  <h1>Liam Burger</h1>
+  <h1>LIAM BURGER</h1>
   <p>Pedidos: (383) 461-9831</p>
 </header>
 
@@ -54,22 +71,22 @@
   <label for="pizzas" class="accordion-label">
     Pizzas 🍕
     <div class="carrusel">
-      <img src="https://source.unsplash.com/900x400/?pizza,cheese" alt="pizza_1">
-      <img src="https://source.unsplash.com/900x400/?pizza,pepperoni" alt="pizza_2">
-      <img src="https://source.unsplash.com/900x400/?pizza,margherita" alt="pizza_3">
-      <img src="https://source.unsplash.com/900x400/?pizza,vegetarian" alt="pizza_4">
-      <img src="https://source.unsplash.com/900x400/?pizza,oven" alt="pizza_5">
-      <img src="https://source.unsplash.com/900x400/?pizza,slice" alt="pizza_6">
+      <img src="images/pizza_1.jpg" alt="pizza_1">
+      <img src="images/pizza_2.jpg" alt="pizza_2">
+      <img src="images/pizza_3.jpg" alt="pizza_3">
+      <img src="images/pizza_4.jpg" alt="pizza_4">
+      <img src="images/pizza_5.jpg" alt="pizza_5">
+      <img src="images/pizza_6.jpg" alt="pizza_6">
     </div>
   </label>
   <div class="accordion-content">
-    <div class="item"><span class="itemNombre">Muzzarela</span><span class="puntos"></span><span class="precioBox">$7.000</span><button class="btnAgregar" onclick="agregar('Muzzarela',7000)">+</button></div>
-    <div class="item"><span class="itemNombre">Especial</span><span class="puntos"></span><span class="precioBox">$8.000</span><button class="btnAgregar" onclick="agregar('Especial',8000)">+</button></div>
-    <div class="item"><span class="itemNombre">Napolitana</span><span class="puntos"></span><span class="precioBox">$7.500</span><button class="btnAgregar" onclick="agregar('Napolitana',7500)">+</button></div>
-    <div class="item"><span class="itemNombre">Napolitana Especial</span><span class="puntos"></span><span class="precioBox">$8.000</span><button class="btnAgregar" onclick="agregar('Napolitana Especial',8000)">+</button></div>
-    <div class="item"><span class="itemNombre">Argentina</span><span class="puntos"></span><span class="precioBox">$10.000</span><button class="btnAgregar" onclick="agregar('Argentina',10000)">+</button></div>
-    <div class="item"><span class="itemNombre">Calabresa</span><span class="puntos"></span><span class="precioBox">$8.000</span><button class="btnAgregar" onclick="agregar('Calabresa',8000)">+</button></div>
-    <div class="item"><span class="itemNombre">Fugazzeta</span><span class="puntos"></span><span class="precioBox">$8.000</span><button class="btnAgregar" onclick="agregar('Fugazzeta',8000)">+</button></div>
+    <div class="item"><span class="itemNombre">Muzzarela</span><span class="puntos"></span><span class="precioBox">$7.000</span><button class="btnAgregar" onclick="confirmar('Muzzarela',7000)">+</button></div>
+    <div class="item"><span class="itemNombre">Especial</span><span class="puntos"></span><span class="precioBox">$8.000</span><button class="btnAgregar" onclick="confirmar('Especial',8000)">+</button></div>
+    <div class="item"><span class="itemNombre">Napolitana</span><span class="puntos"></span><span class="precioBox">$7.500</span><button class="btnAgregar" onclick="confirmar('Napolitana',7500)">+</button></div>
+    <div class="item"><span class="itemNombre">Napolitana Especial</span><span class="puntos"></span><span class="precioBox">$8.000</span><button class="btnAgregar" onclick="confirmar('Napolitana Especial',8000)">+</button></div>
+    <div class="item"><span class="itemNombre">Argentina</span><span class="puntos"></span><span class="precioBox">$10.000</span><button class="btnAgregar" onclick="confirmar('Argentina',10000)">+</button></div>
+    <div class="item"><span class="itemNombre">Calabresa</span><span class="puntos"></span><span class="precioBox">$8.000</span><button class="btnAgregar" onclick="confirmar('Calabresa',8000)">+</button></div>
+    <div class="item"><span class="itemNombre">Fugazzeta</span><span class="puntos"></span><span class="precioBox">$8.000</span><button class="btnAgregar" onclick="confirmar('Fugazzeta',8000)">+</button></div>
   </div>
 </div>
 
@@ -79,21 +96,21 @@
   <label for="lomos" class="accordion-label">
     Lomos 🥖🍟
     <div class="carrusel">
-      <img src="https://source.unsplash.com/900x400/?steak,sandwich" alt="lomo_1">
-      <img src="https://source.unsplash.com/900x400/?lomito,argentino" alt="lomo_2">
-      <img src="https://source.unsplash.com/900x400/?sandwich,grill" alt="lomo_3">
-      <img src="https://source.unsplash.com/900x400/?bread,meat" alt="lomo_4">
-      <img src="https://source.unsplash.com/900x400/?sandwich,loaded" alt="lomo_5">
-      <img src="https://source.unsplash.com/900x400/?steak,bread" alt="lomo_6">
+      <img src="images/lomo_1.jpg" alt="lomo_1">
+      <img src="images/lomo_2.jpg" alt="lomo_2">
+      <img src="images/lomo_3.jpg" alt="lomo_3">
+      <img src="images/lomo_4.jpg" alt="lomo_4">
+      <img src="images/lomo_5.jpg" alt="lomo_5">
+      <img src="images/lomo_6.jpg" alt="lomo_6">
     </div>
   </label>
   <div class="accordion-content">
-    <div class="item"><span class="itemNombre">Lomo común</span><span class="puntos"></span><span class="precioBox">$7.000</span><button class="btnAgregar" onclick="agregar('Lomo común',7000)">+</button></div>
-    <div class="item"><span class="itemNombre">Lomo especial</span><span class="puntos"></span><span class="precioBox">$8.000</span><button class="btnAgregar" onclick="agregar('Lomo especial',8000)">+</button></div>
-    <div class="item"><span class="itemNombre">Lomazo especial</span><span class="puntos"></span><span class="precioBox">$15.000</span><button class="btnAgregar" onclick="agregar('Lomazo especial',15000)">+</button></div>
-    <div class="item"><span class="itemNombre">Lomo pizza Completo</span><span class="puntos"></span><span class="precioBox">$27.000</span><button class="btnAgregar" onclick="agregar('Lomo pizza Completo',27000)">+</button></div>
-    <div class="item"><span class="itemNombre">1/2 Lomo Pizza</span><span class="puntos"></span><span class="precioBox">$15.000</span><button class="btnAgregar" onclick="agregar('1/2 Lomo Pizza',15000)">+</button></div>
-    <div class="item"><span class="itemNombre">Lomo montado</span><span class="puntos"></span><span class="precioBox">$9.000</span><button class="btnAgregar" onclick="agregar('Lomo montado',9000)">+</button></div>
+    <div class="item"><span class="itemNombre">Lomo común</span><span class="puntos"></span><span class="precioBox">$7.000</span><button class="btnAgregar" onclick="confirmar('Lomo común',7000)">+</button></div>
+    <div class="item"><span class="itemNombre">Lomo especial</span><span class="puntos"></span><span class="precioBox">$8.000</span><button class="btnAgregar" onclick="confirmar('Lomo especial',8000)">+</button></div>
+    <div class="item"><span class="itemNombre">Lomazo especial</span><span class="puntos"></span><span class="precioBox">$15.000</span><button class="btnAgregar" onclick="confirmar('Lomazo especial',15000)">+</button></div>
+    <div class="item"><span class="itemNombre">Lomo pizza Completo</span><span class="puntos"></span><span class="precioBox">$27.000</span><button class="btnAgregar" onclick="confirmar('Lomo pizza Completo',27000)">+</button></div>
+    <div class="item"><span class="itemNombre">1/2 Lomo Pizza</span><span class="puntos"></span><span class="precioBox">$15.000</span><button class="btnAgregar" onclick="confirmar('1/2 Lomo Pizza',15000)">+</button></div>
+    <div class="item"><span class="itemNombre">Lomo montado</span><span class="puntos"></span><span class="precioBox">$9.000</span><button class="btnAgregar" onclick="confirmar('Lomo montado',9000)">+</button></div>
   </div>
 </div>
 
@@ -103,19 +120,19 @@
   <label for="milas" class="accordion-label">
     Milanesas 🍞🥖🍟
     <div class="carrusel">
-      <img src="https://source.unsplash.com/900x400/?milanesa" alt="mila_1">
-      <img src="https://source.unsplash.com/900x400/?milanesa,big" alt="mila_2">
-      <img src="https://source.unsplash.com/900x400/?milanesa,napoli" alt="mila_3">
-      <img src="https://source.unsplash.com/900x400/?schnitzel" alt="mila_4">
-      <img src="https://source.unsplash.com/900x400/?milanesa,eggs" alt="mila_5">
-      <img src="https://source.unsplash.com/900x400/?breaded,meat" alt="mila_6">
+      <img src="images/mila_1.jpg" alt="mila_1">
+      <img src="images/mila_2.jpg" alt="mila_2">
+      <img src="images/mila_3.jpg" alt="mila_3">
+      <img src="images/mila_4.jpg" alt="mila_4">
+      <img src="images/mila_5.jpg" alt="mila_5">
+      <img src="images/mila_6.jpg" alt="mila_6">
     </div>
   </label>
   <div class="accordion-content">
-    <div class="item"><span class="itemNombre">Mila especial</span><span class="puntos"></span><span class="precioBox">$8.000</span><button class="btnAgregar" onclick="agregar('Mila especial',8000)">+</button></div>
-    <div class="item"><span class="itemNombre">Mila Grande</span><span class="puntos"></span><span class="precioBox">$15.000</span><button class="btnAgregar" onclick="agregar('Mila Grande',15000)">+</button></div>
-    <div class="item"><span class="itemNombre">Mila Napo</span><span class="puntos"></span><span class="precioBox">$8.500</span><button class="btnAgregar" onclick="agregar('Mila Napo',8500)">+</button></div>
-    <div class="item"><span class="itemNombre">Mila a caballo</span><span class="puntos"></span><span class="precioBox">$8.000</span><button class="btnAgregar" onclick="agregar('Mila a caballo',8000)">+</button></div>
+    <div class="item"><span class="itemNombre">Mila especial</span><span class="puntos"></span><span class="precioBox">$8.000</span><button class="btnAgregar" onclick="confirmar('Mila especial',8000)">+</button></div>
+    <div class="item"><span class="itemNombre">Mila Grande</span><span class="puntos"></span><span class="precioBox">$15.000</span><button class="btnAgregar" onclick="confirmar('Mila Grande',15000)">+</button></div>
+    <div class="item"><span class="itemNombre">Mila Napo</span><span class="puntos"></span><span class="precioBox">$8.500</span><button class="btnAgregar" onclick="confirmar('Mila Napo',8500)">+</button></div>
+    <div class="item"><span class="itemNombre">Mila a caballo</span><span class="puntos"></span><span class="precioBox">$8.000</span><button class="btnAgregar" onclick="confirmar('Mila a caballo',8000)">+</button></div>
   </div>
 </div>
 
@@ -125,48 +142,109 @@
   <label for="hamburguesas" class="accordion-label">
     Hamburguesas 🍔🍟
     <div class="carrusel">
-      <img src="https://source.unsplash.com/900x400/?burger" alt="hamb_1">
-      <img src="https://source.unsplash.com/900x400/?cheeseburger" alt="hamb_2">
-      <img src="https://source.unsplash.com/900x400/?double,burger" alt="hamb_3">
-      <img src="https://source.unsplash.com/900x400/?burger,grill" alt="hamb_4">
-      <img src="https://source.unsplash.com/900x400/?burger,loaded" alt="hamb_5">
-      <img src="https://source.unsplash.com/900x400/?burger,pizza" alt="hamb_6">
+      <img src="images/hamb_1.jpg" alt="hamb_1">
+      <img src="images/hamb_2.jpg" alt="hamb_2">
+      <img src="images/hamb_3.jpg" alt="hamb_3">
+      <img src="images/hamb_4.jpg" alt="hamb_4">
+      <img src="images/hamb_5.jpg" alt="hamb_5">
+      <img src="images/hamb_6.jpg" alt="hamb_6">
     </div>
   </label>
   <div class="accordion-content">
-    <div class="item"><span class="itemNombre">Hamburg. Zapping común</span><span class="puntos"></span><span class="precioBox">$6.500</span><button class="btnAgregar" onclick="agregar('Hamburg. Zapping común',6500)">+</button></div>
-    <div class="item"><span class="itemNombre">Hamburg. Zapping especial</span><span class="puntos"></span><span class="precioBox">$7.500</span><button class="btnAgregar" onclick="agregar('Hamburg. Zapping especial',7500)">+</button></div>
-    <div class="item"><span class="itemNombre">Paty Especial</span><span class="puntos"></span><span class="precioBox">$5.000</span><button class="btnAgregar" onclick="agregar('Paty Especial',5000)">+</button></div>
-    <div class="item"><span class="itemNombre">Hamburpizza</span><span class="puntos"></span><span class="precioBox">$9.000</span><button class="btnAgregar" onclick="agregar('Hamburpizza',9000)">+</button></div>
-    <div class="item"><span class="itemNombre">Nueva Zapping Doble Super Especial</span><span class="puntos"></span><span class="precioBox">$11.000</span><button class="btnAgregar" onclick="agregar('Nueva Zapping Doble Super Especial',11000)">+</button></div>
+    <div class="item"><span class="itemNombre">Hamburg. Zapping común</span><span class="puntos"></span><span class="precioBox">$6.500</span><button class="btnAgregar" onclick="confirmar('Hamburg. Zapping común',6500)">+</button></div>
+    <div class="item"><span class="itemNombre">Hamburg. Zapping especial</span><span class="puntos"></span><span class="precioBox">$7.500</span><button class="btnAgregar" onclick="confirmar('Hamburg. Zapping especial',7500)">+</button></div>
+    <div class="item"><span class="itemNombre">Paty Especial</span><span class="puntos"></span><span class="precioBox">$5.000</span><button class="btnAgregar" onclick="confirmar('Paty Especial',5000)">+</button></div>
+    <div class="item"><span class="itemNombre">Hamburpizza</span><span class="puntos"></span><span class="precioBox">$9.000</span><button class="btnAgregar" onclick="confirmar('Hamburpizza',9000)">+</button></div>
+    <div class="item"><span class="itemNombre">Nueva Zapping Doble Super Especial</span><span class="puntos"></span><span class="precioBox">$11.000</span><button class="btnAgregar" onclick="confirmar('Nueva Zapping Doble Super Especial',11000)">+</button></div>
   </div>
 </div>
 
+<!-- CARRITO -->
 <div class="carrito" onclick="enviarWhatsApp()">
   🛒 Pedir por WhatsApp <span id="carritoCant">0</span>
 </div>
+<button class="editarBtn" onclick="mostrarEditor()">Editar</button>
 
 <footer>
-  Liam Burger · Alsina Sur · (383) 461-9831 · Todos los días
+  LIAM BURGER · Alsina Sur · (383) 461-9831 · Todos los días
 </footer>
+
+<!-- MODAL CONFIRMACIÓN -->
+<div id="modalConfirm" class="modal oculto">
+  <div class="modalContent">
+    <h3>¿Agregar al carrito?</h3>
+    <button class="si" onclick="confirmarSi()">Sí</button>
+    <button class="no" onclick="confirmarNo()">No</button>
+  </div>
+</div>
+
+<!-- MODAL EDITOR -->
+<div id="editorModal" class="editorModal oculto">
+  <div class="editorContent">
+    <h3>Editar carrito</h3>
+    <div id="editorLista"></div>
+    <button class="btnAgregar" onclick="cerrarEditor()">Cerrar</button>
+  </div>
+</div>
 
 <script>
 const NUMERO_WHATSAPP = 543834619831;
 let carrito = [];
-function agregar(nombre,precio){
-  carrito.push({nombre,precio});
+let tempProducto = null;
+
+function confirmar(nombre, precio) {
+  tempProducto = { nombre, precio };
+  document.getElementById('modalConfirm').classList.remove('oculto');
+}
+function confirmarSi() {
+  if (tempProducto) {
+    carrito.push(tempProducto);
+    actualizarBadge();
+    tempProducto = null;
+  }
+  document.getElementById('modalConfirm').classList.add('oculto');
+}
+function confirmarNo() {
+  tempProducto = null;
+  document.getElementById('modalConfirm').classList.add('oculto');
+}
+function actualizarBadge() {
   document.getElementById('carritoCant').textContent = carrito.length;
 }
-function enviarWhatsApp(){
-  if(carrito.length===0){ alert('Agregá productos al carrito'); return; }
+function enviarWhatsApp() {
+  if (carrito.length === 0) { alert('El carrito está vacío'); return; }
   let texto = `Hola, quiero hacer este pedido:\n`;
   let total = 0;
-  carrito.forEach(p=>{
+  carrito.forEach(p => {
     texto += `· ${p.nombre} $${p.precio.toLocaleString()}\n`;
     total += p.precio;
   });
   texto += `\nTotal: $${total.toLocaleString()}`;
   window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(texto)}`);
+}
+function mostrarEditor() {
+  const editor = document.getElementById('editorModal');
+  const lista = document.getElementById('editorLista');
+  lista.innerHTML = '';
+  if (carrito.length === 0) {
+    lista.innerHTML = '<p>El carrito está vacío</p>';
+  } else {
+    carrito.forEach((p, i) => {
+      const div = document.createElement('div');
+      div.className = 'editorItem';
+      div.innerHTML = `<span>${p.nombre} - $${p.precio.toLocaleString()}</span><button onclick="quitarDelCarrito(${i})">Quitar</button>`;
+      lista.appendChild(div);
+    });
+  }
+  editor.classList.remove('oculto');
+}
+function quitarDelCarrito(index) {
+  carrito.splice(index, 1);
+  actualizarBadge();
+  mostrarEditor(); // refrescar lista
+}
+function cerrarEditor() {
+  document.getElementById('editorModal').classList.add('oculto');
 }
 </script>
 </body>
