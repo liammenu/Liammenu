@@ -26,7 +26,8 @@
   .accordion{width:100%;max-width:720px;margin:auto;padding:0 1rem 3rem;}
   .accordion input{position:absolute;opacity:0;z-index:-1;}
   .accordion-label{position:relative;display:flex;justify-content:space-between;align-items:center;padding:1rem;font-family:var(--fuente-tit);font-size:1.6rem;background:var(--amarillo);border-bottom:3px solid var(--rojo);cursor:pointer;overflow:hidden;}
-  .accordion-label::after{content:"+";font-size:1.8rem;transition:transform .3s;}
+  .labelImagen{position:absolute;inset:0;z-index:-1;width:100%;height:100%;object-fit:cover;opacity:.3;}
+  .accordion-label::after{content:"+";font-size:1.8rem;transition:transform .3s;z-index:2;}
   .accordion input:checked + .accordion-label::after{transform:rotate(45deg);}
   .accordion-content{max-height:0;overflow:hidden;transition:max-height .4s ease;padding:0 1rem;}
   .accordion input:checked ~ .accordion-content{max-height:2000px;padding:1rem 0;}
@@ -57,7 +58,7 @@
   .editorContent h3{margin-bottom:1rem;font-family:var(--fuente-tit);}
   .editorItem{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;}
   .editorItem button{background:#000;color:var(--amarillo);border:none;padding:.2rem .5rem;border-radius:4px;cursor:pointer;}
-  /* Carrusel dentro del acordeón */
+  /* Carrusel interno opcional */
   .innerCarrusel{position:relative;width:100%;height:160px;display:flex;overflow:hidden;border-radius:8px;margin-bottom:.5rem;}
   .innerCarrusel .track{display:flex;width:600%;animation:innerSlide 18s infinite linear;}
   .innerCarrusel .track img{width:calc(100% / 6);height:100%;object-fit:cover;}
@@ -84,18 +85,10 @@
   <input type="checkbox" id="pizzas" checked>
   <label for="pizzas" class="accordion-label">
     Pizzas
+    <img class="labelImagen" src="images/pizza_1.jpg" alt="pizza">
   </label>
   <div class="accordion-content">
-    <div class="innerCarrusel">
-      <div class="track">
-        <img src="images/pizza_1.jpg" alt="pizza_1">
-        <img src="images/pizza_2.jpg" alt="pizza_2">
-        <img src="images/pizza_3.jpg" alt="pizza_3">
-        <img src="images/pizza_4.jpg" alt="pizza_4">
-        <img src="images/pizza_5.jpg" alt="pizza_5">
-        <img src="images/pizza_6.jpg" alt="pizza_6">
-      </div>
-    </div>
+    <div class="innerCarrusel" id="pizzaInner"></div>
     <div class="item">
       <div>
         <span class="itemNombre">Muzzarela</span>
@@ -167,18 +160,10 @@
   <input type="checkbox" id="lomos">
   <label for="lomos" class="accordion-label">
     Lomos
+    <img class="labelImagen" src="images/lomo_1.jpg" alt="lomo">
   </label>
   <div class="accordion-content">
-    <div class="innerCarrusel">
-      <div class="track">
-        <img src="images/lomo_1.jpg" alt="lomo_1">
-        <img src="images/lomo_2.jpg" alt="lomo_2">
-        <img src="images/lomo_3.jpg" alt="lomo_3">
-        <img src="images/lomo_4.jpg" alt="lomo_4">
-        <img src="images/lomo_5.jpg" alt="lomo_5">
-        <img src="images/lomo_6.jpg" alt="lomo_6">
-      </div>
-    </div>
+    <div class="innerCarrusel" id="lomoInner"></div>
     <div class="item">
       <div>
         <span class="itemNombre">Lomo común</span>
@@ -241,18 +226,10 @@
   <input type="checkbox" id="milas">
   <label for="milas" class="accordion-label">
     Milanesas
+    <img class="labelImagen" src="images/mila_1.jpg" alt="mila">
   </label>
   <div class="accordion-content">
-    <div class="innerCarrusel">
-      <div class="track">
-        <img src="images/mila_1.jpg" alt="mila_1">
-        <img src="images/mila_2.jpg" alt="mila_2">
-        <img src="images/mila_3.jpg" alt="mila_3">
-        <img src="images/mila_4.jpg" alt="mila_4">
-        <img src="images/mila_5.jpg" alt="mila_5">
-        <img src="images/mila_6.jpg" alt="mila_6">
-      </div>
-    </div>
+    <div class="innerCarrusel" id="milaInner"></div>
     <div class="item">
       <div>
         <span class="itemNombre">Mila especial</span>
@@ -297,18 +274,10 @@
   <input type="checkbox" id="zappin">
   <label for="zappin" class="accordion-label">
     Hamburguesas Zappin
+    <img class="labelImagen" src="images/hamb_1.jpg" alt="zappin">
   </label>
   <div class="accordion-content">
-    <div class="innerCarrusel">
-      <div class="track">
-        <img src="images/hamb_1.jpg" alt="zappin_1">
-        <img src="images/hamb_2.jpg" alt="zappin_2">
-        <img src="images/hamb_3.jpg" alt="zappin_3">
-        <img src="images/hamb_4.jpg" alt="zappin_4">
-        <img src="images/hamb_5.jpg" alt="zappin_5">
-        <img src="images/hamb_6.jpg" alt="zappin_6">
-      </div>
-    </div>
+    <div class="innerCarrusel" id="zappinInner"></div>
     <div class="item">
       <div>
         <span class="itemNombre">Hamburg. Zapping común</span>
@@ -353,18 +322,10 @@
   <input type="checkbox" id="patys">
   <label for="patys" class="accordion-label">
     Patys
+    <img class="labelImagen" src="images/patys_1.jpg" alt="patys">
   </label>
   <div class="accordion-content">
-    <div class="innerCarrusel">
-      <div class="track">
-        <img src="images/patys_1.jpg" alt="patys_1">
-        <img src="images/patys_2.jpg" alt="patys_2">
-        <img src="images/patys_3.jpg" alt="patys_3">
-        <img src="images/patys_4.jpg" alt="patys_4">
-        <img src="images/patys_5.jpg" alt="patys_5">
-        <img src="images/patys_6.jpg" alt="patys_6">
-      </div>
-    </div>
+    <div class="innerCarrusel" id="patysInner"></div>
     <div class="item">
       <div>
         <span class="itemNombre">Paty Especial</span>
@@ -456,6 +417,41 @@ const NUMERO_WHATSAPP = 543834619831;
 let carrito = [];
 let tempProducto = null;
 
+// ---------- UTILS ----------
+function existeImagen(src) {
+  const img = new Image();
+  img.src = src;
+  return img.height !== 0;
+}
+function armarCarrusel(innerId, baseNombre, max = 6) {
+  const inner = document.getElementById(innerId);
+  let html = '';
+  let cuenta = 0;
+  for (let i = 1; i <= max; i++) {
+    const ruta = `images/${baseNombre}_${i}.jpg`;
+    if (existeImagen(ruta)) {
+      html += `<img src="${ruta}" alt="${baseNombre}_${i}">`;
+      cuenta++;
+    }
+  }
+  if (cuenta < 2) {
+    // Si hay 0 o 1 foto → mostramos solo la fija sin carrusel
+    inner.style.display = 'none';
+  } else {
+    inner.querySelector('.track').innerHTML = html;
+  }
+}
+
+// ---------- INICIALIZAR CARRUSELES INTERNOS ----------
+window.addEventListener('DOMContentLoaded', () => {
+  armarCarrusel('pizzaInner', 'pizza');
+  armarCarrusel('lomoInner', 'lomo');
+  armarCarrusel('milaInner', 'mila');
+  armarCarrusel('zappinInner', 'hamb');
+  armarCarrusel('patysInner', 'patys');
+});
+
+// ---------- CARRITO ----------
 function confirmar(nombre, precio) {
   tempProducto = { nombre, precio };
   document.getElementById('modalConfirm').classList.remove('oculto');
