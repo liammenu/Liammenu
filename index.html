@@ -23,46 +23,58 @@
   @keyframes slideInfinito{0%{transform:translateX(0)}100%{transform:translateX(-600%)}}
   header h1{position:relative;z-index:1;font-family:var(--fuente-tit);font-size:4rem;color:var(--rojo);text-transform:uppercase;letter-spacing:3px;text-shadow:3px 3px 0 #000;}
   header p{position:relative;z-index:1;margin-top:.5rem;font-size:1.2rem;}
-  .accordion{width:100%;max-width:720px;margin:auto;padding:0 1rem 3rem;}
+  .accordion{width:100%;max-width:720px;margin:auto;padding:0 1rem 3rem;position:relative;}
   .accordion input{position:absolute;opacity:0;z-index:-1;}
-  .accordion-label{position:relative;display:flex;justify-content:space-between;align-items:center;padding:1rem;font-family:var(--fuente-tit);font-size:1.6rem;background:var(--amarillo);border-bottom:3px solid var(--rojo);cursor:pointer;overflow:hidden;}
-  .labelImagen{position:absolute;inset:0;z-index:-1;width:100%;height:100%;object-fit:cover;opacity:.3;}
-  .accordion-label::after{content:"+";font-size:1.8rem;transition:transform .3s;z-index:2;}
+  .accordion-label{position:relative;display:flex;justify-content:space-between;align-items:center;padding:1rem;font-family:var(--fuente-tit);font-size:1.6rem;background:var(--amarillo);border-bottom:3px solid var(--rojo);cursor:pointer;z-index:2;}
+  .section-background{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;overflow:hidden;border-radius:8px;opacity:0;transition:opacity 0.5s ease;}
+  .accordion input:checked ~ .section-background{opacity:1;}
+  .section-background img{width:100%;height:100%;object-fit:cover;}
+  .section-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(245,240,225,0.85);z-index:2;}
+  .accordion-label::after{content:"+";font-size:1.8rem;transition:transform .3s;z-index:2;color:var(--rojo);background:rgba(255,255,255,0.7);width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:50%;}
   .accordion input:checked + .accordion-label::after{transform:rotate(45deg);}
-  .accordion-content{max-height:0;overflow:hidden;transition:max-height .4s ease;padding:0 1rem;}
-  .accordion input:checked ~ .accordion-content{max-height:2000px;padding:1rem 0;}
+  .accordion-content{max-height:0;overflow:hidden;transition:max-height .4s ease;padding:0 1rem;position:relative;z-index:3;}
+  .accordion input:checked ~ .accordion-content{max-height:2000px;padding:1rem 0;background:rgba(245,240,225,0.95);border-radius:0 0 8px 8px;}
   .item{display:flex;align-items:flex-start;justify-content:space-between;padding:.5rem 0;border-bottom:1px dashed var(--letra);}
   .itemNombre{flex:1;font-family:var(--fuente-tit);font-size:1.1rem;}
   .itemDesc{font-size:.8rem;font-weight:400;margin-top:.2rem;color:#444;}
   .puntos{border-bottom:2px dotted var(--letra);flex:1;margin:0 .5rem;opacity:.6;align-self:center;}
   .precioBox{background:#000;color:var(--amarillo);padding:.2rem .6rem;border-radius:4px;font-weight:700;font-size:1.3rem;white-space:nowrap;align-self:center;}
-  .btnAgregar{background:var(--rojo);color:#fff;border:none;padding:.3rem .6rem;border-radius:4px;margin-left:.5rem;cursor:pointer;font-family:var(--fuente-cuerpo);}
+  .btnAgregar{background:var(--rojo);color:#fff;border:none;padding:.3rem .6rem;border-radius:4px;margin-left:.5rem;cursor:pointer;font-family:var(--fuente-cuerpo);transition:background 0.2s;}
   .btnAgregar:hover{background:#c20023;}
-  .carrito{position:fixed;bottom:1rem;right:1rem;background:#000;color:var(--amarillo);padding:.7rem 1rem;border-radius:30px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3);}
+  .carrito{position:fixed;bottom:1rem;right:1rem;background:#000;color:var(--amarillo);padding:.7rem 1rem;border-radius:30px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3);z-index:10;transition:transform 0.2s;}
+  .carrito:hover{transform:scale(1.05);}
   .carrito span{background:var(--amarillo);color:#000;border-radius:50%;padding:.2rem .5rem;margin-left:.3rem;}
-  .editarBtn{position:fixed;bottom:1rem;right:8.5rem;background:var(--rojo);color:#fff;border:none;padding:.4rem .8rem;border-radius:20px;font-weight:700;cursor:pointer;display:none;}
-  .totalBadge{position:fixed;bottom:1rem;left:1rem;background:var(--amarillo);color:#000;padding:.4rem .8rem;border-radius:20px;font-weight:700;}
-  footer{position:relative;z-index:1;text-align:center;padding:2rem 1rem;font-size:.8rem;font-family:var(--fuente-tit);}
+  .editarBtn{position:fixed;bottom:1rem;right:8.5rem;background:var(--rojo);color:#fff;border:none;padding:.4rem .8rem;border-radius:20px;font-weight:700;cursor:pointer;display:none;z-index:10;transition:background 0.2s;}
+  .editarBtn:hover{background:#b0001f;}
+  .totalBadge{position:fixed;bottom:1rem;left:1rem;background:var(--amarillo);color:#000;padding:.4rem .8rem;border-radius:20px;font-weight:700;z-index:10;box-shadow:0 2px 5px rgba(0,0,0,0.2);}
+  footer{position:relative;z-index:1;text-align:center;padding:2rem 1rem;font-size:.8rem;font-family:var(--fuente-tit);margin-top:2rem;}
   /* Modal confirmación */
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:9999;}
   .modal.oculto{display:none;}
-  .modalContent{background:var(--fondo);padding:1.5rem 2rem;border-radius:8px;text-align:center;font-family:var(--fuente-tit);}
-  .modalContent h3{margin-bottom:1rem;font-size:1.3rem;}
-  .modalContent button{margin:.5rem;padding:.5rem 1rem;font-size:1rem;border:none;border-radius:4px;cursor:pointer;}
+  .modalContent{background:var(--fondo);padding:1.5rem 2rem;border-radius:8px;text-align:center;font-family:var(--fuente-tit);max-width:90%;box-shadow:0 4px 20px rgba(0,0,0,0.3);}
+  .modalContent h3{margin-bottom:1rem;font-size:1.3rem;color:var(--rojo);}
+  .modalContent button{margin:.5rem;padding:.5rem 1rem;font-size:1rem;border:none;border-radius:4px;cursor:pointer;transition:background 0.2s;}
   .modalContent .si{background:var(--rojo);color:#fff;}
+  .modalContent .si:hover{background:#c20023;}
   .modalContent .no{background:#ccc;color:#000;}
+  .modalContent .no:hover{background:#bbb;}
   /* Editor carrito */
   .editorModal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:9999;}
   .editorModal.oculto{display:none;}
-  .editorContent{background:var(--fondo);padding:1.5rem;border-radius:8px;max-width:400px;width:90%;max-height:70vh;overflow-y:auto;font-family:var(--fuente-cuerpo);}
-  .editorContent h3{margin-bottom:1rem;font-family:var(--fuente-tit);}
-  .editorItem{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;}
-  .editorItem button{background:#000;color:var(--amarillo);border:none;padding:.2rem .5rem;border-radius:4px;cursor:pointer;}
-  /* Carrusel interno opcional */
-  .innerCarrusel{position:relative;width:100%;height:160px;display:flex;overflow:hidden;border-radius:8px;margin-bottom:.5rem;}
-  .innerCarrusel .track{display:flex;width:600%;animation:innerSlide 18s infinite linear;}
-  .innerCarrusel .track img{width:calc(100% / 6);height:100%;object-fit:cover;}
-  @keyframes innerSlide{0%{transform:translateX(0)}100%{transform:translateX(-83.333%)}}
+  .editorContent{background:var(--fondo);padding:1.5rem;border-radius:8px;max-width:400px;width:90%;max-height:70vh;overflow-y:auto;font-family:var(--fuente-cuerpo);box-shadow:0 4px 20px rgba(0,0,0,0.3);}
+  .editorContent h3{margin-bottom:1rem;font-family:var(--fuente-tit);color:var(--rojo);}
+  .editorItem{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;padding:0.5rem;background:rgba(0,0,0,0.05);border-radius:4px;}
+  .editorItem button{background:#000;color:var(--amarillo);border:none;padding:.2rem .5rem;border-radius:4px;cursor:pointer;transition:background 0.2s;}
+  .editorItem button:hover{background:#333;}
+  
+  /* Mejoras para móviles */
+  @media (max-width: 600px) {
+    header h1{font-size:3rem;}
+    .accordion-label{font-size:1.4rem;}
+    .itemNombre{font-size:1rem;}
+    .precioBox{font-size:1.1rem;}
+    .editarBtn{right:7.5rem;}
+  }
   </style>
 </head>
 <body>
@@ -83,12 +95,12 @@
 <!-- PIZZAS -->
 <div class="accordion">
   <input type="checkbox" id="pizzas" checked>
-  <label for="pizzas" class="accordion-label">
-    Pizzas
-    <img class="labelImagen" src="images/pizza_1.jpg" alt="pizza">
-  </label>
+  <label for="pizzas" class="accordion-label">Pizzas</label>
+  <div class="section-background">
+    <img src="images/pizza_1.jpg" alt="pizza">
+    <div class="section-overlay"></div>
+  </div>
   <div class="accordion-content">
-    <div class="innerCarrusel" id="pizzaInner"></div>
     <div class="item">
       <div>
         <span class="itemNombre">Muzzarela</span>
@@ -158,12 +170,12 @@
 <!-- LOMOS -->
 <div class="accordion">
   <input type="checkbox" id="lomos">
-  <label for="lomos" class="accordion-label">
-    Lomos
-    <img class="labelImagen" src="images/lomo_1.jpg" alt="lomo">
-  </label>
+  <label for="lomos" class="accordion-label">Lomos</label>
+  <div class="section-background">
+    <img src="images/lomo_1.jpg" alt="lomo">
+    <div class="section-overlay"></div>
+  </div>
   <div class="accordion-content">
-    <div class="innerCarrusel" id="lomoInner"></div>
     <div class="item">
       <div>
         <span class="itemNombre">Lomo común</span>
@@ -224,12 +236,12 @@
 <!-- MILANESAS -->
 <div class="accordion">
   <input type="checkbox" id="milas">
-  <label for="milas" class="accordion-label">
-    Milanesas
-    <img class="labelImagen" src="images/mila_1.jpg" alt="mila">
-  </label>
+  <label for="milas" class="accordion-label">Milanesas</label>
+  <div class="section-background">
+    <img src="images/mila_1.jpg" alt="mila">
+    <div class="section-overlay"></div>
+  </div>
   <div class="accordion-content">
-    <div class="innerCarrusel" id="milaInner"></div>
     <div class="item">
       <div>
         <span class="itemNombre">Mila especial</span>
@@ -272,12 +284,12 @@
 <!-- HAMBURGUESAS ZAPPIN -->
 <div class="accordion">
   <input type="checkbox" id="zappin">
-  <label for="zappin" class="accordion-label">
-    Hamburguesas Zappin
-    <img class="labelImagen" src="images/hamb_1.jpg" alt="zappin">
-  </label>
+  <label for="zappin" class="accordion-label">Hamburguesas Zappin</label>
+  <div class="section-background">
+    <img src="images/hamb_1.jpg" alt="zappin">
+    <div class="section-overlay"></div>
+  </div>
   <div class="accordion-content">
-    <div class="innerCarrusel" id="zappinInner"></div>
     <div class="item">
       <div>
         <span class="itemNombre">Hamburg. Zapping común</span>
@@ -320,12 +332,12 @@
 <!-- PATYS -->
 <div class="accordion">
   <input type="checkbox" id="patys">
-  <label for="patys" class="accordion-label">
-    Patys
-    <img class="labelImagen" src="images/patys_1.jpg" alt="patys">
-  </label>
+  <label for="patys" class="accordion-label">Patys</label>
+  <div class="section-background">
+    <img src="images/patys_1.jpg" alt="patys">
+    <div class="section-overlay"></div>
+  </div>
   <div class="accordion-content">
-    <div class="innerCarrusel" id="patysInner"></div>
     <div class="item">
       <div>
         <span class="itemNombre">Paty Especial</span>
@@ -416,40 +428,6 @@
 const NUMERO_WHATSAPP = 543834619831;
 let carrito = [];
 let tempProducto = null;
-
-// ---------- UTILS ----------
-function existeImagen(src) {
-  const img = new Image();
-  img.src = src;
-  return img.height !== 0;
-}
-function armarCarrusel(innerId, baseNombre, max = 6) {
-  const inner = document.getElementById(innerId);
-  let html = '';
-  let cuenta = 0;
-  for (let i = 1; i <= max; i++) {
-    const ruta = `images/${baseNombre}_${i}.jpg`;
-    if (existeImagen(ruta)) {
-      html += `<img src="${ruta}" alt="${baseNombre}_${i}">`;
-      cuenta++;
-    }
-  }
-  if (cuenta < 2) {
-    // Si hay 0 o 1 foto → mostramos solo la fija sin carrusel
-    inner.style.display = 'none';
-  } else {
-    inner.querySelector('.track').innerHTML = html;
-  }
-}
-
-// ---------- INICIALIZAR CARRUSELES INTERNOS ----------
-window.addEventListener('DOMContentLoaded', () => {
-  armarCarrusel('pizzaInner', 'pizza');
-  armarCarrusel('lomoInner', 'lomo');
-  armarCarrusel('milaInner', 'mila');
-  armarCarrusel('zappinInner', 'hamb');
-  armarCarrusel('patysInner', 'patys');
-});
 
 // ---------- CARRITO ----------
 function confirmar(nombre, precio) {
