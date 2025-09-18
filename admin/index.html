@@ -2,66 +2,16 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin - LIAM BURGER</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel</title>
+  <script src="https://unpkg.com/@staticcms/app@^4.0.0/dist/static-cms-app.js"></script>
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: sans-serif;
-    }
-    .cms-container {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+    body { margin: 0; font-family: sans-serif; }
   </style>
 </head>
 <body>
-  <div class="cms-container" id="cms-root"></div>
-  
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   <script>
-    window.CMS_CONFIG = {
-      backend: {
-        name: 'netlify',
-        site_domain: 'liammenu.netlify.app',
-      },
-      media_folder: "images/uploads",
-      public_folder: "/images/uploads",
-      collections: [
-        {
-          name: "menu",
-          label: "Secciones del Menú",
-          folder: "_data",
-          create: true,
-          fields: [
-            { label: "Título", name: "title", widget: "string" },
-            { label: "Orden", name: "order", widget: "number" },
-            { label: "Imagen de fondo", name: "background_image", widget: "image" },
-            { label: "Color", name: "color", widget: "select", options: ["amarillo", "rojo"] }
-          ]
-        },
-        {
-          name: "products",
-          label: "Productos",
-          folder: "_products",
-          create: true,
-          nested: {
-            depth: 2
-          },
-          fields: [
-            { label: "Título", name: "title", widget: "string" },
-            { label: "Categoría", name: "category", widget: "select", options: ["pizzas", "lomos", "milanesas", "zappin", "patys", "ofertas"] },
-            { label: "Precio", name: "price", widget: "number" },
-            { label: "Descripción", name: "description", widget: "text", required: false },
-            { label: "Imagen", name: "image", widget: "image", required: false },
-            { label: "Disponible", name: "available", widget: "boolean", default: true },
-            { label: "Orden", name: "order", widget: "number", default: 0 }
-          ]
-        }
-      ]
-    };
+    window.CMS.init();
   </script>
 </body>
 </html>
