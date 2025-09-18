@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin - LIAM BURGER</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+    }
+    .cms-container {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <div class="cms-container" id="cms-root"></div>
+  
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <script>
+    window.CMS_CONFIG = {
+      backend: {
+        name: 'netlify',
+        site_domain: 'liammenu.netlify.app',
+      },
+      media_folder: "images/uploads",
+      public_folder: "/images/uploads",
+      collections: [
+        {
+          name: "products",
+          label: "Productos",
+          folder: "_products",
+          create: true,
+          fields: [
+            { label: "Título", name: "title", widget: "string" },
+            { label: "Categoría", name: "category", widget: "select", options: ["pizzas", "lomos", "milanesas", "zappin", "patys", "ofertas"] },
+            { label: "Precio", name: "price", widget: "number" },
+            { label: "Descripción", name: "description", widget: "text", required: false },
+            { label: "Imagen", name: "image", widget: "image", required: false },
+            { label: "Disponible", name: "available", widget: "boolean", default: true },
+            { label: "Orden", name: "order", widget: "number", default: 0 }
+          ]
+        }
+      ]
+    };
+  </script>
+</body>
+</html>
