@@ -1,7 +1,8 @@
 backend:
   name: git-gateway
   branch: main # Rama principal de tu repositorio
-  repo: liammenu/Liammenu # Aquí debes poner tu usuario de GitHub y el nombre de tu repositorio
+  repo: liammenu/Liammenu # Reemplaza con tu usuario de GitHub y el nombre de tu repositorio
+  site_domain: liammenu.netlify.app # Tu dominio de Netlify
 
 media_folder: "images/uploads" # Carpeta para las imágenes que subas desde Decap CMS
 public_folder: "/images/uploads" # Ruta pública para acceder a esas imágenes
