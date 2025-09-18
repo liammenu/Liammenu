@@ -31,10 +31,25 @@
       public_folder: "/images/uploads",
       collections: [
         {
+          name: "menu",
+          label: "Secciones del Menú",
+          folder: "_data",
+          create: true,
+          fields: [
+            { label: "Título", name: "title", widget: "string" },
+            { label: "Orden", name: "order", widget: "number" },
+            { label: "Imagen de fondo", name: "background_image", widget: "image" },
+            { label: "Color", name: "color", widget: "select", options: ["amarillo", "rojo"] }
+          ]
+        },
+        {
           name: "products",
           label: "Productos",
           folder: "_products",
           create: true,
+          nested: {
+            depth: 2
+          },
           fields: [
             { label: "Título", name: "title", widget: "string" },
             { label: "Categoría", name: "category", widget: "select", options: ["pizzas", "lomos", "milanesas", "zappin", "patys", "ofertas"] },
