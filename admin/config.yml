@@ -1,34 +1,19 @@
 backend:
   name: git-gateway
-  branch: main # Rama principal de tu repositorio
-  repo: liammenu/Liammenu # Reemplaza con tu usuario de GitHub y el nombre de tu repositorio
-  site_domain: liammenu.netlify.app # Tu dominio de Netlify
+  branch: main
 
-media_folder: "images/uploads" # Carpeta para las imágenes que subas desde Decap CMS
-public_folder: "/images/uploads" # Ruta pública para acceder a esas imágenes
+media_folder: "images"
+public_folder: "/images"
 
 collections:
-  - name: "menu"
-    label: "Secciones del Menú"
-    folder: "_data"
-    create: true
-    fields:
-      - { label: "Título", name: "title", widget: "string" }
-      - { label: "Orden", name: "order", widget: "number" }
-      - { label: "Imagen de fondo", name: "background_image", widget: "image" }
-      - { label: "Color", name: "color", widget: "select", options: ["amarillo", "rojo"] }
-  
-  - name: "products"
+  - name: "productos"
     label: "Productos"
-    folder: "_products"
+    folder: "_data/productos"
     create: true
-    nested:
-      depth: 2
     fields:
-      - { label: "Título", name: "title", widget: "string" }
-      - { label: "Categoría", name: "category", widget: "select", options: ["pizzas", "lomos", "milanesas", "zappin", "patys", "ofertas"] }
-      - { label: "Precio", name: "price", widget: "number" }
-      - { label: "Descripción", name: "description", widget: "text", required: false }
-      - { label: "Imagen", name: "image", widget: "image", required: false }
-      - { label: "Disponible", name: "available", widget: "boolean", default: true }
-      - { label: "Orden", name: "order", widget: "number", default: 0 }
+      - { name: "title", label: "Título", widget: "string" }
+      - { name: "price", label: "Precio", widget: "number" }
+      - { name: "image", label: "Imagen", widget: "image" }
+      - { name: "description", label: "Descripción", widget: "text" }
+      - { name: "categoria", label: "Categoría", widget: "select", options: ["OFERTAS", "PIZZAS", "LOMOS", "MILANESAS", "ZAPPIN Y PAPAS", "PATYS"] }
+      - { name: "disponible", label: "Disponible", widget: "boolean", default: true }
