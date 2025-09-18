@@ -5,7 +5,7 @@
   <title>LIAM BURGER - Carta 70's</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Carta retro 70's de LIAM BURGER - Delivery de hamburguesas, pizzas, lomos, milanesas y patys." />
-  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Oswald:wght@700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Oswald:wght@900&display=swap" rel="stylesheet" />
   <style>
   :root{
     --fondo:#f5f0e1;
@@ -26,8 +26,8 @@
   .accordion{width:100%;max-width:100%;margin:auto;padding:0 0 1rem;position:relative;}
   .accordion.ofertas-accordion{padding:0 0 1rem;}
   .accordion input{position:absolute;opacity:0;z-index:-1;}
-  .accordion-label{position:relative;display:flex;justify-content:space-between;align-items:center;padding:1rem;font-family:var(--fuente-tit);font-size:1.6rem;background:var(--amarillo);border-bottom:3px solid var(--rojo);cursor:pointer;z-index:2;overflow:hidden;}
-  .accordion-label.ofertas{background:var(--rojo);color:var(--amarillo);font-size:1.8rem;font-weight:900;}
+  .accordion-label{position:relative;display:flex;justify-content:space-between;align-items:center;padding:1rem;font-family:var(--fuente-tit);font-size:1.84rem;background:var(--amarillo);border-bottom:3px solid var(--rojo);cursor:pointer;z-index:2;overflow:hidden;font-weight:900;}
+  .accordion-label.ofertas{background:var(--rojo);color:var(--amarillo);font-size:2.07rem;font-weight:900;}
   .labelImagen{position:absolute;inset:0;z-index:-1;width:100%;height:100%;object-fit:cover;opacity:1;}
   .section-background{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;overflow:hidden;opacity:0;transition:opacity 0.5s ease;}
   .accordion input:checked ~ .section-background{opacity:1;}
@@ -55,12 +55,17 @@
   .precioBox{background:#000;color:var(--amarillo);padding:.2rem .6rem;border-radius:4px;font-weight:700;font-size:1.3rem;white-space:nowrap;align-self:center;}
   .btnAgregar{background:var(--rojo);color:#fff;border:none;padding:.3rem .6rem;border-radius:4px;margin-left:.5rem;cursor:pointer;font-family:var(--fuente-cuerpo);transition:background 0.2s;align-self:center;}
   .btnAgregar:hover{background:#c20023;}
-  .carrito{position:fixed;bottom:1rem;right:1rem;background:#000;color:var(--amarillo);padding:.7rem 1rem;border-radius:30px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3);z-index:100;transition:transform 0.2s;}
+  .carrito{position:fixed;bottom:1rem;right:1rem;background:#000;color:var(--amarillo);padding:.7rem 1rem;border-radius:30px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3);z-index:1000;transition:transform 0.2s;}
   .carrito:hover{transform:scale(1.05);}
   .carrito span{background:var(--amarillo);color:#000;border-radius:50%;padding:.2rem .5rem;margin-left:.3rem;}
-  .editarBtn{position:fixed;bottom:1rem;right:8.5rem;background:var(--rojo);color:#fff;border:none;padding:.4rem .8rem;border-radius:20px;font-weight:700;cursor:pointer;display:none;z-index:100;transition:background 0.2s;}
+  .editarBtn{position:fixed;bottom:1rem;right:8.5rem;background:var(--rojo);color:#fff;border:none;padding:.4rem .8rem;border-radius:20px;font-weight:700;cursor:pointer;display:none;z-index:1000;transition:background 0.2s;transform: translateY(0);}
   .editarBtn:hover{background:#b0001f;}
-  .totalBadge{position:fixed;bottom:1rem;left:1rem;background:var(--amarillo);color:#000;padding:.4rem .8rem;border-radius:20px;font-weight:700;z-index:100;box-shadow:0 2px 5px rgba(0,0,0,0.2);}
+  .editarBtn.visible{display:block;animation:fadeIn 0.3s ease-in-out;}
+  @keyframes fadeIn{
+    from{opacity:0;transform: translateY(10px);}
+    to{opacity:1;transform: translateY(0);}
+  }
+  .totalBadge{position:fixed;bottom:1rem;left:1rem;background:var(--amarillo);color:#000;padding:.4rem .8rem;border-radius:20px;font-weight:700;z-index:1000;box-shadow:0 2px 5px rgba(0,0,0,0.2);}
   footer{position:relative;z-index:1;text-align:center;padding:2rem 1rem;font-size:.8rem;font-family:var(--fuente-tit);margin-top:2rem;}
   /* Modal confirmación */
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:9999;}
@@ -87,6 +92,23 @@
   /* Estilo para separador de categorías */
   .separadorCategoria{margin:1rem 0;text-align:center;font-family:var(--fuente-tit);font-size:1.2rem;color:var(--rojo);font-weight:900;}
   
+  /* Estilos para productos no disponibles */
+  .item.no-disponible {
+    opacity: 0.6;
+    background: rgba(255, 200, 200, 0.3);
+  }
+  
+  .no-disponible-label {
+    background: var(--rojo);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-top: 5px;
+    display: inline-block;
+  }
+  
   /* Mejoras para móviles */
   @media (max-width: 600px) {
     header h1{font-size:3.5rem;}
@@ -108,7 +130,7 @@
 </header>
 
 <!-- OFERTAS -->
-<div class="accordion ofertas-accordion">
+<div class="accordion ofertas-accordion" id="ofertas-section">
   <input type="checkbox" id="ofertas">
   <label for="ofertas" class="accordion-label ofertas">OFERTAS</label>
   <div class="section-background">
@@ -118,74 +140,12 @@
     <div class="section-overlay"></div>
   </div>
   <div class="accordion-content">
-    <div class="item">
-      <div>
-        <span class="itemNombre">Dos muzzas</span>
-        <div class="itemDesc">2 pizzas de muzzarella</div>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$13.000</span>
-      <button class="btnAgregar" onclick="confirmar('Dos muzzas',13000)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Muzza + Especial</span>
-        <div class="itemDesc">1 pizza muzzarella + 1 pizza especial</div>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$14.000</span>
-      <button class="btnAgregar" onclick="confirmar('Muzza + Especial',14000)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Argentina + Calabresa</span>
-        <div class="itemDesc">1 pizza argentina + 1 pizza calabresa</div>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$17.000</span>
-      <button class="btnAgregar" onclick="confirmar('Argentina + Calabresa',17000)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Dos especiales</span>
-        <div class="itemDesc">2 pizzas especiales</div>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$15.000</span>
-      <button class="btnAgregar" onclick="confirmar('Dos especiales',15000)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Pizza mixta</span>
-        <div class="itemDesc">Pizza con ingredientes variados</div>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$10.000</span>
-      <button class="btnAgregar" onclick="confirmar('Pizza mixta',10000)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Dos Patys especial</span>
-        <div class="itemDesc">2 Patys especial</div>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$9.000</span>
-      <button class="btnAgregar" onclick="confirmar('Dos Patys especial',9000)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Dos Patys a elección</span>
-        <div class="itemDesc">2 Patys a elección</div>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$10.500</span>
-      <button class="btnAgregar" onclick="confirmar('Dos Patys a elección',10500)">+</button>
-    </div>
+    <!-- Los productos se cargarán dinámicamente desde Decap CMS -->
   </div>
 </div>
 
 <!-- PIZZAS -->
-<div class="accordion">
+<div class="accordion" id="pizzas-section">
   <input type="checkbox" id="pizzas" checked>
   <label for="pizzas" class="accordion-label">
     Pizzas
@@ -198,67 +158,12 @@
     <div class="section-overlay"></div>
   </div>
   <div class="accordion-content">
-    <div class="item">
-      <div>
-        <span class="itemNombre">Muzzarela</span>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$7.000</span>
-      <button class="btnAgregar" onclick="confirmar('Muzzarela',7000)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Especial</span>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$8.000</span>
-      <button class="btnAgregar" onclick="confirmar('Especial',8000)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Napolitana</span>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$7.500</span>
-      <button class="btnAgregar" onclick="confirmar('Napolitana',7500)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Napolitana Especial</span>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$8.000</span>
-      <button class="btnAgregar" onclick="confirmar('Napolitana Especial',8000)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Argentina</span>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$10.000</span>
-      <button class="btnAgregar" onclick="confirmar('Argentina',10000)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Calabresa</span>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$8.000</span>
-      <button class="btnAgregar" onclick="confirmar('Calabresa',8000)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Fugazzeta</span>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$8.000</span>
-      <button class="btnAgregar" onclick="confirmar('Fugazzeta',8000)">+</button>
-    </div>
+    <!-- Los productos se cargarán dinámicamente desde Decap CMS -->
   </div>
 </div>
 
 <!-- LOMOS -->
-<div class="accordion">
+<div class="accordion" id="lomos-section">
   <input type="checkbox" id="lomos">
   <label for="lomos" class="accordion-label">
     Lomos
@@ -271,59 +176,12 @@
     <div class="section-overlay"></div>
   </div>
   <div class="accordion-content">
-    <div class="item">
-      <div>
-        <span class="itemNombre">Lomo común</span>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$7.000</span>
-      <button class="btnAgregar" onclick="confirmar('Lomo común',7000)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Lomo especial</span>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$8.000</span>
-      <button class="btnAgregar" onclick="confirmar('Lomo especial',8000)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Lomazo especial</span>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$15.000</span>
-      <button class="btnAgregar" onclick="confirmar('Lomazo especial',15000)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Lomo pizza Completo</span>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$27.000</span>
-      <button class="btnAgregar" onclick="confirmar('Lomo pizza Completo',27000)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">1/2 Lomo Pizza</span>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$15.000</span>
-      <button class="btnAgregar" onclick="confirmar('1/2 Lomo Pizza',15000)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Lomo montado</span>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$9.000</span>
-      <button class="btnAgregar" onclick="confirmar('Lomo montado',9000)">+</button>
-    </div>
+    <!-- Los productos se cargarán dinámicamente desde Decap CMS -->
   </div>
 </div>
 
 <!-- MILANESAS -->
-<div class="accordion">
+<div class="accordion" id="milas-section">
   <input type="checkbox" id="milas">
   <label for="milas" class="accordion-label">
     Milanesas
@@ -336,47 +194,16 @@
     <div class="section-overlay"></div>
   </div>
   <div class="accordion-content">
-    <div class="item">
-      <div>
-        <span class="itemNombre">Mila especial</span>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$8.000</span>
-      <button class="btnAgregar" onclick="confirmar('Mila especial',8000)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Mila Grande</span>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$15.000</span>
-      <button class="btnAgregar" onclick="confirmar('Mila Grande',15000)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Mila Napo</span>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$8.500</span>
-      <button class="btnAgregar" onclick="confirmar('Mila Napo',8500)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Mila a caballo</span>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$8.000</span>
-      <button class="btnAgregar" onclick="confirmar('Mila a caballo',8000)">+</button>
-    </div>
+    <!-- Los productos se cargarán dinámicamente desde Decap CMS -->
   </div>
 </div>
 
 <!-- ZAPPIN Y PAPAS -->
-<div class="accordion">
+<div class="accordion" id="zappin-section">
   <input type="checkbox" id="zappin">
   <label for="zappin" class="accordion-label">
     Zappin y Papas
-    <img class="labelImagen" src="images/hamb_3.jpg" alt="zappin">
+    <img class="labelImagen" src="images/hamb_4.jpg" alt="zappin">
   </label>
   <div class="section-background">
     <div class="carrusel" id="hambCarrusel">
@@ -385,62 +212,13 @@
     <div class="section-overlay"></div>
   </div>
   <div class="accordion-content">
-    <div class="item">
-      <div>
-        <span class="itemNombre">Zapping común</span>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$6.500</span>
-      <button class="btnAgregar" onclick="confirmar('Zapping común',6500)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Zapping especial</span>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$7.500</span>
-      <button class="btnAgregar" onclick="confirmar('Zapping especial',7500)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Hamburpizza</span>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$9.000</span>
-      <button class="btnAgregar" onclick="confirmar('Hamburpizza',9000)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Nueva Zapping Doble Super Especial</span>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$11.000</span>
-      <button class="btnAgregar" onclick="confirmar('Nueva Zapping Doble Super Especial',11000)">+</button>
-    </div>
-    
+    <!-- Los productos se cargarán dinámicamente desde Decap CMS -->
     <div class="separadorCategoria">PAPAS</div>
-    
-    <div class="item">
-      <div>
-        <span class="itemNombre">Papas comunes</span>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$2.000</span>
-      <button class="btnAgregar" onclick="confirmar('Papas comunes',2000)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Papas con cheddar</span>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$3.000</span>
-      <button class="btnAgregar" onclick="confirmar('Papas con cheddar',3000)">+</button>
-    </div>
   </div>
 </div>
 
 <!-- PATYS -->
-<div class="accordion">
+<div class="accordion" id="patys-section">
   <input type="checkbox" id="patys">
   <label for="patys" class="accordion-label">
     Patys
@@ -453,60 +231,7 @@
     <div class="section-overlay"></div>
   </div>
   <div class="accordion-content">
-    <div class="item">
-      <div>
-        <span class="itemNombre">Paty Especial</span>
-        <div class="itemDesc">Lechuga, tomate, medallón de Paty, jamón, queso, huevo, mayo casera</div>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$5.000</span>
-      <button class="btnAgregar" onclick="confirmar('Paty Especial',5000)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Paty Liam</span>
-        <div class="itemDesc">Lechuga, tomate, medallón de Paty, cebolla caramelizada, bacon, huevo, cheddar, mayo casera</div>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$6.500</span>
-      <button class="btnAgregar" onclick="confirmar('Paty Liam',6500)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Paty Cheddar</span>
-        <div class="itemDesc">Lechuga, tomate, medallón de Paty, doble cheddar, mayo casera</div>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$5.000</span>
-      <button class="btnAgregar" onclick="confirmar('Paty Cheddar',5000)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Paty Bacon</span>
-        <div class="itemDesc">Lechuga, tomate, medallón de Paty, cheddar, bacon, cebolla morada, mayo casera</div>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$6.000</span>
-      <button class="btnAgregar" onclick="confirmar('Paty Bacon',6000)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Paty BBQ</span>
-        <div class="itemDesc">Salsa BBQ, cheddar, salteado de morrón, medallón de Paty, huevo</div>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$5.500</span>
-      <button class="btnAgregar" onclick="confirmar('Paty BBQ',5500)">+</button>
-    </div>
-    <div class="item">
-      <div>
-        <span class="itemNombre">Paty Criolla</span>
-        <div class="itemDesc">Lechuga, tomate, salsa criolla, medallón de Paty, mostaza, mayo casera</div>
-      </div>
-      <span class="puntos"></span>
-      <span class="precioBox">$4.500</span>
-      <button class="btnAgregar" onclick="confirmar('Paty Criolla',4500)">+</button>
-    </div>
+    <!-- Los productos se cargarán dinámicamente desde Decap CMS -->
     <div class="leyendaPatys">¡Todo con papas + pote de mayo!</div>
   </div>
 </div>
@@ -613,7 +338,70 @@ async function cargarImagenesCarrusel(contenedorId, prefijo, max = 6) {
   }
 }
 
-// Inicializar carruseles cuando se carga la página
+// Función para cargar productos desde Decap CMS
+async function cargarProductos() {
+  try {
+    // Cargar las secciones del menú
+    const menuResponse = await fetch('_data/menu.json');
+    const menuData = await menuResponse.json();
+    
+    // Ordenar secciones según el campo "order"
+    const seccionesOrdenadas = menuData.sort((a, b) => a.order - b.order);
+    
+    // Cargar productos para cada sección
+    for (const seccion of seccionesOrdenadas) {
+      const productosResponse = await fetch(`_products/${seccion.title.toLowerCase()}/index.json`);
+      const productos = await productosResponse.json();
+      
+      // Ordenar productos según el campo "order"
+      const productosOrdenados = productos.sort((a, b) => a.order - b.order);
+      
+      // Renderizar productos en la sección correspondiente
+      const sectionContent = document.querySelector(`#${seccion.title.toLowerCase()}-section .accordion-content`);
+      
+      // Limpiar contenido existente (excepto elementos especiales)
+      const elementosEspeciales = sectionContent.querySelectorAll('.separadorCategoria, .leyendaPatys');
+      sectionContent.innerHTML = '';
+      elementosEspeciales.forEach(elemento => sectionContent.appendChild(elemento));
+      
+      // Agregar cada producto
+      productosOrdenados.forEach(producto => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'item';
+        
+        // Si no está disponible, agregar una clase especial
+        if (!producto.available) {
+          itemDiv.classList.add('no-disponible');
+        }
+        
+        itemDiv.innerHTML = `
+          <div>
+            <span class="itemNombre">${producto.title}</span>
+            ${producto.description ? `<div class="itemDesc">${producto.description}</div>` : ''}
+            ${!producto.available ? '<div class="no-disponible-label">NO DISPONIBLE</div>' : ''}
+          </div>
+          <span class="puntos"></span>
+          <span class="precioBox">$${producto.price.toLocaleString()}</span>
+          ${producto.available ? `<button class="btnAgregar" onclick="confirmar('${producto.title}', ${producto.price})">+</button>` : ''}
+        `;
+        
+        sectionContent.insertBefore(itemDiv, sectionContent.firstChild);
+      });
+    }
+  } catch (error) {
+    console.error('Error al cargar productos:', error);
+    // Si hay error al cargar desde Decap CMS, cargar productos estáticos
+    cargarProductosEstaticos();
+  }
+}
+
+// Función para cargar productos estáticos si falla Decap CMS
+function cargarProductosEstaticos() {
+  // Cargar productos estáticos aquí si es necesario
+  console.log('Cargando productos estáticos...');
+}
+
+// Inicializar carruseles y productos cuando se carga la página
 window.addEventListener('DOMContentLoaded', async () => {
   // Cargar carrusel del header
   await cargarImagenesCarrusel('headerCarrusel', 'pizza', 6);
@@ -625,6 +413,12 @@ window.addEventListener('DOMContentLoaded', async () => {
   await cargarImagenesCarrusel('milaCarrusel', 'mila', 6);
   await cargarImagenesCarrusel('hambCarrusel', 'hamb', 6);
   await cargarImagenesCarrusel('patysCarrusel', 'patys', 6);
+  
+  // Cargar productos desde Decap CMS
+  await cargarProductos();
+  
+  // Forzar la visualización del botón de editar si hay productos en el carrito
+  actualizarUI();
 });
 
 // ---------- CARRITO ----------
@@ -650,11 +444,16 @@ function actualizarUI() {
   document.getElementById('carritoCant').textContent = cant;
   document.getElementById('totalBadge').textContent = `Total: $${total.toLocaleString()}`;
   const editarBtn = document.getElementById('editarBtn');
+  
   if (cant > 0) {
     editarBtn.style.display = 'block';
-    editarBtn.style.zIndex = '100';
+    editarBtn.classList.add('visible');
+    editarBtn.style.zIndex = '1000';
+    console.log('Mostrando botón de editar carrito');
   } else {
     editarBtn.style.display = 'none';
+    editarBtn.classList.remove('visible');
+    console.log('Ocultando botón de editar carrito');
   }
 }
 function enviarWhatsApp() {
@@ -695,6 +494,56 @@ function cerrarEditor() {
 // Inicializar
 actualizarUI();
 </script>
+
+<!-- Script de Decap CMS -->
 <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+<script>
+window.CMS_MANUAL_INIT = true;
+</script>
+<script>
+window.CMS_CONFIG = {
+  backend: {
+    name: 'git-gateway',
+    branch: 'main',
+    repo: 'tu-usuario/tu-repositorio', // Reemplaza con tu usuario y repositorio
+    site_domain: 'liammenu.netlify.app',
+  },
+  media_folder: "images/uploads",
+  public_folder: "/images/uploads",
+  collections: [
+    {
+      name: "menu",
+      label: "Secciones del Menú",
+      folder: "_data",
+      create: true,
+      fields: [
+        { label: "Título", name: "title", widget: "string" },
+        { label: "Orden", name: "order", widget: "number" },
+        { label: "Imagen de fondo", name: "background_image", widget: "image" },
+        { label: "Color", name: "color", widget: "select", options: ["amarillo", "rojo"] }
+      ]
+    },
+    {
+      name: "products",
+      label: "Productos",
+      folder: "_products",
+      create: true,
+      nested: {
+        depth: 2
+      },
+      fields: [
+        { label: "Título", name: "title", widget: "string" },
+        { label: "Categoría", name: "category", widget: "select", options: ["pizzas", "lomos", "milanesas", "zappin", "patys", "ofertas"] },
+        { label: "Precio", name: "price", widget: "number" },
+        { label: "Descripción", name: "description", widget: "text", required: false },
+        { label: "Imagen", name: "image", widget: "image", required: false },
+        { label: "Disponible", name: "available", widget: "boolean", default: true },
+        { label: "Orden", name: "order", widget: "number", default: 0 }
+      ]
+    }
+  ]
+};
+</script>
+
 </body>
 </html>
