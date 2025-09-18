@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: liammenu/Liammenu  # Importante: tu usuario y repositorio
+  repo: liammenu/Liammenu
   branch: main
   base_url: https://api.github.com
   site_domain: liammenu.github.io
