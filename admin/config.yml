@@ -1,6 +1,9 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: liammenu/Liammenu  # Importante: tu usuario y repositorio
   branch: main
+  base_url: https://api.github.com
+  site_domain: liammenu.github.io
 
 media_folder: "images"
 public_folder: "/images"
