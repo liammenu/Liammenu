@@ -1,7 +1,7 @@
 backend:
   name: git-gateway
   branch: main # Rama principal de tu repositorio
-  repo: tu-usuario/tu-repositorio # Aquí debes poner tu usuario de GitHub y el nombre de tu repositorio
+  repo: liammenu/Liammenu # Aquí debes poner tu usuario de GitHub y el nombre de tu repositorio
 
 media_folder: "images/uploads" # Carpeta para las imágenes que subas desde Decap CMS
 public_folder: "/images/uploads" # Ruta pública para acceder a esas imágenes
