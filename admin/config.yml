@@ -1,6 +1,9 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: liammenu/Liammenu
   branch: main
+  auth_scope: repo
+  token: {{ secrets.TOKEN_GITHUB }}
 
 media_folder: "images"
 public_folder: "/images"
