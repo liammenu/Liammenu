@@ -3,212 +3,200 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Panel - Sistema de Gestión</title>
+  <title>Panel de Administración</title>
   <script src="https://cdn.jsdelivr.net/npm/@staticcms/app@4.0.0/dist/static-cms-app.js"></script>
   <style>
-    /* Variables de colores y estilos */
+    /* Variables de diseño */
     :root {
-      --primary-color: #2563eb;
-      --primary-hover: #1d4ed8;
-      --secondary-color: #64748b;
-      --accent-color: #f1f5f9;
-      --text-color: #334155;
+      --primary: #2563eb;
+      --primary-hover: #1e40af;
+      --secondary: #64748b;
+      --accent: #f1f5f9;
+      --text: #334155;
       --text-light: #64748b;
-      --border-color: #e2e8f0;
-      --success-color: #10b981;
-      --warning-color: #f59e0b;
-      --danger-color: #ef4444;
-      --sidebar-bg: #1e293b;
-      --sidebar-text: #f8fafc;
-      --sidebar-hover: #334155;
-      --content-bg: #ffffff;
+      --border: #e2e8f0;
+      --success: #10b981;
       --card-bg: #ffffff;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --sidebar-bg: #1e293b;
       --radius: 8px;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
 
-    /* Estilos generales SOLO para elementos base */
-    * {
-      box-sizing: border-box;
+    /* Estilos base para elementos de Static CMS */
+    .CMSRoot {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text);
+      line-height: 1.5;
     }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-      background-color: #f8fafc;
-      color: var(--text-color);
-      font-size: 16px;
-      line-height: 1.6;
-      margin: 0;
-      padding: 0;
+    /* Mejoras para la barra lateral */
+    .CMSLayout-sidebar {
+      background-color: var(--sidebar-bg) !important;
+      border-right: none !important;
     }
 
-    /* Layout principal - solo para contenedores base */
-    .cms-wrapper {
-      display: flex;
-      min-height: 100vh;
+    .CMSSidebarHeader-root {
+      padding: 1.5rem !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
     }
 
-    /* Barra lateral - solo estructura básica */
-    .cms-sidebar {
-      width: 280px;
-      background-color: var(--sidebar-bg);
-      color: var(--sidebar-text);
-      padding: 1.5rem 0;
-      flex-shrink: 0;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow-y: auto;
-    }
-
-    .cms-sidebar-header {
-      padding: 0 1.5rem 1.5rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      margin-bottom: 1.5rem;
-    }
-
-    .cms-sidebar-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin: 0;
-      color: white;
-    }
-
-    .cms-sidebar-subtitle {
-      font-size: 0.875rem;
-      color: #94a3b8;
-      margin-top: 0.5rem;
-    }
-
-    /* Contenido principal - solo estructura básica */
-    .cms-main-content {
-      flex: 1;
-      padding: 2rem;
-      overflow-y: auto;
-      max-height: 100vh;
-      background-color: var(--content-bg);
-    }
-
-    /* Estilos para elementos específicos de Static CMS */
-    /* Aseguramos que los elementos de CMS tengan estilos consistentes */
-    [class*="CMS"] {
-      box-sizing: border-box;
-    }
-
-    /* Mejora para las tarjetas de colecciones de CMS */
-    .CMSGrid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin: 1.5rem 0;
-    }
-
-    .CMSCard {
-      border-radius: var(--radius) !important;
-      box-shadow: var(--shadow) !important;
-      overflow: hidden;
-      border: 1px solid var(--border-color) !important;
-      transition: all 0.2s ease;
-    }
-
-    .CMSCard:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
-    }
-
-    /* Mejora para los botones de CMS */
-    .CMSButton {
-      border-radius: var(--radius) !important;
-      font-weight: 500 !important;
-      transition: all 0.2s ease !important;
-    }
-
-    /* Mejora para los formularios de CMS */
-    .CMSForm {
-      max-width: 800px;
-    }
-
-    .CMSInput, .CMSTextarea, .CMSSelect {
-      border-radius: var(--radius) !important;
-      border: 1px solid var(--border-color) !important;
-      padding: 0.75rem !important;
-      transition: all 0.2s ease !important;
-    }
-
-    .CMSInput:focus, .CMSTextarea:focus, .CMSSelect:focus {
-      border-color: var(--primary-color) !important;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
-      outline: none !important;
-    }
-
-    /* Mejora para las imágenes en CMS */
-    .CMSImageWrapper img {
-      border-radius: var(--radius) !important;
-      box-shadow: var(--shadow) !important;
-      max-height: 200px !important;
-      object-fit: contain;
-    }
-
-    /* Mejora para las tablas y listas de CMS */
-    .CMSTable {
-      border-radius: var(--radius) !important;
-      overflow: hidden;
-      box-shadow: var(--shadow) !important;
-      border: 1px solid var(--border-color) !important;
-    }
-
-    .CMSTable th {
-      background-color: var(--accent-color) !important;
+    .CMSSidebarHeader-logo {
+      color: white !important;
+      font-size: 1.5rem !important;
       font-weight: 600 !important;
     }
 
-    /* Mejora para los modales de CMS */
-    .CMSModal {
+    .CMSNavLink-root {
+      color: rgba(255, 255, 255, 0.7) !important;
       border-radius: var(--radius) !important;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+      margin: 0.25rem 0.5rem !important;
+      padding: 0.75rem 1rem !important;
     }
 
-    /* Responsive */
-    @media (max-width: 1024px) {
-      .cms-wrapper {
-        flex-direction: column;
-      }
-      
-      .cms-sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-        padding: 1rem 0;
-      }
-      
-      .cms-main-content {
-        padding: 1.5rem;
-      }
+    .CMSNavLink-root:hover {
+      background-color: rgba(255, 255, 255, 0.1) !important;
+      color: white !important;
     }
 
-    @media (max-width: 640px) {
-      .CMSGrid {
-        grid-template-columns: 1fr;
+    .CMSNavLink-active {
+      background-color: var(--primary) !important;
+      color: white !important;
+    }
+
+    /* Mejoras para el contenido principal */
+    .CMSLayout-main {
+      background-color: #f8fafc !important;
+      padding: 2rem !important;
+    }
+
+    .CMSCollection-container {
+      background-color: var(--card-bg) !important;
+      border-radius: var(--radius) !important;
+      box-shadow: var(--shadow) !important;
+      border: 1px solid var(--border) !important;
+      padding: 1.5rem !important;
+      margin-bottom: 1.5rem !important;
+    }
+
+    .CMSCollection-header {
+      margin-bottom: 1.5rem !important;
+      padding-bottom: 1rem !important;
+      border-bottom: 1px solid var(--border) !important;
+    }
+
+    .CMSCollection-heading {
+      font-size: 1.5rem !important;
+      font-weight: 700 !important;
+      color: var(--text) !important;
+      margin: 0 !important;
+    }
+
+    /* Mejoras para botones */
+    .CMSButton-button {
+      border-radius: var(--radius) !important;
+      font-weight: 500 !important;
+      padding: 0.625rem 1.25rem !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .CMSButton-button-primary {
+      background-color: var(--primary) !important;
+    }
+
+    .CMSButton-button-primary:hover {
+      background-color: var(--primary-hover) !important;
+    }
+
+    /* Mejoras para formularios y campos */
+    .CMSField-root {
+      margin-bottom: 1.5rem !important;
+    }
+
+    .CMSField-label {
+      font-size: 1rem !important;
+      font-weight: 600 !important;
+      color: var(--text) !important;
+      margin-bottom: 0.5rem !important;
+    }
+
+    .CMSField-description {
+      font-size: 0.875rem !important;
+      color: var(--text-light) !important;
+      margin-top: 0.5rem !important;
+    }
+
+    .CMSWidget-control {
+      border: 1px solid var(--border) !important;
+      border-radius: var(--radius) !important;
+      padding: 0.75rem !important;
+      font-size: 1rem !important;
+      transition: border-color 0.2s ease !important;
+    }
+
+    .CMSWidget-control:focus {
+      outline: none !important;
+      border-color: var(--primary) !important;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+    }
+
+    /* Mejoras para las imágenes */
+    .CMSMediaLibrary-image {
+      max-width: 100% !important;
+      height: auto !important;
+      border-radius: var(--radius) !important;
+      box-shadow: var(--shadow) !important;
+    }
+
+    .CMSMediaLibrary-card {
+      max-width: 300px !important;
+      border: 1px solid var(--border) !important;
+      border-radius: var(--radius) !important;
+      padding: 1rem !important;
+      background-color: var(--card-bg) !important;
+    }
+
+    /* Mejoras para las tablas y listas */
+    .CMSCollection-list {
+      border: 1px solid var(--border) !important;
+      border-radius: var(--radius) !important;
+      overflow: hidden !important;
+      box-shadow: var(--shadow) !important;
+    }
+
+    .CMSCollection-list-header {
+      background-color: var(--accent) !important;
+      padding: 1rem 1.5rem !important;
+      border-bottom: 1px solid var(--border) !important;
+    }
+
+    .CMSCollection-list-item {
+      padding: 1rem 1.5rem !important;
+      border-bottom: 1px solid var(--border) !important;
+    }
+
+    .CMSCollection-list-item:last-child {
+      border-bottom: none !important;
+    }
+
+    /* Mejoras para el editor de contenido */
+    .CMSEditor-root {
+      border: 1px solid var(--border) !important;
+      border-radius: var(--radius) !important;
+    }
+
+    /* Responsividad */
+    @media (max-width: 768px) {
+      .CMSLayout-main {
+        padding: 1rem !important;
+      }
+      
+      .CMSCollection-container {
+        padding: 1rem !important;
       }
     }
   </style>
 </head>
 <body>
-  <div class="cms-wrapper">
-    <!-- Barra lateral -->
-    <aside class="cms-sidebar">
-      <div class="cms-sidebar-header">
-        <h1 class="cms-sidebar-title">Panel de Admin</h1>
-        <p class="cms-sidebar-subtitle">Sistema de gestión de contenido</p>
-      </div>
-    </aside>
-
-    <!-- Contenido principal -->
-    <main class="cms-main-content">
-      <!-- Static CMS generará el contenido aquí dinámicamente -->
-    </main>
-  </div>
-
   <script>
     // Configuración de Static CMS con proxy - SIN MODIFICACIONES
     window.CMS.init({
