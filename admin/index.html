@@ -1,153 +1,837 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Panel - Liam Menu</title>
+  <title>Admin Panel - Sistema de Gestión</title>
   <script src="https://cdn.jsdelivr.net/npm/@staticcms/app@4.0.0/dist/static-cms-app.js"></script>
   <style>
+    /* Variables de colores y estilos */
     :root {
-      --primary-color: #3498db;
-      --primary-hover: #2980b9;
-      --secondary-color: #ecf0f1;
-      --dark-color: #2c3e50;
-      --light-color: #f8f9fa;
-      --border-color: #ddd;
-      --text-color: #333;
-      --text-light: #7f8c8d;
-      --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-      --border-radius: 8px;
-      --transition: all 0.2s ease;
+      --primary-color: #2563eb;
+      --primary-hover: #1d4ed8;
+      --secondary-color: #64748b;
+      --accent-color: #f1f5f9;
+      --text-color: #334155;
+      --text-light: #64748b;
+      --border-color: #e2e8f0;
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --danger-color: #ef4444;
+      --sidebar-bg: #1e293b;
+      --sidebar-text: #f8fafc;
+      --sidebar-hover: #334155;
+      --content-bg: #ffffff;
+      --card-bg: #ffffff;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --radius: 8px;
+    }
+
+    /* Estilos generales */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Roboto, sans-serif;
-      background-color: var(--light-color);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background-color: #f8fafc;
       color: var(--text-color);
-      font-size: 15px;
+      font-size: 16px;
       line-height: 1.6;
     }
 
+    /* Layout principal */
     .cms-wrapper {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
       display: flex;
       min-height: 100vh;
-      gap: 20px;
     }
 
+    /* Barra lateral */
     .cms-sidebar {
-      width: 250px;
-      background-color: var(--dark-color);
-      color: white;
-      padding: 20px;
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow-sm);
-      height: fit-content;
+      width: 280px;
+      background-color: var(--sidebar-bg);
+      color: var(--sidebar-text);
+      padding: 1.5rem 0;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
     }
 
     .cms-sidebar-header {
-      margin-bottom: 20px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding: 0 1.5rem 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 1.5rem;
+    }
+
+    .cms-sidebar-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0;
+      color: white;
+    }
+
+    .cms-sidebar-subtitle {
+      font-size: 0.875rem;
+      color: #94a3b8;
+      margin-top: 0.5rem;
+    }
+
+    .cms-sidebar-nav {
+      padding: 0 1rem;
+    }
+
+    .cms-sidebar-nav-item {
+      margin-bottom: 0.5rem;
     }
 
     .cms-sidebar-nav-link {
-      color: rgba(255,255,255,0.8);
+      color: #cbd5e1;
       text-decoration: none;
-      padding: 10px;
-      border-radius: 4px;
-      display: block;
-      transition: var(--transition);
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      transition: all 0.2s;
+      font-weight: 500;
     }
 
     .cms-sidebar-nav-link:hover {
-      background-color: rgba(255,255,255,0.1);
+      background-color: var(--sidebar-hover);
+      color: white;
     }
 
+    .cms-sidebar-nav-link.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .cms-sidebar-nav-link i {
+      margin-right: 0.75rem;
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Contenido principal */
     .cms-main-content {
       flex: 1;
-      background-color: white;
-      padding: 25px;
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow-sm);
+      padding: 2rem;
+      overflow-y: auto;
+      max-height: 100vh;
+    }
+
+    /* Cabecera del contenido */
+    .cms-content-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .cms-content-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-color);
+      margin: 0;
+    }
+
+    .cms-content-subtitle {
+      font-size: 1rem;
+      color: var(--text-light);
+      margin-top: 0.5rem;
+    }
+
+    .cms-content-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    /* Botones */
+    .cms-button {
+      padding: 0.625rem 1.25rem;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .cms-button-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .cms-button-primary:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .cms-button-secondary {
+      background-color: var(--accent-color);
+      color: var(--text-color);
+    }
+
+    .cms-button-secondary:hover {
+      background-color: #e2e8f0;
+    }
+
+    .cms-button-success {
+      background-color: var(--success-color);
+      color: white;
+    }
+
+    .cms-button-success:hover {
+      background-color: #059669;
+    }
+
+    /* Tarjetas de colecciones */
+    .cms-collection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .cms-collection-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      transition: all 0.2s;
+      border: 1px solid var(--border-color);
+    }
+
+    .cms-collection-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .cms-collection-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .cms-collection-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0;
+      color: var(--text-color);
+    }
+
+    .cms-collection-count {
+      background-color: var(--accent-color);
+      color: var(--text-light);
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .cms-collection-description {
+      color: var(--text-light);
+      margin: 0 0 1.5rem 0;
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+
+    .cms-collection-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    /* Lista de entradas */
+    .cms-list-container {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .cms-list-header {
+      padding: 1rem 1.5rem;
+      background-color: var(--accent-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .cms-list-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 0;
+      color: var(--text-color);
+    }
+
+    .cms-list {
+      list-style: none;
+    }
+
+    .cms-list-item {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.2s;
+    }
+
+    .cms-list-item:last-child {
+      border-bottom: none;
+    }
+
+    .cms-list-item:hover {
+      background-color: #f8fafc;
+    }
+
+    .cms-list-item-title {
+      font-weight: 500;
+      color: var(--text-color);
+      font-size: 1rem;
+    }
+
+    .cms-list-item-meta {
+      font-size: 0.875rem;
+      color: var(--text-light);
+      margin-top: 0.25rem;
+    }
+
+    .cms-list-item-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    /* Formularios */
+    .cms-form-container {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .cms-form-header {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .cms-form-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0;
+      color: var(--text-color);
+    }
+
+    .cms-form {
+      max-width: 800px;
     }
 
     .cms-form-group {
-      margin-bottom: 20px;
+      margin-bottom: 1.5rem;
     }
 
     .cms-form-label {
       display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: var(--dark-color);
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: var(--text-color);
+      font-size: 0.875rem;
     }
 
     .cms-form-input,
     .cms-form-textarea,
     .cms-form-select {
       width: 100%;
-      padding: 12px;
+      padding: 0.75rem;
       border: 1px solid var(--border-color);
-      border-radius: 6px;
-      font-size: 15px;
-      box-sizing: border-box;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      transition: all 0.2s;
+      background-color: white;
     }
 
+    .cms-form-input:focus,
+    .cms-form-textarea:focus,
+    .cms-form-select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .cms-form-textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .cms-form-help {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      margin-top: 0.5rem;
+    }
+
+    /* Widget de booleano (toggle) */
+    .cms-widget-boolean {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .cms-toggle {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 26px;
+    }
+
+    .cms-toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .cms-toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .cms-toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .cms-toggle-slider {
+      background-color: var(--success-color);
+    }
+
+    input:checked + .cms-toggle-slider:before {
+      transform: translateX(24px);
+    }
+
+    /* Widget de imagen */
     .cms-widget-image {
       border: 2px dashed var(--border-color);
-      border-radius: 6px;
-      padding: 20px;
+      border-radius: var(--radius);
+      padding: 1.5rem;
       text-align: center;
-      margin-bottom: 16px;
-      background-color: #f9f9f9;
+      cursor: pointer;
+      transition: all 0.2s;
+      background-color: #f8fafc;
     }
 
-    .cms-button {
-      padding: 10px 20px;
+    .cms-widget-image:hover {
+      border-color: var(--primary-color);
+      background-color: #f1f5f9;
+    }
+
+    .cms-widget-image-placeholder {
+      color: var(--text-light);
+      margin-bottom: 1rem;
+      font-size: 3rem;
+    }
+
+    .cms-widget-image-text {
+      color: var(--text-light);
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+
+    .cms-widget-image-preview {
+      max-width: 100%;
+      max-height: 200px;
+      margin-bottom: 1rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    /* Modal */
+    .cms-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1rem;
+    }
+
+    .cms-modal {
+      background-color: white;
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    .cms-modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cms-modal-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0;
+      color: var(--text-color);
+    }
+
+    .cms-modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-light);
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.2s;
+    }
+
+    .cms-modal-close:hover {
+      background-color: var(--accent-color);
+      color: var(--text-color);
+    }
+
+    .cms-modal-body {
+      padding: 1.5rem;
+    }
+
+    .cms-modal-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+
+    /* Notificaciones */
+    .cms-notification {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      z-index: 1100;
+      max-width: 400px;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    .cms-notification-success {
+      background-color: var(--success-color);
+      color: white;
+    }
+
+    .cms-notification-error {
+      background-color: var(--danger-color);
+      color: white;
+    }
+
+    .cms-notification-info {
       background-color: var(--primary-color);
       color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 15px;
-      cursor: pointer;
-      transition: var(--transition);
     }
 
-    @media (max-width: 768px) {
+    .cms-notification-icon {
+      font-size: 1.25rem;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
       .cms-wrapper {
         flex-direction: column;
       }
+      
       .cms-sidebar {
         width: 100%;
+        height: auto;
+        position: relative;
+        padding: 1rem 0;
       }
+      
+      .cms-main-content {
+        margin-left: 0;
+        padding: 1.5rem;
+      }
+      
+      .cms-collection-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .cms-content-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .cms-content-actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
+      
+      .cms-collection-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .cms-modal-overlay {
+        padding: 0.5rem;
+      }
+      
+      .cms-modal {
+        max-height: 95vh;
+      }
+    }
+
+    /* Utilidades */
+    .cms-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .cms-divider {
+      height: 1px;
+      background-color: var(--border-color);
+      margin: 1.5rem 0;
+    }
+
+    .cms-text-sm {
+      font-size: 0.875rem;
+    }
+
+    .cms-text-lg {
+      font-size: 1.125rem;
+    }
+
+    .cms-font-semibold {
+      font-weight: 600;
+    }
+
+    .cms-mb-1 {
+      margin-bottom: 0.5rem;
+    }
+
+    .cms-mb-2 {
+      margin-bottom: 1rem;
+    }
+
+    .cms-mt-2 {
+      margin-top: 1rem;
+    }
+
+    .cms-text-center {
+      text-align: center;
     }
   </style>
 </head>
 <body>
   <div class="cms-wrapper">
+    <!-- Barra lateral -->
     <aside class="cms-sidebar">
       <div class="cms-sidebar-header">
-        <h2 style="color: white; margin: 0;">Admin Panel</h2>
+        <h1 class="cms-sidebar-title">Panel de Admin</h1>
+        <p class="cms-sidebar-subtitle">Sistema de gestión de contenido</p>
       </div>
-      <nav>
-        <a href="#" class="cms-sidebar-nav-link">Productos</a>
+      <nav class="cms-sidebar-nav">
+        <div class="cms-sidebar-nav-item">
+          <a href="#" class="cms-sidebar-nav-link active">
+            <i>📦</i> Productos
+          </a>
+        </div>
+        <div class="cms-sidebar-nav-item">
+          <a href="#" class="cms-sidebar-nav-link">
+            <i>📁</i> Categorías
+          </a>
+        </div>
+        <div class="cms-sidebar-nav-item">
+          <a href="#" class="cms-sidebar-nav-link">
+            <i>📊</i> Pedidos
+          </a>
+        </div>
+        <div class="cms-sidebar-nav-item">
+          <a href="#" class="cms-sidebar-nav-link">
+            <i>👥</i> Clientes
+          </a>
+        </div>
+        <div class="cms-sidebar-nav-item">
+          <a href="#" class="cms-sidebar-nav-link">
+            <i>⚙️</i> Configuración
+          </a>
+        </div>
       </nav>
     </aside>
-    <main class="cms-main-content" id="static-cms-app"></main>
+
+    <!-- Contenido principal -->
+    <main class="cms-main-content">
+      <header class="cms-content-header">
+        <div>
+          <h1 class="cms-content-title">Gestión de Productos</h1>
+          <p class="cms-content-subtitle">Administra los productos de tu menú</p>
+        </div>
+        <div class="cms-content-actions">
+          <button class="cms-button cms-button-secondary">
+            <i>↻</i> Actualizar
+          </button>
+          <button class="cms-button cms-button-primary">
+            <i>+</i> Nuevo Producto
+          </button>
+        </div>
+      </header>
+
+      <!-- Tarjetas de resumen -->
+      <div class="cms-collection-grid">
+        <div class="cms-collection-card">
+          <div class="cms-collection-header">
+            <h2 class="cms-collection-title">Total Productos</h2>
+            <span class="cms-collection-count">24</span>
+          </div>
+          <p class="cms-collection-description">Número total de productos en el sistema</p>
+        </div>
+        
+        <div class="cms-collection-card">
+          <div class="cms-collection-header">
+            <h2 class="cms-collection-title">Disponibles</h2>
+            <span class="cms-collection-count">18</span>
+          </div>
+          <p class="cms-collection-description">Productos actualmente disponibles</p>
+        </div>
+        
+        <div class="cms-collection-card">
+          <div class="cms-collection-header">
+            <h2 class="cms-collection-title">Agotados</h2>
+            <span class="cms-collection-count">6</span>
+          </div>
+          <p class="cms-collection-description">Productos temporalmente no disponibles</p>
+        </div>
+      </div>
+
+      <!-- Lista de productos -->
+      <div class="cms-list-container">
+        <div class="cms-list-header">
+          <h2 class="cms-list-title">Lista de Productos</h2>
+          <div class="cms-content-actions">
+            <button class="cms-button cms-button-secondary cms-text-sm">
+              <i>🔍</i> Buscar
+            </button>
+          </div>
+        </div>
+        <ul class="cms-list">
+          <li class="cms-list-item">
+            <div>
+              <div class="cms-list-item-title">Pizza Margarita</div>
+              <div class="cms-list-item-meta">PIZZAS • $12.99</div>
+            </div>
+            <div class="cms-list-item-actions">
+              <button class="cms-button cms-button-secondary cms-text-sm">
+                <i>✏️</i> Editar
+              </button>
+              <button class="cms-button cms-button-success cms-text-sm">
+                <i>✔️</i> Activo
+              </button>
+            </div>
+          </li>
+          <li class="cms-list-item">
+            <div>
+              <div class="cms-list-item-title">Lomo Completo</div>
+              <div class="cms-list-item-meta">LOMOS • $15.50</div>
+            </div>
+            <div class="cms-list-item-actions">
+              <button class="cms-button cms-button-secondary cms-text-sm">
+                <i>✏️</i> Editar
+              </button>
+              <button class="cms-button cms-button-success cms-text-sm">
+                <i>✔️</i> Activo
+              </button>
+            </div>
+          </li>
+          <li class="cms-list-item">
+            <div>
+              <div class="cms-list-item-title">Milanesa Napolitana</div>
+              <div class="cms-list-item-meta">MILANESAS • $14.25</div>
+            </div>
+            <div class="cms-list-item-actions">
+              <button class="cms-button cms-button-secondary cms-text-sm">
+                <i>✏️</i> Editar
+              </button>
+              <button class="cms-button cms-button-success cms-text-sm">
+                <i>✔️</i> Activo
+              </button>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </main>
   </div>
 
   <script>
+    // Configuración de Static CMS con proxy
     window.CMS.init({
       config: {
         backend: {
           name: 'proxy',
           proxy_url: 'https://api.staticcms.org/github'
         },
+        locale: 'es',
         media_folder: "images",
         public_folder: "/images",
         collections: [
@@ -157,12 +841,52 @@
             folder: "data/productos",
             create: true,
             fields: [
-              { name: "title", label: "Título", widget: "string" },
-              { name: "price", label: "Precio", widget: "number" },
-              { name: "image", label: "Imagen", widget: "image" },
-              { name: "description", label: "Descripción", widget: "text" },
-              { name: "categoria", label: "Categoría", widget: "select", options: ["OFERTAS", "PIZZAS", "LOMOS", "MILANESAS", "ZAPPIN Y PAPAS", "PATYS"] },
-              { name: "disponible", label: "Disponible", widget: "boolean", default: true }
+              { 
+                name: "title", 
+                label: "Título", 
+                widget: "string",
+                hint: "Nombre del producto tal como aparecerá en el menú"
+              },
+              { 
+                name: "price", 
+                label: "Precio", 
+                widget: "number",
+                min: 0,
+                step: 0.01,
+                value_type: "float"
+              },
+              { 
+                name: "image", 
+                label: "Imagen", 
+                widget: "image",
+                hint: "Imagen del producto (relación aspecto recomendada: 1:1)"
+              },
+              { 
+                name: "description", 
+                label: "Descripción", 
+                widget: "text",
+                hint: "Descripción detallada del producto"
+              },
+              { 
+                name: "categoria", 
+                label: "Categoría", 
+                widget: "select", 
+                options: [
+                  { label: "OFERTAS", value: "OFERTAS" },
+                  { label: "PIZZAS", value: "PIZZAS" },
+                  { label: "LOMOS", value: "LOMOS" },
+                  { label: "MILANESAS", value: "MILANESAS" },
+                  { label: "ZAPPIN Y PAPAS", value: "ZAPPIN Y PAPAS" },
+                  { label: "PATYS", value: "PATYS" }
+                ] 
+              },
+              { 
+                name: "disponible", 
+                label: "Disponible", 
+                widget: "boolean", 
+                default: true,
+                hint: "¿Este producto está actualmente disponible?"
+              }
             ]
           }
         ]
