@@ -6,7 +6,6 @@
   <title>Panel de Administración - Liam's Menu</title>
   <script src="https://cdn.jsdelivr.net/npm/@staticcms/app@4.0.0/dist/static-cms-app.js"></script>
   <style>
-    /* Estilos básicos para la página de carga */
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
@@ -26,11 +25,6 @@
       max-width: 500px;
       width: 90%;
     }
-    .loading {
-      font-size: 1.2rem;
-      color: #64748b;
-      margin-bottom: 1rem;
-    }
     .spinner {
       border: 4px solid #f1f5f9;
       border-top: 4px solid #3b82f6;
@@ -44,28 +38,33 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    .auth-info {
-      background-color: #f1f5f9;
-      padding: 1rem;
-      border-radius: 8px;
-      margin-top: 1.5rem;
-      font-size: 0.9rem;
-    }
-    .success {
-      color: #10b981;
-      margin-top: 1rem;
-      padding: 0.75rem;
-      background-color: #ecfdf5;
-      border-radius: 6px;
-      border-left: 4px solid #10b981;
-    }
     .error {
       color: #ef4444;
-      margin-top: 1rem;
       padding: 0.75rem;
       background-color: #fef2f2;
       border-radius: 6px;
       border-left: 4px solid #ef4444;
+      margin: 1rem 0;
+    }
+    .solution-box {
+      background-color: #e0f2fe;
+      border: 1px solid #38bdf8;
+      padding: 1rem;
+      border-radius: 6px;
+      margin: 1rem 0;
+    }
+    .retry-button {
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1rem;
+    }
+    .retry-button:hover {
+      background-color: #2563eb;
     }
     .debug-info {
       background-color: #fffbeb;
@@ -74,304 +73,205 @@
       border-radius: 6px;
       margin-top: 1rem;
       font-size: 0.85rem;
+      text-align: left;
     }
   </style>
 </head>
 <body>
   <div class="loading-container">
     <div class="spinner"></div>
-    <div class="loading" id="status-text">Iniciando sesión en GitHub...</div>
+    <h2 id="status-text">Conectando con GitHub...</h2>
     
-    <div class="auth-info">
-      <p><strong>Configuración de GitHub OAuth:</strong></p>
-      <p>Application: <strong>Cms</strong></p>
-      <p>Client ID: <code>Ov23liyjswEELMqTAagb</code></p>
-      <p>Homepage URL: <code id="homepage-url"></code></p>
-      <p>Callback URL: <code id="callback-url"></code></p>
+    <div id="error-message" class="error" style="display: none;">
+      <h3>Error de conexión con GitHub</h3>
+      <p id="error-details">Tiempo de espera agotado</p>
     </div>
 
-    <div id="status-message" class="success">
-      Client ID integrado correctamente. Conectando con GitHub...
+    <div class="solution-box">
+      <h3>🚨 Solución Requerida</h3>
+      <p>Problema de conexión con GitHub. Por favor:</p>
+      <ol>
+        <li>Verifica que tu aplicación OAuth en GitHub tenga EXACTAMENTE estas URLs:</li>
+        <li><strong>Homepage URL:</strong> <code>https://liammenu.github.io/Liammenu/admin/</code></li>
+        <li><strong>Callback URL:</strong> <code>https://liammenu.github.io/Liammenu/admin/index.html</code></li>
+        <li>Asegúrate de que GitHub no esté bloqueado por tu firewall o red</li>
+      </ol>
+      <button class="retry-button" onclick="window.location.reload()">Reintentar Conexión</button>
     </div>
 
-    <div class="debug-info" id="debug-section" style="display: none;">
-      <p><strong>Información de depuración:</strong></p>
-      <p id="current-url"></p>
-      <p id="config-status">Verificando configuración...</p>
+    <div class="debug-info">
+      <h4>Información de Depuración:</h4>
+      <p><strong>URL actual:</strong> <span id="current-url"></span></p>
+      <p><strong>Estado:</strong> <span id="connection-status">Iniciando...</span></p>
+      <p><strong>Client ID:</strong> Ov23liyjswEELMqTAagb</p>
     </div>
   </div>
 
   <script>
-    // Detectar la URL actual para verificar configuraciones
-    const currentUrl = window.location.href;
-    document.getElementById('current-url').textContent = `URL actual: ${currentUrl}`;
-    document.getElementById('homepage-url').textContent = currentUrl.replace('/index.html', '/');
-    document.getElementById('callback-url').textContent = currentUrl;
-    document.getElementById('debug-section').style.display = 'block';
-
-    // Configuración de Static CMS con GitHub OAuth
-    // Usamos la URL actual para evitar problemas de coincidencia
-    const baseUrl = currentUrl.includes('localhost') ? 'http://localhost:8081' : 'https://api.staticcms.org';
+    // Mostrar información de depuración
+    document.getElementById('current-url').textContent = window.location.href;
     
-    window.CMS.init({
-      config: {
-        backend: {
-          name: 'github',
-          repo: 'liammenu/Liammenu',
-          branch: 'main',
-          base_url: baseUrl,
-          auth_endpoint: 'api/auth',
-          app_id: 'Ov23liyjswEELMqTAagb'
-        },
-        locale: 'es',
-        site_url: 'https://liammenu.github.io',
-        display_url: 'https://liammenu.github.io/Liammenu',
-        media_folder: "static/images",
-        public_folder: "/images",
-        collections: [
-          {
-            name: "productos",
-            label: "Productos",
-            label_singular: "Producto",
-            folder: "data/productos",
-            create: true,
-            slug: "{{slug}}",
-            fields: [
-              { 
-                name: "title", 
-                label: "Título", 
-                widget: "string",
-                hint: "Nombre del producto tal como aparecerá en el menú"
-              },
-              { 
-                name: "price", 
-                label: "Precio", 
-                widget: "number",
-                min: 0,
-                step: 0.01,
-                value_type: "float"
-              },
-              { 
-                name: "image", 
-                label: "Imagen", 
-                widget: "image",
-                hint: "Imagen del producto (relación aspecto recomendada: 1:1)",
-                allow_multiple: false
-              },
-              { 
-                name: "description", 
-                label: "Descripción", 
-                widget: "text",
-                hint: "Descripción detallada del producto"
-              },
-              { 
-                name: "categoria", 
-                label: "Categoría", 
-                widget: "select", 
-                options: [
-                  { label: "OFERTAS", value: "OFERTAS" },
-                  { label: "PIZZAS", value: "PIZZAS" },
-                  { label: "LOMOS", value: "LOMOS" },
-                  { label: "MILANESAS", value: "MILANESAS" },
-                  { label: "ZAPPIN Y PAPAS", value: "ZAPPIN Y PAPAS" },
-                  { label: "PATYS", value: "PATYS" }
-                ] 
-              },
-              { 
-                name: "disponible", 
-                label: "Disponible", 
-                widget: "boolean", 
-                default: true,
-                hint: "¿Este producto está actualmente disponible?"
+    // Configuración de Static CMS con manejo de errores mejorado
+    const initCMS = () => {
+      try {
+        window.CMS.init({
+          config: {
+            backend: {
+              name: 'github',
+              repo: 'liammenu/Liammenu',
+              branch: 'main',
+              base_url: 'https://api.staticcms.org',
+              auth_endpoint: 'api/auth',
+              app_id: 'Ov23liyjswEELMqTAagb'
+            },
+            locale: 'es',
+            site_url: 'https://liammenu.github.io',
+            display_url: 'https://liammenu.github.io/Liammenu',
+            media_folder: "static/images",
+            public_folder: "/images",
+            collections: [
+              {
+                name: "productos",
+                label: "Productos",
+                label_singular: "Producto",
+                folder: "data/productos",
+                create: true,
+                slug: "{{slug}}",
+                fields: [
+                  { 
+                    name: "title", 
+                    label: "Título", 
+                    widget: "string",
+                    hint: "Nombre del producto tal como aparecerá en el menú"
+                  },
+                  { 
+                    name: "price", 
+                    label: "Precio", 
+                    widget: "number",
+                    min: 0,
+                    step: 0.01,
+                    value_type: "float"
+                  },
+                  { 
+                    name: "image", 
+                    label: "Imagen", 
+                    widget: "image",
+                    hint: "Imagen del producto (relación aspecto recomendada: 1:1)",
+                    allow_multiple: false
+                  },
+                  { 
+                    name: "description", 
+                    label: "Descripción", 
+                    widget: "text",
+                    hint: "Descripción detallada del producto"
+                  },
+                  { 
+                    name: "categoria", 
+                    label: "Categoría", 
+                    widget: "select", 
+                    options: [
+                      { label: "OFERTAS", value: "OFERTAS" },
+                      { label: "PIZZAS", value: "PIZZAS" },
+                      { label: "LOMOS", value: "LOMOS" },
+                      { label: "MILANESAS", value: "MILANESAS" },
+                      { label: "ZAPPIN Y PAPAS", value: "ZAPPIN Y PAPAS" },
+                      { label: "PATYS", value: "PATYS" }
+                    ] 
+                  },
+                  { 
+                    name: "disponible", 
+                    label: "Disponible", 
+                    widget: "boolean", 
+                    default: true,
+                    hint: "¿Este producto está actualmente disponible?"
+                  }
+                ]
               }
             ]
           }
-        ]
+        });
+        
+        document.getElementById('connection-status').textContent = 'CMS inicializado - Esperando GitHub';
+        
+      } catch (error) {
+        showError('Error al inicializar CMS: ' + error.message);
       }
-    });
+    };
 
-    // Función para inyectar estilos en el Shadow DOM de Static CMS
-    function injectCustomStyles() {
+    // Función para mostrar errores
+    const showError = (message) => {
+      document.getElementById('error-message').style.display = 'block';
+      document.getElementById('error-details').textContent = message;
+      document.getElementById('status-text').textContent = 'Error de Conexión';
+      document.getElementById('connection-status').textContent = 'Error: ' + message;
+    };
+
+    // Verificar si hay un error de autenticación en la URL
+    const checkUrlForErrors = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const error = urlParams.get('error');
+      const errorDescription = urlParams.get('error_description');
+      
+      if (error) {
+        showError(`Error de GitHub: ${error} - ${errorDescription || 'Sin detalles'}`);
+        return true;
+      }
+      return false;
+    };
+
+    // Inicializar después de un breve delay
+    setTimeout(() => {
+      if (!checkUrlForErrors()) {
+        document.getElementById('connection-status').textContent = 'Inicializando CMS...';
+        initCMS();
+      }
+    }, 1000);
+
+    // Timeout para detectar si la conexión falla
+    setTimeout(() => {
+      if (document.querySelector('.loading-container').style.display !== 'none') {
+        showError('Tiempo de espera agotado. GitHub no respondió.');
+        
+        // Sugerencias específicas para timeout
+        const errorDetails = document.getElementById('error-details');
+        errorDetails.innerHTML += `
+          <br><br><strong>Posibles soluciones:</strong>
+          <ul>
+            <li>Verifica que tu aplicación OAuth en GitHub tenga las URLs exactas</li>
+            <li>Intenta desde una red diferente (a veces firewalls bloquean GitHub)</li>
+            <li>Espera unos minutos e intenta nuevamente</li>
+            <li>Verifica que GitHub no esté presentando intermitencias</li>
+          </ul>
+        `;
+      }
+    }, 10000);
+
+    // Función para inyectar estilos cuando CMS cargue
+    const injectCustomStyles = () => {
       const checkForShadowRoot = setInterval(() => {
         const cmsElement = document.querySelector('static-cms');
-        
         if (cmsElement && cmsElement.shadowRoot) {
           clearInterval(checkForShadowRoot);
-          
-          const style = document.createElement('style');
-          style.textContent = `
-            /* Variables de diseño */
-            :host {
-              --primary: #3b82f6;
-              --primary-hover: #2563eb;
-              --secondary: #64748b;
-              --accent: #f1f5f9;
-              --text: #1f2937;
-              --text-light: #6b7280;
-              --border: #e5e7eb;
-              --success: #10b981;
-              --warning: #f59e0b;
-              --error: #ef4444;
-              --card-bg: #ffffff;
-              --sidebar-bg: #1f2937;
-              --radius: 8px;
-              --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            }
-
-            /* Estilos generales */
-            * {
-              box-sizing: border-box;
-            }
-            
-            body {
-              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-              color: var(--text);
-              background-color: #f8fafc;
-              line-height: 1.6;
-              margin: 0;
-              padding: 0;
-            }
-
-            /* Mejoras para la barra lateral */
-            .CSSSidebar-root {
-              background: var(--sidebar-bg) !important;
-              color: white !important;
-            }
-            
-            .CSSSidebarNavItem-button {
-              color: rgba(255, 255, 255, 0.8) !important;
-              border-radius: 6px !important;
-              margin: 4px 8px !important;
-              padding: 10px 16px !important;
-            }
-            
-            .CSSSidebarNavItem-button:hover {
-              background-color: rgba(255, 255, 255, 0.1) !important;
-              color: white !important;
-            }
-            
-            .CSSSidebarNavItem-selected {
-              background-color: var(--primary) !important;
-              color: white !important;
-            }
-
-            /* Mejoras para el contenido principal */
-            .CMSMainView-root {
-              background-color: #f8fafc !important;
-              padding: 2rem !important;
-            }
-            
-            .CMSCollectionHeading-root {
-              font-size: 1.75rem !important;
-              font-weight: 700 !important;
-              color: var(--text) !important;
-              margin-bottom: 2rem !important;
-              padding-bottom: 1rem !important;
-              border-bottom: 1px solid var(--border) !important;
-            }
-
-            /* Mejoras para botones */
-            .CSSButton-root {
-              border-radius: var(--radius) !important;
-              font-weight: 500 !important;
-              padding: 0.625rem 1.25rem !important;
-            }
-            
-            .CSSButton-primary {
-              background-color: var(--primary) !important;
-              color: white !important;
-            }
-            
-            .CSSButton-primary:hover {
-              background-color: var(--primary-hover) !important;
-            }
-
-            /* Mejoras para tarjetas */
-            .CSSCard-root {
-              background-color: var(--card-bg) !important;
-              border-radius: var(--radius) !important;
-              box-shadow: var(--shadow) !important;
-              border: 1px solid var(--border) !important;
-              padding: 1.5rem !important;
-              margin-bottom: 1.5rem !important;
-            }
-
-            /* Mejoras para formularios */
-            .CSSInput-root, .CSSTextarea-root, .CSSSelect-root {
-              border: 1px solid var(--border) !important;
-              border-radius: var(--radius) !important;
-              padding: 0.75rem !important;
-              font-size: 1rem !important;
-            }
-            
-            .CSSInput-root:focus, .CSSTextarea-root:focus, .CSSSelect-root:focus {
-              outline: none !important;
-              border-color: var(--primary) !important;
-              box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
-            }
-
-            /* Mejoras para imágenes */
-            .CSSImageWrapper-root img {
-              max-width: 100% !important;
-              height: auto !important;
-              border-radius: var(--radius) !important;
-              box-shadow: var(--shadow) !important;
-            }
-          `;
-          
-          cmsElement.shadowRoot.appendChild(style);
           document.querySelector('.loading-container').style.display = 'none';
         }
       }, 100);
-    }
+    };
 
-    // Iniciar la inyección de estilos
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', injectCustomStyles);
-    } else {
-      injectCustomStyles();
-    }
-
-    // Manejar estados de carga y errores
-    let loadTimeout = setTimeout(() => {
-      document.getElementById('status-text').textContent = 'La carga está tardando más de lo esperado...';
-      document.getElementById('status-message').className = 'error';
-      document.getElementById('status-message').innerHTML = `
-        Posibles soluciones:<br>
-        1. Verifica que las URLs en GitHub OAuth coincidan exactamente con las mostradas arriba<br>
-        2. Asegúrate de que tu aplicación OAuth esté configurada correctamente<br>
-        3. Recarga la página para intentarlo nuevamente
-      `;
-      document.getElementById('config-status').textContent = 'Error: Tiempo de espera agotado';
-    }, 8000);
-
-    // Manejar mensajes de error de Static CMS
-    window.addEventListener('message', event => {
+    // Escuchar mensajes de éxito de Static CMS
+    window.addEventListener('message', (event) => {
       if (event.data && event.data.from === 'static-cms') {
-        clearTimeout(loadTimeout);
-        
-        if (event.data.message === 'configError' || event.data.message === 'authError') {
-          document.getElementById('status-text').textContent = 'Error de configuración';
-          document.getElementById('status-message').className = 'error';
-          document.getElementById('status-message').innerHTML = 
-            'Error de autenticación con GitHub. Verifica la configuración de tu aplicación OAuth.';
-          document.getElementById('config-status').textContent = 'Error: Configuración incorrecta';
-          
-          console.error('Error de Static CMS:', event.data.error);
-        } else if (event.data.message === 'ready') {
-          document.getElementById('status-text').textContent = 'Conexión exitosa!';
-          document.getElementById('status-message').className = 'success';
-          document.getElementById('status-message').textContent = 'Conectado correctamente a GitHub';
-          document.getElementById('config-status').textContent = 'Configuración correcta - CMS cargado';
-          clearTimeout(loadTimeout);
+        if (event.data.message === 'ready') {
+          document.getElementById('connection-status').textContent = '¡Conectado exitosamente!';
+          injectCustomStyles();
+        }
+        if (event.data.message === 'authError') {
+          showError('Error de autenticación: ' + (event.data.error || 'Verifica las URLs en GitHub OAuth'));
         }
       }
     });
 
-    // Verificar después de 3 segundos
-    setTimeout(() => {
-      document.getElementById('config-status').textContent = 'Configuración aplicada - Esperando respuesta de GitHub';
-    }, 3000);
+    // Iniciar la inyección de estilos después de 2 segundos
+    setTimeout(injectCustomStyles, 2000);
   </script>
 </body>
 </html>
