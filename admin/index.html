@@ -3,26 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Panel</title>
+  <title>Admin Panel - Liam Menu</title>
   <script src="https://cdn.jsdelivr.net/npm/@staticcms/app@4.0.0/dist/static-cms-app.js"></script>
   <style>
-    /* Estilos generales */
     :root {
       --primary-color: #3498db;
       --primary-hover: #2980b9;
       --secondary-color: #ecf0f1;
-      --secondary-hover: #bdc3c7;
       --dark-color: #2c3e50;
       --light-color: #f8f9fa;
       --border-color: #ddd;
       --text-color: #333;
       --text-light: #7f8c8d;
-      --success-color: #2ecc71;
-      --error-color: #e74c3c;
-      --info-color: #3498db;
       --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-      --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
-      --shadow-lg: 0 8px 24px rgba(0,0,0,0.15);
       --border-radius: 8px;
       --transition: all 0.2s ease;
     }
@@ -30,451 +23,107 @@
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      font-family: 'Segoe UI', Roboto, sans-serif;
       background-color: var(--light-color);
       color: var(--text-color);
       font-size: 15px;
       line-height: 1.6;
     }
 
-    /* Contenedor principal */
     .cms-wrapper {
-      max-width: 1440px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 24px;
+      padding: 20px;
       display: flex;
       min-height: 100vh;
-      gap: 24px;
+      gap: 20px;
     }
 
-    /* Barra lateral */
     .cms-sidebar {
-      width: 280px;
+      width: 250px;
       background-color: var(--dark-color);
       color: white;
-      padding: 24px 0;
+      padding: 20px;
       border-radius: var(--border-radius);
-      box-shadow: var(--shadow-md);
-      flex-shrink: 0;
+      box-shadow: var(--shadow-sm);
       height: fit-content;
     }
 
     .cms-sidebar-header {
-      padding: 0 24px 24px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
       margin-bottom: 20px;
-    }
-
-    .cms-sidebar-nav {
-      padding: 0 12px;
-    }
-
-    .cms-sidebar-nav-item {
-      margin-bottom: 8px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
     }
 
     .cms-sidebar-nav-link {
       color: rgba(255,255,255,0.8);
       text-decoration: none;
-      padding: 12px 20px;
-      border-radius: 6px;
+      padding: 10px;
+      border-radius: 4px;
       display: block;
       transition: var(--transition);
-      margin: 0 12px;
-      font-weight: 500;
     }
 
     .cms-sidebar-nav-link:hover {
       background-color: rgba(255,255,255,0.1);
-      color: white;
     }
 
-    .cms-sidebar-nav-link.active {
-      background-color: var(--primary-color);
-      color: white;
-    }
-
-    /* Contenido principal */
     .cms-main-content {
       flex: 1;
-      padding: 32px;
       background-color: white;
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow-sm);
-      overflow-y: auto;
-      max-height: calc(100vh - 48px);
-    }
-
-    /* Cabecera del contenido */
-    .cms-content-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 32px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .cms-content-title {
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--dark-color);
-      margin: 0;
-    }
-
-    .cms-content-actions {
-      display: flex;
-      gap: 12px;
-    }
-
-    /* Botones */
-    .cms-button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      height: 40px;
-    }
-
-    .cms-button-primary {
-      background-color: var(--primary-color);
-      color: white;
-    }
-
-    .cms-button-primary:hover {
-      background-color: var(--primary-hover);
-    }
-
-    .cms-button-secondary {
-      background-color: var(--secondary-color);
-      color: var(--dark-color);
-      border: 1px solid var(--border-color);
-    }
-
-    .cms-button-secondary:hover {
-      background-color: var(--secondary-hover);
-    }
-
-    /* Tarjetas de colecciones */
-    .cms-collection-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 24px;
-      margin-bottom: 32px;
-    }
-
-    .cms-collection-card {
-      background-color: white;
-      border: 1px solid var(--border-color);
-      border-radius: var(--border-radius);
-      padding: 24px;
-      transition: var(--transition);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .cms-collection-card:hover {
-      box-shadow: var(--shadow-md);
-      transform: translateY(-4px);
-    }
-
-    .cms-collection-title {
-      font-size: 20px;
-      font-weight: 600;
-      margin: 0 0 12px 0;
-      color: var(--dark-color);
-    }
-
-    .cms-collection-description {
-      color: var(--text-light);
-      margin: 0 0 16px 0;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .cms-collection-count {
-      display: inline-block;
-      background-color: var(--secondary-color);
-      color: var(--dark-color);
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    /* Lista de entradas */
-    .cms-list {
-      border: 1px solid var(--border-color);
-      border-radius: var(--border-radius);
-      overflow: hidden;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .cms-list-item {
-      padding: 18px 24px;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: var(--transition);
-    }
-
-    .cms-list-item:last-child {
-      border-bottom: none;
-    }
-
-    .cms-list-item:hover {
-      background-color: var(--light-color);
-    }
-
-    .cms-list-item-title {
-      font-weight: 600;
-      color: var(--dark-color);
-      font-size: 15px;
-    }
-
-    .cms-list-item-actions {
-      display: flex;
-      gap: 10px;
-    }
-
-    /* Formularios */
-    .cms-form {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 24px;
-      background-color: white;
+      padding: 25px;
       border-radius: var(--border-radius);
       box-shadow: var(--shadow-sm);
     }
 
     .cms-form-group {
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
 
     .cms-form-label {
       display: block;
-      font-weight: 600;
       margin-bottom: 8px;
+      font-weight: 600;
       color: var(--dark-color);
-      font-size: 15px;
     }
 
     .cms-form-input,
     .cms-form-textarea,
     .cms-form-select {
       width: 100%;
-      padding: 12px 16px;
+      padding: 12px;
       border: 1px solid var(--border-color);
       border-radius: 6px;
       font-size: 15px;
-      transition: var(--transition);
-      background-color: white;
+      box-sizing: border-box;
     }
 
-    .cms-form-input:focus,
-    .cms-form-textarea:focus,
-    .cms-form-select:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-    }
-
-    .cms-form-textarea {
-      min-height: 140px;
-      resize: vertical;
-      font-family: inherit;
-    }
-
-    /* Widget de booleano (toggle) */
-    .cms-widget-boolean {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .cms-widget-boolean input[type="checkbox"] {
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-      accent-color: var(--primary-color);
-    }
-
-    /* Widget de imagen */
     .cms-widget-image {
       border: 2px dashed var(--border-color);
       border-radius: 6px;
-      padding: 32px;
-      text-align: center;
-      cursor: pointer;
-      transition: var(--transition);
-      background-color: rgba(0,0,0,0.02);
-      min-height: 120px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .cms-widget-image:hover {
-      border-color: var(--primary-color);
-      background-color: rgba(52, 152, 219, 0.05);
-    }
-
-    .cms-widget-image-preview {
-      max-width: 100%;
-      max-height: 240px;
-      margin-bottom: 16px;
-      border-radius: 4px;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .cms-widget-image-instructions {
-      color: var(--text-light);
-      font-size: 14px;
-      margin-top: 8px;
-    }
-
-    /* Modal */
-    .cms-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0,0,0,0.6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
       padding: 20px;
+      text-align: center;
+      margin-bottom: 16px;
+      background-color: #f9f9f9;
     }
 
-    .cms-modal-content {
-      background-color: white;
-      border-radius: var(--border-radius);
-      width: 100%;
-      max-width: 700px;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: var(--shadow-lg);
-    }
-
-    .cms-modal-header {
-      padding: 24px 24px 20px;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .cms-modal-title {
-      font-size: 22px;
-      font-weight: 700;
-      margin: 0;
-      color: var(--dark-color);
-    }
-
-    .cms-modal-close {
-      background: none;
+    .cms-button {
+      padding: 10px 20px;
+      background-color: var(--primary-color);
+      color: white;
       border: none;
-      font-size: 24px;
-      cursor: pointer;
-      color: var(--text-light);
-      padding: 0;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      transition: var(--transition);
-    }
-
-    .cms-modal-close:hover {
-      background-color: rgba(0,0,0,0.05);
-      color: var(--dark-color);
-    }
-
-    .cms-modal-body {
-      padding: 24px;
-    }
-
-    .cms-modal-footer {
-      padding: 20px 24px;
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      justify-content: flex-end;
-      gap: 12px;
-    }
-
-    /* Notificaciones */
-    .cms-notification {
-      position: fixed;
-      top: 24px;
-      right: 24px;
-      padding: 16px 24px;
       border-radius: 6px;
-      box-shadow: var(--shadow-md);
-      z-index: 1100;
-      max-width: 400px;
-      font-size: 14px;
-      font-weight: 500;
-    }
-
-    .cms-notification-success {
-      background-color: var(--success-color);
-      color: white;
-    }
-
-    .cms-notification-error {
-      background-color: var(--error-color);
-      color: white;
-    }
-
-    .cms-notification-info {
-      background-color: var(--info-color);
-      color: white;
-    }
-
-    /* Responsive */
-    @media (max-width: 1024px) {
-      .cms-wrapper {
-        flex-direction: column;
-        gap: 20px;
-      }
-
-      .cms-sidebar {
-        width: 100%;
-      }
-
-      .cms-main-content {
-        padding: 24px;
-      }
-
-      .cms-collection-grid {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      }
+      font-size: 15px;
+      cursor: pointer;
+      transition: var(--transition);
     }
 
     @media (max-width: 768px) {
-      .cms-collection-grid {
-        grid-template-columns: 1fr;
+      .cms-wrapper {
+        flex-direction: column;
       }
-
-      .cms-content-title {
-        font-size: 24px;
-      }
-
-      .cms-button {
-        padding: 8px 16px;
-        font-size: 13px;
+      .cms-sidebar {
+        width: 100%;
       }
     }
   </style>
@@ -483,19 +132,16 @@
   <div class="cms-wrapper">
     <aside class="cms-sidebar">
       <div class="cms-sidebar-header">
-        <h2 style="color: white; margin: 0; font-size: 20px; font-weight: 600;">Admin Panel</h2>
+        <h2 style="color: white; margin: 0;">Admin Panel</h2>
       </div>
-      <nav class="cms-sidebar-nav">
-        <div class="cms-sidebar-nav-item">
-          <a href="#" class="cms-sidebar-nav-link active">Productos</a>
-        </div>
+      <nav>
+        <a href="#" class="cms-sidebar-nav-link">Productos</a>
       </nav>
     </aside>
     <main class="cms-main-content" id="static-cms-app"></main>
   </div>
 
   <script>
-    // Configuración de Static CMS con proxy
     window.CMS.init({
       config: {
         backend: {
