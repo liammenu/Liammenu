@@ -5,11 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Panel de Administración - Liam's Menu</title>
   <script src="https://cdn.jsdelivr.net/npm/@staticcms/app@4.0.0/dist/static-cms-app.js"></script>
-  <style id="cms-custom-styles">
-    /* Este bloque se mantendrá vacío, los estilos se inyectarán via JavaScript */
+  <style>
+    /* Estilos básicos para la página de carga */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f8fafc;
+      color: #334155;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .loading {
+      font-size: 1.2rem;
+      color: #64748b;
+    }
   </style>
 </head>
 <body>
+  <div class="loading">Cargando panel de administración...</div>
+
   <script>
     // Configuración de Static CMS
     window.CMS.init({
@@ -85,200 +101,208 @@
       }
     });
 
-    // Función para aplicar estilos después de que Static CMS haya cargado
-    function applyCustomStyles() {
-      const customStyles = `
-        /* Variables de diseño */
-        :root {
-          --primary: #2563eb;
-          --primary-hover: #1e40af;
-          --secondary: #64748b;
-          --accent: #f1f5f9;
-          --text: #334155;
-          --text-light: #64748b;
-          --border: #e2e8f0;
-          --success: #10b981;
-          --card-bg: #ffffff;
-          --sidebar-bg: #1e293b;
-          --radius: 8px;
-          --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Estilos generales */
-        body {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-          color: var(--text) !important;
-          background-color: #f8fafc !important;
-        }
-
-        /* Barra lateral */
-        [class*="Sidebar"] {
-          background-color: var(--sidebar-bg) !important;
-          color: white !important;
-        }
+    // Función para inyectar estilos en el Shadow DOM de Static CMS
+    function injectCustomStyles() {
+      // Esperar a que Static CMS cargue su interfaz
+      const checkForShadowRoot = setInterval(() => {
+        // Buscar el elemento que contiene el Shadow DOM de Static CMS
+        const cmsElement = document.querySelector('static-cms');
         
-        [class*="SidebarNavItem"] {
-          color: rgba(255, 255, 255, 0.8) !important;
-          border-radius: 6px !important;
-          margin: 4px 8px !important;
-          padding: 10px 16px !important;
-        }
-        
-        [class*="SidebarNavItem"]:hover {
-          background-color: rgba(255, 255, 255, 0.1) !important;
-          color: white !important;
-        }
-        
-        [class*="SidebarNavItem-selected"] {
-          background-color: var(--primary) !important;
-          color: white !important;
-        }
-
-        /* Cabeceras */
-        [class*="Heading-root"] {
-          color: var(--text) !important;
-          font-weight: 600 !important;
-        }
-        
-        [class*="CollectionHeading"] {
-          font-size: 1.5rem !important;
-          margin-bottom: 1.5rem !important;
-          padding-bottom: 0.75rem !important;
-          border-bottom: 1px solid var(--border) !important;
-        }
-
-        /* Tarjetas y contenedores */
-        [class*="Card-root"] {
-          border-radius: var(--radius) !important;
-          box-shadow: var(--shadow) !important;
-          border: 1px solid var(--border) !important;
-          padding: 1.5rem !important;
-          margin-bottom: 1.5rem !important;
-          background-color: var(--card-bg) !important;
-        }
-
-        /* Botones */
-        [class*="Button-root"] {
-          border-radius: var(--radius) !important;
-          font-weight: 500 !important;
-          padding: 0.625rem 1.25rem !important;
-        }
-        
-        [class*="Button-primary"] {
-          background-color: var(--primary) !important;
-        }
-        
-        [class*="Button-primary"]:hover {
-          background-color: var(--primary-hover) !important;
-        }
-
-        /* Campos de formulario */
-        [class*="FormField-root"] {
-          margin-bottom: 1.5rem !important;
-        }
-        
-        [class*="Label-root"] {
-          font-size: 1rem !important;
-          font-weight: 600 !important;
-          color: var(--text) !important;
-          margin-bottom: 0.5rem !important;
-        }
-        
-        [class*="HelpText-root"] {
-          font-size: 0.875rem !important;
-          color: var(--text-light) !important;
-          margin-top: 0.5rem !important;
-        }
-        
-        [class*="Input-root"], [class*="Textarea-root"], [class*="Select-root"] {
-          border: 1px solid var(--border) !important;
-          border-radius: var(--radius) !important;
-          padding: 0.75rem !important;
-          font-size: 1rem !important;
-        }
-        
-        [class*="Input-root"]:focus, [class*="Textarea-root"]:focus, [class*="Select-root"]:focus {
-          outline: none !important;
-          border-color: var(--primary) !important;
-          box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
-        }
-
-        /* Imágenes - solución al problema de tamaño */
-        [class*="ImageWrapper-root"] img {
-          max-width: 100% !important;
-          height: auto !important;
-          border-radius: var(--radius) !important;
-          box-shadow: var(--shadow) !important;
-        }
-        
-        [class*="MediaLibraryCard-root"] {
-          max-width: 300px !important;
-          border: 1px solid var(--border) !important;
-          border-radius: var(--radius) !important;
-          padding: 1rem !important;
-        }
-
-        /* Listas y tablas */
-        [class*="CollectionList-root"] {
-          border: 1px solid var(--border) !important;
-          border-radius: var(--radius) !important;
-          overflow: hidden !important;
-          box-shadow: var(--shadow) !important;
-        }
-        
-        [class*="CollectionList-header"] {
-          background-color: var(--accent) !important;
-          padding: 1rem 1.5rem !important;
-          border-bottom: 1px solid var(--border) !important;
-        }
-        
-        [class*="CollectionList-item"] {
-          padding: 1rem 1.5rem !important;
-          border-bottom: 1px solid var(--border) !important;
-        }
-        
-        [class*="CollectionList-item"]:last-child {
-          border-bottom: none !important;
-        }
-
-        /* Ajustes responsivos */
-        @media (max-width: 768px) {
-          [class*="Card-root"] {
-            padding: 1rem !important;
-          }
+        if (cmsElement && cmsElement.shadowRoot) {
+          clearInterval(checkForShadowRoot);
           
-          [class*="CollectionList-item"], 
-          [class*="CollectionList-header"] {
-            padding: 0.75rem 1rem !important;
-          }
-        }
+          // Crear elemento style dentro del Shadow DOM
+          const style = document.createElement('style');
+          style.textContent = `
+            /* Variables de diseño */
+            :host {
+              --primary: #2563eb;
+              --primary-hover: #1e40af;
+              --secondary: #64748b;
+              --accent: #f1f5f9;
+              --text: #334155;
+              --text-light: #64748b;
+              --border: #e2e8f0;
+              --success: #10b981;
+              --card-bg: #ffffff;
+              --sidebar-bg: #1e293b;
+              --radius: 8px;
+              --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            }
 
-        /* Estilos para modo de edición */
-        [class*="Editor-root"] {
-          border: 1px solid var(--border) !important;
-          border-radius: var(--radius) !important;
-          padding: 1rem !important;
-        }
-      `;
+            /* Estilos generales */
+            body {
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+              color: var(--text);
+              background-color: #f8fafc;
+            }
 
-      // Inyectar estilos en el head
-      const styleElement = document.getElementById('cms-custom-styles');
-      styleElement.textContent = customStyles;
-      
-      // También aplicar estilos directamente a elementos existentes
-      document.querySelectorAll('[class*="Sidebar"]').forEach(el => {
-        if (!el.closest('[data-testid="collection-main"]')) {
-          el.style.backgroundColor = '#1e293b !important';
+            /* Barra lateral */
+            .sidebar {
+              background-color: var(--sidebar-bg);
+              color: white;
+            }
+            
+            .sidebar-nav-item {
+              color: rgba(255, 255, 255, 0.8);
+              border-radius: 6px;
+              margin: 4px 8px;
+              padding: 10px 16px;
+            }
+            
+            .sidebar-nav-item:hover {
+              background-color: rgba(255, 255, 255, 0.1);
+              color: white;
+            }
+            
+            .sidebar-nav-item.selected {
+              background-color: var(--primary);
+              color: white;
+            }
+
+            /* Cabeceras */
+            .heading {
+              color: var(--text);
+              font-weight: 600;
+            }
+            
+            .collection-heading {
+              font-size: 1.5rem;
+              margin-bottom: 1.5rem;
+              padding-bottom: 0.75rem;
+              border-bottom: 1px solid var(--border);
+            }
+
+            /* Tarjetas y contenedores */
+            .card {
+              border-radius: var(--radius);
+              box-shadow: var(--shadow);
+              border: 1px solid var(--border);
+              padding: 1.5rem;
+              margin-bottom: 1.5rem;
+              background-color: var(--card-bg);
+            }
+
+            /* Botones */
+            .button {
+              border-radius: var(--radius);
+              font-weight: 500;
+              padding: 0.625rem 1.25rem;
+            }
+            
+            .button-primary {
+              background-color: var(--primary);
+              color: white;
+            }
+            
+            .button-primary:hover {
+              background-color: var(--primary-hover);
+            }
+
+            /* Campos de formulario */
+            .form-field {
+              margin-bottom: 1.5rem;
+            }
+            
+            .label {
+              font-size: 1rem;
+              font-weight: 600;
+              color: var(--text);
+              margin-bottom: 0.5rem;
+            }
+            
+            .help-text {
+              font-size: 0.875rem;
+              color: var(--text-light);
+              margin-top: 0.5rem;
+            }
+            
+            .input, .textarea, .select {
+              border: 1px solid var(--border);
+              border-radius: var(--radius);
+              padding: 0.75rem;
+              font-size: 1rem;
+            }
+            
+            .input:focus, .textarea:focus, .select:focus {
+              outline: none;
+              border-color: var(--primary);
+              box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            }
+
+            /* Imágenes - solución al problema de tamaño */
+            .image-wrapper img {
+              max-width: 100%;
+              height: auto;
+              border-radius: var(--radius);
+              box-shadow: var(--shadow);
+            }
+            
+            .media-library-card {
+              max-width: 300px;
+              border: 1px solid var(--border);
+              border-radius: var(--radius);
+              padding: 1rem;
+            }
+
+            /* Listas y tablas */
+            .collection-list {
+              border: 1px solid var(--border);
+              border-radius: var(--radius);
+              overflow: hidden;
+              box-shadow: var(--shadow);
+            }
+            
+            .collection-list-header {
+              background-color: var(--accent);
+              padding: 1rem 1.5rem;
+              border-bottom: 1px solid var(--border);
+            }
+            
+            .collection-list-item {
+              padding: 1rem 1.5rem;
+              border-bottom: 1px solid var(--border);
+            }
+            
+            .collection-list-item:last-child {
+              border-bottom: none;
+            }
+
+            /* Ajustes responsivos */
+            @media (max-width: 768px) {
+              .card {
+                padding: 1rem;
+              }
+              
+              .collection-list-item, 
+              .collection-list-header {
+                padding: 0.75rem 1rem;
+              }
+            }
+
+            /* Estilos para modo de edición */
+            .editor {
+              border: 1px solid var(--border);
+              border-radius: var(--radius);
+              padding: 1rem;
+            }
+          `;
+          
+          // Inyectar estilos en el Shadow DOM
+          cmsElement.shadowRoot.appendChild(style);
+          
+          // Ocultar mensaje de carga
+          document.querySelector('.loading').style.display = 'none';
         }
-      });
+      }, 100);
     }
 
-    // Esperar a que Static CMS cargue y luego aplicar estilos
-    setTimeout(applyCustomStyles, 1000);
-    
-    // También aplicar estilos cuando se detecten cambios en el DOM
-    const observer = new MutationObserver(applyCustomStyles);
-    observer.observe(document.body, { childList: true, subtree: true });
+    // Iniciar la inyección de estilos después de que la página cargue
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', injectCustomStyles);
+    } else {
+      injectCustomStyles();
+    }
   </script>
 </body>
 </html>
