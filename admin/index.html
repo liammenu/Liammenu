@@ -4,14 +4,40 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Panel</title>
-  <script src="https://unpkg.com/@staticcms/app@^4.0.0/dist/static-cms-app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@staticcms/app@4.0.0/dist/static-cms-app.js"></script>
   <style>
     body { margin: 0; font-family: sans-serif; }
   </style>
 </head>
 <body>
   <script>
-    window.CMS.init();
+    // Configuración de Static CMS con proxy
+    window.CMS.init({
+      config: {
+        backend: {
+          name: 'proxy',
+          proxy_url: 'https://api.staticcms.org/github'
+        },
+        media_folder: "images",
+        public_folder: "/images",
+        collections: [
+          {
+            name: "productos",
+            label: "Productos",
+            folder: "_data/productos",
+            create: true,
+            fields: [
+              { name: "title", label: "Título", widget: "string" },
+              { name: "price", label: "Precio", widget: "number" },
+              { name: "image", label: "Imagen", widget: "image" },
+              { name: "description", label: "Descripción", widget: "text" },
+              { name: "categoria", label: "Categoría", widget: "select", options: ["OFERTAS", "PIZZAS", "LOMOS", "MILANESAS", "ZAPPIN Y PAPAS", "PATYS"] },
+              { name: "disponible", label: "Disponible", widget: "boolean", default: true }
+            ]
+          }
+        ]
+      }
+    });
   </script>
 </body>
 </html>
