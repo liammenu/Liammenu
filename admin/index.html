@@ -5,193 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Panel de Administración - Liam's Menu</title>
   <script src="https://cdn.jsdelivr.net/npm/@staticcms/app@4.0.0/dist/static-cms-app.js"></script>
-  <style>
-    /* ESTILOS DE ALTA PRIORIDAD PARA STATIC CMS */
-    
-    /* Variables de diseño */
-    :root {
-      --primary: #2563eb;
-      --primary-hover: #1e40af;
-      --secondary: #64748b;
-      --accent: #f1f5f9;
-      --text: #334155;
-      --text-light: #64748b;
-      --border: #e2e8f0;
-      --success: #10b981;
-      --card-bg: #ffffff;
-      --sidebar-bg: #1e293b;
-      --radius: 8px;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Fuerza estilos con !important para sobrescribir los de Static CMS */
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-      color: var(--text) !important;
-      background-color: #f8fafc !important;
-    }
-
-    /* Barra lateral */
-    .CSSSidebar-root {
-      background-color: var(--sidebar-bg) !important;
-      color: white !important;
-    }
-    
-    .CSSSidebarNavItem-button {
-      color: rgba(255, 255, 255, 0.8) !important;
-      border-radius: 6px !important;
-      margin: 4px 8px !important;
-      padding: 10px 16px !important;
-    }
-    
-    .CSSSidebarNavItem-button:hover {
-      background-color: rgba(255, 255, 255, 0.1) !important;
-      color: white !important;
-    }
-    
-    .CSSSidebarNavItem-selected {
-      background-color: var(--primary) !important;
-      color: white !important;
-    }
-
-    /* Cabeceras */
-    .CSSHeading-root {
-      color: var(--text) !important;
-      font-weight: 600 !important;
-    }
-    
-    .CSSCollectionHeading-root {
-      font-size: 1.5rem !important;
-      margin-bottom: 1.5rem !important;
-      padding-bottom: 0.75rem !important;
-      border-bottom: 1px solid var(--border) !important;
-    }
-
-    /* Tarjetas y contenedores */
-    .CSSCard-root {
-      border-radius: var(--radius) !important;
-      box-shadow: var(--shadow) !important;
-      border: 1px solid var(--border) !important;
-      padding: 1.5rem !important;
-      margin-bottom: 1.5rem !important;
-      background-color: var(--card-bg) !important;
-    }
-
-    /* Botones */
-    .CSSButton-root {
-      border-radius: var(--radius) !important;
-      font-weight: 500 !important;
-      padding: 0.625rem 1.25rem !important;
-      transition: all 0.2s ease !important;
-    }
-    
-    .CSSButton-primary {
-      background-color: var(--primary) !important;
-    }
-    
-    .CSSButton-primary:hover {
-      background-color: var(--primary-hover) !important;
-    }
-
-    /* Campos de formulario */
-    .CSSFormField-root {
-      margin-bottom: 1.5rem !important;
-    }
-    
-    .CSSLabel-root {
-      font-size: 1rem !important;
-      font-weight: 600 !important;
-      color: var(--text) !important;
-      margin-bottom: 0.5rem !important;
-    }
-    
-    .CSSHelpText-root {
-      font-size: 0.875rem !important;
-      color: var(--text-light) !important;
-      margin-top: 0.5rem !important;
-    }
-    
-    .CSSInput-root, .CSSTextarea-root, .CSSSelect-root {
-      border: 1px solid var(--border) !important;
-      border-radius: var(--radius) !important;
-      padding: 0.75rem !important;
-      font-size: 1rem !important;
-    }
-    
-    .CSSInput-root:focus, .CSSTextarea-root:focus, .CSSSelect-root:focus {
-      outline: none !important;
-      border-color: var(--primary) !important;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
-    }
-
-    /* Imágenes - solución al problema de tamaño */
-    .CSSImageWrapper-root img {
-      max-width: 100% !important;
-      height: auto !important;
-      border-radius: var(--radius) !important;
-      box-shadow: var(--shadow) !important;
-    }
-    
-    .CSSMediaLibraryCard-root {
-      max-width: 300px !important;
-      border: 1px solid var(--border) !important;
-      border-radius: var(--radius) !important;
-      padding: 1rem !important;
-    }
-
-    /* Listas y tablas */
-    .CSSCollectionList-root {
-      border: 1px solid var(--border) !important;
-      border-radius: var(--radius) !important;
-      overflow: hidden !important;
-      box-shadow: var(--shadow) !important;
-    }
-    
-    .CSSCollectionList-header {
-      background-color: var(--accent) !important;
-      padding: 1rem 1.5rem !important;
-      border-bottom: 1px solid var(--border) !important;
-    }
-    
-    .CSSCollectionList-item {
-      padding: 1rem 1.5rem !important;
-      border-bottom: 1px solid var(--border) !important;
-    }
-    
-    .CSSCollectionList-item:last-child {
-      border-bottom: none !important;
-    }
-
-    /* Ajustes responsivos */
-    @media (max-width: 768px) {
-      .CSSCard-root {
-        padding: 1rem !important;
-      }
-      
-      .CSSCollectionList-item, 
-      .CSSCollectionList-header {
-        padding: 0.75rem 1rem !important;
-      }
-    }
-
-    /* Estilos para modo de edición */
-    .CSSEditor-root {
-      border: 1px solid var(--border) !important;
-      border-radius: var(--radius) !important;
-      padding: 1rem !important;
-    }
+  <style id="cms-custom-styles">
+    /* Este bloque se mantendrá vacío, los estilos se inyectarán via JavaScript */
   </style>
 </head>
 <body>
   <script>
-    // Configuración de Static CMS - SIN MODIFICACIONES
+    // Configuración de Static CMS
     window.CMS.init({
       config: {
         backend: {
           name: 'proxy',
-          proxy_url: window.location.href.includes('localhost') 
-            ? 'http://localhost:8081/api/v1' 
-            : 'https://api.staticcms.org/github'
+          proxy_url: 'https://api.staticcms.org/github'
         },
         locale: 'es',
         site_url: 'https://liammenu.github.io',
@@ -259,6 +84,201 @@
         ]
       }
     });
+
+    // Función para aplicar estilos después de que Static CMS haya cargado
+    function applyCustomStyles() {
+      const customStyles = `
+        /* Variables de diseño */
+        :root {
+          --primary: #2563eb;
+          --primary-hover: #1e40af;
+          --secondary: #64748b;
+          --accent: #f1f5f9;
+          --text: #334155;
+          --text-light: #64748b;
+          --border: #e2e8f0;
+          --success: #10b981;
+          --card-bg: #ffffff;
+          --sidebar-bg: #1e293b;
+          --radius: 8px;
+          --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Estilos generales */
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+          color: var(--text) !important;
+          background-color: #f8fafc !important;
+        }
+
+        /* Barra lateral */
+        [class*="Sidebar"] {
+          background-color: var(--sidebar-bg) !important;
+          color: white !important;
+        }
+        
+        [class*="SidebarNavItem"] {
+          color: rgba(255, 255, 255, 0.8) !important;
+          border-radius: 6px !important;
+          margin: 4px 8px !important;
+          padding: 10px 16px !important;
+        }
+        
+        [class*="SidebarNavItem"]:hover {
+          background-color: rgba(255, 255, 255, 0.1) !important;
+          color: white !important;
+        }
+        
+        [class*="SidebarNavItem-selected"] {
+          background-color: var(--primary) !important;
+          color: white !important;
+        }
+
+        /* Cabeceras */
+        [class*="Heading-root"] {
+          color: var(--text) !important;
+          font-weight: 600 !important;
+        }
+        
+        [class*="CollectionHeading"] {
+          font-size: 1.5rem !important;
+          margin-bottom: 1.5rem !important;
+          padding-bottom: 0.75rem !important;
+          border-bottom: 1px solid var(--border) !important;
+        }
+
+        /* Tarjetas y contenedores */
+        [class*="Card-root"] {
+          border-radius: var(--radius) !important;
+          box-shadow: var(--shadow) !important;
+          border: 1px solid var(--border) !important;
+          padding: 1.5rem !important;
+          margin-bottom: 1.5rem !important;
+          background-color: var(--card-bg) !important;
+        }
+
+        /* Botones */
+        [class*="Button-root"] {
+          border-radius: var(--radius) !important;
+          font-weight: 500 !important;
+          padding: 0.625rem 1.25rem !important;
+        }
+        
+        [class*="Button-primary"] {
+          background-color: var(--primary) !important;
+        }
+        
+        [class*="Button-primary"]:hover {
+          background-color: var(--primary-hover) !important;
+        }
+
+        /* Campos de formulario */
+        [class*="FormField-root"] {
+          margin-bottom: 1.5rem !important;
+        }
+        
+        [class*="Label-root"] {
+          font-size: 1rem !important;
+          font-weight: 600 !important;
+          color: var(--text) !important;
+          margin-bottom: 0.5rem !important;
+        }
+        
+        [class*="HelpText-root"] {
+          font-size: 0.875rem !important;
+          color: var(--text-light) !important;
+          margin-top: 0.5rem !important;
+        }
+        
+        [class*="Input-root"], [class*="Textarea-root"], [class*="Select-root"] {
+          border: 1px solid var(--border) !important;
+          border-radius: var(--radius) !important;
+          padding: 0.75rem !important;
+          font-size: 1rem !important;
+        }
+        
+        [class*="Input-root"]:focus, [class*="Textarea-root"]:focus, [class*="Select-root"]:focus {
+          outline: none !important;
+          border-color: var(--primary) !important;
+          box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+        }
+
+        /* Imágenes - solución al problema de tamaño */
+        [class*="ImageWrapper-root"] img {
+          max-width: 100% !important;
+          height: auto !important;
+          border-radius: var(--radius) !important;
+          box-shadow: var(--shadow) !important;
+        }
+        
+        [class*="MediaLibraryCard-root"] {
+          max-width: 300px !important;
+          border: 1px solid var(--border) !important;
+          border-radius: var(--radius) !important;
+          padding: 1rem !important;
+        }
+
+        /* Listas y tablas */
+        [class*="CollectionList-root"] {
+          border: 1px solid var(--border) !important;
+          border-radius: var(--radius) !important;
+          overflow: hidden !important;
+          box-shadow: var(--shadow) !important;
+        }
+        
+        [class*="CollectionList-header"] {
+          background-color: var(--accent) !important;
+          padding: 1rem 1.5rem !important;
+          border-bottom: 1px solid var(--border) !important;
+        }
+        
+        [class*="CollectionList-item"] {
+          padding: 1rem 1.5rem !important;
+          border-bottom: 1px solid var(--border) !important;
+        }
+        
+        [class*="CollectionList-item"]:last-child {
+          border-bottom: none !important;
+        }
+
+        /* Ajustes responsivos */
+        @media (max-width: 768px) {
+          [class*="Card-root"] {
+            padding: 1rem !important;
+          }
+          
+          [class*="CollectionList-item"], 
+          [class*="CollectionList-header"] {
+            padding: 0.75rem 1rem !important;
+          }
+        }
+
+        /* Estilos para modo de edición */
+        [class*="Editor-root"] {
+          border: 1px solid var(--border) !important;
+          border-radius: var(--radius) !important;
+          padding: 1rem !important;
+        }
+      `;
+
+      // Inyectar estilos en el head
+      const styleElement = document.getElementById('cms-custom-styles');
+      styleElement.textContent = customStyles;
+      
+      // También aplicar estilos directamente a elementos existentes
+      document.querySelectorAll('[class*="Sidebar"]').forEach(el => {
+        if (!el.closest('[data-testid="collection-main"]')) {
+          el.style.backgroundColor = '#1e293b !important';
+        }
+      });
+    }
+
+    // Esperar a que Static CMS cargue y luego aplicar estilos
+    setTimeout(applyCustomStyles, 1000);
+    
+    // También aplicar estilos cuando se detecten cambios en el DOM
+    const observer = new MutationObserver(applyCustomStyles);
+    observer.observe(document.body, { childList: true, subtree: true });
   </script>
 </body>
 </html>
