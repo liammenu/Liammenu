@@ -27,11 +27,9 @@
       --radius: 8px;
     }
 
-    /* Estilos generales */
+    /* Estilos generales SOLO para elementos base */
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
 
     body {
@@ -40,15 +38,17 @@
       color: var(--text-color);
       font-size: 16px;
       line-height: 1.6;
+      margin: 0;
+      padding: 0;
     }
 
-    /* Layout principal */
+    /* Layout principal - solo para contenedores base */
     .cms-wrapper {
       display: flex;
       min-height: 100vh;
     }
 
-    /* Barra lateral */
+    /* Barra lateral - solo estructura básica */
     .cms-sidebar {
       width: 280px;
       background-color: var(--sidebar-bg);
@@ -80,515 +80,92 @@
       margin-top: 0.5rem;
     }
 
-    .cms-sidebar-nav {
-      padding: 0 1rem;
-    }
-
-    .cms-sidebar-nav-item {
-      margin-bottom: 0.5rem;
-    }
-
-    .cms-sidebar-nav-link {
-      color: #cbd5e1;
-      text-decoration: none;
-      padding: 0.75rem 1rem;
-      border-radius: var(--radius);
-      display: flex;
-      align-items: center;
-      transition: all 0.2s;
-      font-weight: 500;
-    }
-
-    .cms-sidebar-nav-link:hover {
-      background-color: var(--sidebar-hover);
-      color: white;
-    }
-
-    .cms-sidebar-nav-link.active {
-      background-color: var(--primary-color);
-      color: white;
-    }
-
-    .cms-sidebar-nav-link i {
-      margin-right: 0.75rem;
-      width: 20px;
-      text-align: center;
-    }
-
-    /* Contenido principal */
+    /* Contenido principal - solo estructura básica */
     .cms-main-content {
       flex: 1;
       padding: 2rem;
       overflow-y: auto;
       max-height: 100vh;
+      background-color: var(--content-bg);
     }
 
-    /* Cabecera del contenido */
-    .cms-content-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--border-color);
+    /* Estilos para elementos específicos de Static CMS */
+    /* Aseguramos que los elementos de CMS tengan estilos consistentes */
+    [class*="CMS"] {
+      box-sizing: border-box;
     }
 
-    .cms-content-title {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--text-color);
-      margin: 0;
-    }
-
-    .cms-content-subtitle {
-      font-size: 1rem;
-      color: var(--text-light);
-      margin-top: 0.5rem;
-    }
-
-    .cms-content-actions {
-      display: flex;
-      gap: 0.75rem;
-    }
-
-    /* Botones */
-    .cms-button {
-      padding: 0.625rem 1.25rem;
-      border: none;
-      border-radius: var(--radius);
-      font-size: 0.875rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .cms-button-primary {
-      background-color: var(--primary-color);
-      color: white;
-    }
-
-    .cms-button-primary:hover {
-      background-color: var(--primary-hover);
-    }
-
-    .cms-button-secondary {
-      background-color: var(--accent-color);
-      color: var(--text-color);
-    }
-
-    .cms-button-secondary:hover {
-      background-color: #e2e8f0;
-    }
-
-    .cms-button-success {
-      background-color: var(--success-color);
-      color: white;
-    }
-
-    .cms-button-success:hover {
-      background-color: #059669;
-    }
-
-    /* Tarjetas de colecciones */
-    .cms-collection-grid {
+    /* Mejora para las tarjetas de colecciones de CMS */
+    .CMSGrid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 1.5rem;
-      margin-bottom: 2rem;
+      margin: 1.5rem 0;
     }
 
-    .cms-collection-card {
-      background-color: var(--card-bg);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      box-shadow: var(--shadow);
-      transition: all 0.2s;
-      border: 1px solid var(--border-color);
-    }
-
-    .cms-collection-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    }
-
-    .cms-collection-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 1rem;
-    }
-
-    .cms-collection-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin: 0;
-      color: var(--text-color);
-    }
-
-    .cms-collection-count {
-      background-color: var(--accent-color);
-      color: var(--text-light);
-      padding: 0.25rem 0.75rem;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .cms-collection-description {
-      color: var(--text-light);
-      margin: 0 0 1.5rem 0;
-      font-size: 0.875rem;
-      line-height: 1.5;
-    }
-
-    .cms-collection-actions {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    /* Lista de entradas */
-    .cms-list-container {
-      background-color: var(--card-bg);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+    .CMSCard {
+      border-radius: var(--radius) !important;
+      box-shadow: var(--shadow) !important;
       overflow: hidden;
-      margin-bottom: 2rem;
-      border: 1px solid var(--border-color);
+      border: 1px solid var(--border-color) !important;
+      transition: all 0.2s ease;
     }
 
-    .cms-list-header {
-      padding: 1rem 1.5rem;
-      background-color: var(--accent-color);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--border-color);
+    .CMSCard:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
     }
 
-    .cms-list-title {
-      font-size: 1.125rem;
-      font-weight: 600;
-      margin: 0;
-      color: var(--text-color);
+    /* Mejora para los botones de CMS */
+    .CMSButton {
+      border-radius: var(--radius) !important;
+      font-weight: 500 !important;
+      transition: all 0.2s ease !important;
     }
 
-    .cms-list {
-      list-style: none;
-    }
-
-    .cms-list-item {
-      padding: 1rem 1.5rem;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: background-color 0.2s;
-    }
-
-    .cms-list-item:last-child {
-      border-bottom: none;
-    }
-
-    .cms-list-item:hover {
-      background-color: #f8fafc;
-    }
-
-    .cms-list-item-title {
-      font-weight: 500;
-      color: var(--text-color);
-      font-size: 1rem;
-    }
-
-    .cms-list-item-meta {
-      font-size: 0.875rem;
-      color: var(--text-light);
-      margin-top: 0.25rem;
-    }
-
-    .cms-list-item-actions {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    /* Formularios */
-    .cms-form-container {
-      background-color: var(--card-bg);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 2rem;
-      margin-bottom: 2rem;
-      border: 1px solid var(--border-color);
-    }
-
-    .cms-form-header {
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .cms-form-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin: 0;
-      color: var(--text-color);
-    }
-
-    .cms-form {
+    /* Mejora para los formularios de CMS */
+    .CMSForm {
       max-width: 800px;
     }
 
-    .cms-form-group {
-      margin-bottom: 1.5rem;
+    .CMSInput, .CMSTextarea, .CMSSelect {
+      border-radius: var(--radius) !important;
+      border: 1px solid var(--border-color) !important;
+      padding: 0.75rem !important;
+      transition: all 0.2s ease !important;
     }
 
-    .cms-form-label {
-      display: block;
-      font-weight: 500;
-      margin-bottom: 0.5rem;
-      color: var(--text-color);
-      font-size: 0.875rem;
+    .CMSInput:focus, .CMSTextarea:focus, .CMSSelect:focus {
+      border-color: var(--primary-color) !important;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+      outline: none !important;
     }
 
-    .cms-form-input,
-    .cms-form-textarea,
-    .cms-form-select {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
-      font-size: 1rem;
-      transition: all 0.2s;
-      background-color: white;
+    /* Mejora para las imágenes en CMS */
+    .CMSImageWrapper img {
+      border-radius: var(--radius) !important;
+      box-shadow: var(--shadow) !important;
+      max-height: 200px !important;
+      object-fit: contain;
     }
 
-    .cms-form-input:focus,
-    .cms-form-textarea:focus,
-    .cms-form-select:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    /* Mejora para las tablas y listas de CMS */
+    .CMSTable {
+      border-radius: var(--radius) !important;
+      overflow: hidden;
+      box-shadow: var(--shadow) !important;
+      border: 1px solid var(--border-color) !important;
     }
 
-    .cms-form-textarea {
-      min-height: 120px;
-      resize: vertical;
+    .CMSTable th {
+      background-color: var(--accent-color) !important;
+      font-weight: 600 !important;
     }
 
-    .cms-form-help {
-      font-size: 0.75rem;
-      color: var(--text-light);
-      margin-top: 0.5rem;
-    }
-
-    /* Widget de booleano (toggle) */
-    .cms-widget-boolean {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .cms-toggle {
-      position: relative;
-      display: inline-block;
-      width: 50px;
-      height: 26px;
-    }
-
-    .cms-toggle input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .cms-toggle-slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      transition: .4s;
-      border-radius: 34px;
-    }
-
-    .cms-toggle-slider:before {
-      position: absolute;
-      content: "";
-      height: 18px;
-      width: 18px;
-      left: 4px;
-      bottom: 4px;
-      background-color: white;
-      transition: .4s;
-      border-radius: 50%;
-    }
-
-    input:checked + .cms-toggle-slider {
-      background-color: var(--success-color);
-    }
-
-    input:checked + .cms-toggle-slider:before {
-      transform: translateX(24px);
-    }
-
-    /* Widget de imagen */
-    .cms-widget-image {
-      border: 2px dashed var(--border-color);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-      background-color: #f8fafc;
-    }
-
-    .cms-widget-image:hover {
-      border-color: var(--primary-color);
-      background-color: #f1f5f9;
-    }
-
-    .cms-widget-image-placeholder {
-      color: var(--text-light);
-      margin-bottom: 1rem;
-      font-size: 3rem;
-    }
-
-    .cms-widget-image-text {
-      color: var(--text-light);
-      font-size: 0.875rem;
-      margin-bottom: 1rem;
-    }
-
-    .cms-widget-image-preview {
-      max-width: 100%;
-      max-height: 200px;
-      margin-bottom: 1rem;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
-
-    /* Modal */
-    .cms-modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 1rem;
-    }
-
-    .cms-modal {
-      background-color: white;
-      border-radius: var(--radius);
-      width: 100%;
-      max-width: 600px;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    }
-
-    .cms-modal-header {
-      padding: 1.5rem;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .cms-modal-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin: 0;
-      color: var(--text-color);
-    }
-
-    .cms-modal-close {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: var(--text-light);
-      padding: 0;
-      width: 30px;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      transition: all 0.2s;
-    }
-
-    .cms-modal-close:hover {
-      background-color: var(--accent-color);
-      color: var(--text-color);
-    }
-
-    .cms-modal-body {
-      padding: 1.5rem;
-    }
-
-    .cms-modal-footer {
-      padding: 1rem 1.5rem;
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      justify-content: flex-end;
-      gap: 0.75rem;
-    }
-
-    /* Notificaciones */
-    .cms-notification {
-      position: fixed;
-      top: 1.5rem;
-      right: 1.5rem;
-      padding: 1rem 1.5rem;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      z-index: 1100;
-      max-width: 400px;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      animation: slideIn 0.3s ease-out;
-    }
-
-    .cms-notification-success {
-      background-color: var(--success-color);
-      color: white;
-    }
-
-    .cms-notification-error {
-      background-color: var(--danger-color);
-      color: white;
-    }
-
-    .cms-notification-info {
-      background-color: var(--primary-color);
-      color: white;
-    }
-
-    .cms-notification-icon {
-      font-size: 1.25rem;
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
+    /* Mejora para los modales de CMS */
+    .CMSModal {
+      border-radius: var(--radius) !important;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
     }
 
     /* Responsive */
@@ -605,82 +182,14 @@
       }
       
       .cms-main-content {
-        margin-left: 0;
         padding: 1.5rem;
-      }
-      
-      .cms-collection-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       }
     }
 
     @media (max-width: 640px) {
-      .cms-content-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-      }
-      
-      .cms-content-actions {
-        width: 100%;
-        justify-content: flex-end;
-      }
-      
-      .cms-collection-grid {
+      .CMSGrid {
         grid-template-columns: 1fr;
       }
-      
-      .cms-modal-overlay {
-        padding: 0.5rem;
-      }
-      
-      .cms-modal {
-        max-height: 95vh;
-      }
-    }
-
-    /* Utilidades */
-    .cms-card {
-      background-color: var(--card-bg);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      border: 1px solid var(--border-color);
-    }
-
-    .cms-divider {
-      height: 1px;
-      background-color: var(--border-color);
-      margin: 1.5rem 0;
-    }
-
-    .cms-text-sm {
-      font-size: 0.875rem;
-    }
-
-    .cms-text-lg {
-      font-size: 1.125rem;
-    }
-
-    .cms-font-semibold {
-      font-weight: 600;
-    }
-
-    .cms-mb-1 {
-      margin-bottom: 0.5rem;
-    }
-
-    .cms-mb-2 {
-      margin-bottom: 1rem;
-    }
-
-    .cms-mt-2 {
-      margin-top: 1rem;
-    }
-
-    .cms-text-center {
-      text-align: center;
     }
   </style>
 </head>
@@ -692,139 +201,16 @@
         <h1 class="cms-sidebar-title">Panel de Admin</h1>
         <p class="cms-sidebar-subtitle">Sistema de gestión de contenido</p>
       </div>
-      <nav class="cms-sidebar-nav">
-        <div class="cms-sidebar-nav-item">
-          <a href="#" class="cms-sidebar-nav-link active">
-            <i>📦</i> Productos
-          </a>
-        </div>
-        <div class="cms-sidebar-nav-item">
-          <a href="#" class="cms-sidebar-nav-link">
-            <i>📁</i> Categorías
-          </a>
-        </div>
-        <div class="cms-sidebar-nav-item">
-          <a href="#" class="cms-sidebar-nav-link">
-            <i>📊</i> Pedidos
-          </a>
-        </div>
-        <div class="cms-sidebar-nav-item">
-          <a href="#" class="cms-sidebar-nav-link">
-            <i>👥</i> Clientes
-          </a>
-        </div>
-        <div class="cms-sidebar-nav-item">
-          <a href="#" class="cms-sidebar-nav-link">
-            <i>⚙️</i> Configuración
-          </a>
-        </div>
-      </nav>
     </aside>
 
     <!-- Contenido principal -->
     <main class="cms-main-content">
-      <header class="cms-content-header">
-        <div>
-          <h1 class="cms-content-title">Gestión de Productos</h1>
-          <p class="cms-content-subtitle">Administra los productos de tu menú</p>
-        </div>
-        <div class="cms-content-actions">
-          <button class="cms-button cms-button-secondary">
-            <i>↻</i> Actualizar
-          </button>
-          <button class="cms-button cms-button-primary">
-            <i>+</i> Nuevo Producto
-          </button>
-        </div>
-      </header>
-
-      <!-- Tarjetas de resumen -->
-      <div class="cms-collection-grid">
-        <div class="cms-collection-card">
-          <div class="cms-collection-header">
-            <h2 class="cms-collection-title">Total Productos</h2>
-            <span class="cms-collection-count">24</span>
-          </div>
-          <p class="cms-collection-description">Número total de productos en el sistema</p>
-        </div>
-        
-        <div class="cms-collection-card">
-          <div class="cms-collection-header">
-            <h2 class="cms-collection-title">Disponibles</h2>
-            <span class="cms-collection-count">18</span>
-          </div>
-          <p class="cms-collection-description">Productos actualmente disponibles</p>
-        </div>
-        
-        <div class="cms-collection-card">
-          <div class="cms-collection-header">
-            <h2 class="cms-collection-title">Agotados</h2>
-            <span class="cms-collection-count">6</span>
-          </div>
-          <p class="cms-collection-description">Productos temporalmente no disponibles</p>
-        </div>
-      </div>
-
-      <!-- Lista de productos -->
-      <div class="cms-list-container">
-        <div class="cms-list-header">
-          <h2 class="cms-list-title">Lista de Productos</h2>
-          <div class="cms-content-actions">
-            <button class="cms-button cms-button-secondary cms-text-sm">
-              <i>🔍</i> Buscar
-            </button>
-          </div>
-        </div>
-        <ul class="cms-list">
-          <li class="cms-list-item">
-            <div>
-              <div class="cms-list-item-title">Pizza Margarita</div>
-              <div class="cms-list-item-meta">PIZZAS • $12.99</div>
-            </div>
-            <div class="cms-list-item-actions">
-              <button class="cms-button cms-button-secondary cms-text-sm">
-                <i>✏️</i> Editar
-              </button>
-              <button class="cms-button cms-button-success cms-text-sm">
-                <i>✔️</i> Activo
-              </button>
-            </div>
-          </li>
-          <li class="cms-list-item">
-            <div>
-              <div class="cms-list-item-title">Lomo Completo</div>
-              <div class="cms-list-item-meta">LOMOS • $15.50</div>
-            </div>
-            <div class="cms-list-item-actions">
-              <button class="cms-button cms-button-secondary cms-text-sm">
-                <i>✏️</i> Editar
-              </button>
-              <button class="cms-button cms-button-success cms-text-sm">
-                <i>✔️</i> Activo
-              </button>
-            </div>
-          </li>
-          <li class="cms-list-item">
-            <div>
-              <div class="cms-list-item-title">Milanesa Napolitana</div>
-              <div class="cms-list-item-meta">MILANESAS • $14.25</div>
-            </div>
-            <div class="cms-list-item-actions">
-              <button class="cms-button cms-button-secondary cms-text-sm">
-                <i>✏️</i> Editar
-              </button>
-              <button class="cms-button cms-button-success cms-text-sm">
-                <i>✔️</i> Activo
-              </button>
-            </div>
-          </li>
-        </ul>
-      </div>
+      <!-- Static CMS generará el contenido aquí dinámicamente -->
     </main>
   </div>
 
   <script>
-    // Configuración de Static CMS con proxy
+    // Configuración de Static CMS con proxy - SIN MODIFICACIONES
     window.CMS.init({
       config: {
         backend: {
