@@ -3,9 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Panel de Administración</title>
+  <title>Panel de Administración - Liam's Menu</title>
   <script src="https://cdn.jsdelivr.net/npm/@staticcms/app@4.0.0/dist/static-cms-app.js"></script>
   <style>
+    /* ESTILOS DE ALTA PRIORIDAD PARA STATIC CMS */
+    
     /* Variables de diseño */
     :root {
       --primary: #2563eb;
@@ -22,198 +24,188 @@
       --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
 
-    /* Estilos base para elementos de Static CMS */
-    .CMSRoot {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      color: var(--text);
-      line-height: 1.5;
+    /* Fuerza estilos con !important para sobrescribir los de Static CMS */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+      color: var(--text) !important;
+      background-color: #f8fafc !important;
     }
 
-    /* Mejoras para la barra lateral */
-    .CMSLayout-sidebar {
+    /* Barra lateral */
+    .CSSSidebar-root {
       background-color: var(--sidebar-bg) !important;
-      border-right: none !important;
-    }
-
-    .CMSSidebarHeader-root {
-      padding: 1.5rem !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-    }
-
-    .CMSSidebarHeader-logo {
       color: white !important;
-      font-size: 1.5rem !important;
-      font-weight: 600 !important;
     }
-
-    .CMSNavLink-root {
-      color: rgba(255, 255, 255, 0.7) !important;
-      border-radius: var(--radius) !important;
-      margin: 0.25rem 0.5rem !important;
-      padding: 0.75rem 1rem !important;
+    
+    .CSSSidebarNavItem-button {
+      color: rgba(255, 255, 255, 0.8) !important;
+      border-radius: 6px !important;
+      margin: 4px 8px !important;
+      padding: 10px 16px !important;
     }
-
-    .CMSNavLink-root:hover {
+    
+    .CSSSidebarNavItem-button:hover {
       background-color: rgba(255, 255, 255, 0.1) !important;
       color: white !important;
     }
-
-    .CMSNavLink-active {
+    
+    .CSSSidebarNavItem-selected {
       background-color: var(--primary) !important;
       color: white !important;
     }
 
-    /* Mejoras para el contenido principal */
-    .CMSLayout-main {
-      background-color: #f8fafc !important;
-      padding: 2rem !important;
+    /* Cabeceras */
+    .CSSHeading-root {
+      color: var(--text) !important;
+      font-weight: 600 !important;
+    }
+    
+    .CSSCollectionHeading-root {
+      font-size: 1.5rem !important;
+      margin-bottom: 1.5rem !important;
+      padding-bottom: 0.75rem !important;
+      border-bottom: 1px solid var(--border) !important;
     }
 
-    .CMSCollection-container {
-      background-color: var(--card-bg) !important;
+    /* Tarjetas y contenedores */
+    .CSSCard-root {
       border-radius: var(--radius) !important;
       box-shadow: var(--shadow) !important;
       border: 1px solid var(--border) !important;
       padding: 1.5rem !important;
       margin-bottom: 1.5rem !important;
+      background-color: var(--card-bg) !important;
     }
 
-    .CMSCollection-header {
-      margin-bottom: 1.5rem !important;
-      padding-bottom: 1rem !important;
-      border-bottom: 1px solid var(--border) !important;
-    }
-
-    .CMSCollection-heading {
-      font-size: 1.5rem !important;
-      font-weight: 700 !important;
-      color: var(--text) !important;
-      margin: 0 !important;
-    }
-
-    /* Mejoras para botones */
-    .CMSButton-button {
+    /* Botones */
+    .CSSButton-root {
       border-radius: var(--radius) !important;
       font-weight: 500 !important;
       padding: 0.625rem 1.25rem !important;
       transition: all 0.2s ease !important;
     }
-
-    .CMSButton-button-primary {
+    
+    .CSSButton-primary {
       background-color: var(--primary) !important;
     }
-
-    .CMSButton-button-primary:hover {
+    
+    .CSSButton-primary:hover {
       background-color: var(--primary-hover) !important;
     }
 
-    /* Mejoras para formularios y campos */
-    .CMSField-root {
+    /* Campos de formulario */
+    .CSSFormField-root {
       margin-bottom: 1.5rem !important;
     }
-
-    .CMSField-label {
+    
+    .CSSLabel-root {
       font-size: 1rem !important;
       font-weight: 600 !important;
       color: var(--text) !important;
       margin-bottom: 0.5rem !important;
     }
-
-    .CMSField-description {
+    
+    .CSSHelpText-root {
       font-size: 0.875rem !important;
       color: var(--text-light) !important;
       margin-top: 0.5rem !important;
     }
-
-    .CMSWidget-control {
+    
+    .CSSInput-root, .CSSTextarea-root, .CSSSelect-root {
       border: 1px solid var(--border) !important;
       border-radius: var(--radius) !important;
       padding: 0.75rem !important;
       font-size: 1rem !important;
-      transition: border-color 0.2s ease !important;
     }
-
-    .CMSWidget-control:focus {
+    
+    .CSSInput-root:focus, .CSSTextarea-root:focus, .CSSSelect-root:focus {
       outline: none !important;
       border-color: var(--primary) !important;
       box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
     }
 
-    /* Mejoras para las imágenes */
-    .CMSMediaLibrary-image {
+    /* Imágenes - solución al problema de tamaño */
+    .CSSImageWrapper-root img {
       max-width: 100% !important;
       height: auto !important;
       border-radius: var(--radius) !important;
       box-shadow: var(--shadow) !important;
     }
-
-    .CMSMediaLibrary-card {
+    
+    .CSSMediaLibraryCard-root {
       max-width: 300px !important;
       border: 1px solid var(--border) !important;
       border-radius: var(--radius) !important;
       padding: 1rem !important;
-      background-color: var(--card-bg) !important;
     }
 
-    /* Mejoras para las tablas y listas */
-    .CMSCollection-list {
+    /* Listas y tablas */
+    .CSSCollectionList-root {
       border: 1px solid var(--border) !important;
       border-radius: var(--radius) !important;
       overflow: hidden !important;
       box-shadow: var(--shadow) !important;
     }
-
-    .CMSCollection-list-header {
+    
+    .CSSCollectionList-header {
       background-color: var(--accent) !important;
       padding: 1rem 1.5rem !important;
       border-bottom: 1px solid var(--border) !important;
     }
-
-    .CMSCollection-list-item {
+    
+    .CSSCollectionList-item {
       padding: 1rem 1.5rem !important;
       border-bottom: 1px solid var(--border) !important;
     }
-
-    .CMSCollection-list-item:last-child {
+    
+    .CSSCollectionList-item:last-child {
       border-bottom: none !important;
     }
 
-    /* Mejoras para el editor de contenido */
-    .CMSEditor-root {
-      border: 1px solid var(--border) !important;
-      border-radius: var(--radius) !important;
-    }
-
-    /* Responsividad */
+    /* Ajustes responsivos */
     @media (max-width: 768px) {
-      .CMSLayout-main {
+      .CSSCard-root {
         padding: 1rem !important;
       }
       
-      .CMSCollection-container {
-        padding: 1rem !important;
+      .CSSCollectionList-item, 
+      .CSSCollectionList-header {
+        padding: 0.75rem 1rem !important;
       }
+    }
+
+    /* Estilos para modo de edición */
+    .CSSEditor-root {
+      border: 1px solid var(--border) !important;
+      border-radius: var(--radius) !important;
+      padding: 1rem !important;
     }
   </style>
 </head>
 <body>
   <script>
-    // Configuración de Static CMS con proxy - SIN MODIFICACIONES
+    // Configuración de Static CMS - SIN MODIFICACIONES
     window.CMS.init({
       config: {
         backend: {
           name: 'proxy',
-          proxy_url: 'https://api.staticcms.org/github'
+          proxy_url: window.location.href.includes('localhost') 
+            ? 'http://localhost:8081/api/v1' 
+            : 'https://api.staticcms.org/github'
         },
         locale: 'es',
+        site_url: 'https://liammenu.github.io',
+        display_url: 'https://liammenu.github.io/Liammenu',
         media_folder: "images",
         public_folder: "/images",
         collections: [
           {
             name: "productos",
             label: "Productos",
+            label_singular: "Producto",
             folder: "data/productos",
             create: true,
+            slug: "{{slug}}",
             fields: [
               { 
                 name: "title", 
@@ -233,7 +225,8 @@
                 name: "image", 
                 label: "Imagen", 
                 widget: "image",
-                hint: "Imagen del producto (relación aspecto recomendada: 1:1)"
+                hint: "Imagen del producto (relación aspecto recomendada: 1:1)",
+                allow_multiple: false
               },
               { 
                 name: "description", 
