@@ -59,37 +59,69 @@
       border-radius: 6px;
       border-left: 4px solid #10b981;
     }
+    .error {
+      color: #ef4444;
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background-color: #fef2f2;
+      border-radius: 6px;
+      border-left: 4px solid #ef4444;
+    }
+    .debug-info {
+      background-color: #fffbeb;
+      border: 1px solid #fcd34d;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-top: 1rem;
+      font-size: 0.85rem;
+    }
   </style>
 </head>
 <body>
   <div class="loading-container">
     <div class="spinner"></div>
-    <div class="loading">Iniciando sesión en GitHub...</div>
+    <div class="loading" id="status-text">Iniciando sesión en GitHub...</div>
     
     <div class="auth-info">
       <p><strong>Configuración de GitHub OAuth:</strong></p>
       <p>Application: <strong>Cms</strong></p>
       <p>Client ID: <code>Ov23liyjswEELMqTAagb</code></p>
-      <p>Homepage URL: <code>https://liammenu.github.io/Liammenu/admin/</code></p>
-      <p>Callback URL: <code>https://liammenu.github.io/Liammenu/admin/index.html</code></p>
+      <p>Homepage URL: <code id="homepage-url"></code></p>
+      <p>Callback URL: <code id="callback-url"></code></p>
     </div>
 
     <div id="status-message" class="success">
       Client ID integrado correctamente. Conectando con GitHub...
     </div>
+
+    <div class="debug-info" id="debug-section" style="display: none;">
+      <p><strong>Información de depuración:</strong></p>
+      <p id="current-url"></p>
+      <p id="config-status">Verificando configuración...</p>
+    </div>
   </div>
 
   <script>
+    // Detectar la URL actual para verificar configuraciones
+    const currentUrl = window.location.href;
+    document.getElementById('current-url').textContent = `URL actual: ${currentUrl}`;
+    document.getElementById('homepage-url').textContent = currentUrl.replace('/index.html', '/');
+    document.getElementById('callback-url').textContent = currentUrl;
+    document.getElementById('debug-section').style.display = 'block';
+
     // Configuración de Static CMS con GitHub OAuth
+    // Usamos la URL actual para evitar problemas de coincidencia
+    const baseUrl = currentUrl.includes('localhost') ? 'http://localhost:8081' : 'https://api.staticcms.org';
+    
     window.CMS.init({
       config: {
         backend: {
           name: 'github',
           repo: 'liammenu/Liammenu',
-          branch: 'main', // Cambia a 'master' si es necesario
-          base_url: 'https://api.staticcms.org',
+          branch: 'main',
+          base_url: baseUrl,
           auth_endpoint: 'api/auth',
-          app_id: 'Ov23liyjswEELMqTAagb' // Tu Client ID
+          app_id: 'Ov23liyjswEELMqTAagb'
         },
         locale: 'es',
         site_url: 'https://liammenu.github.io',
@@ -200,172 +232,90 @@
               padding: 0;
             }
 
-            /* Barra lateral */
-            .sidebar {
-              background: var(--sidebar-bg);
-              color: white;
-              padding: 1rem 0;
+            /* Mejoras para la barra lateral */
+            .CSSSidebar-root {
+              background: var(--sidebar-bg) !important;
+              color: white !important;
             }
             
-            .sidebar-header {
-              padding: 0 1.5rem 1.5rem;
-              border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            .CSSSidebarNavItem-button {
+              color: rgba(255, 255, 255, 0.8) !important;
+              border-radius: 6px !important;
+              margin: 4px 8px !important;
+              padding: 10px 16px !important;
             }
             
-            .sidebar-title {
-              font-size: 1.5rem;
-              font-weight: 700;
-              margin: 0 0 0.5rem 0;
-              color: white;
+            .CSSSidebarNavItem-button:hover {
+              background-color: rgba(255, 255, 255, 0.1) !important;
+              color: white !important;
             }
             
-            .sidebar-subtitle {
-              font-size: 0.875rem;
-              color: #94a3b8;
-              margin: 0;
-            }
-            
-            .sidebar-nav {
-              padding: 0 1rem;
-            }
-            
-            .sidebar-nav-item {
-              display: block;
-              color: #cbd5e1;
-              text-decoration: none;
-              padding: 0.75rem 1rem;
-              border-radius: var(--radius);
-              margin-bottom: 0.25rem;
-              transition: all 0.2s;
-            }
-            
-            .sidebar-nav-item:hover {
-              background-color: rgba(255, 255, 255, 0.08);
-              color: white;
-            }
-            
-            .sidebar-nav-item.active {
-              background-color: var(--primary);
-              color: white;
+            .CSSSidebarNavItem-selected {
+              background-color: var(--primary) !important;
+              color: white !important;
             }
 
-            /* Contenido principal */
-            .main-content {
-              padding: 2rem;
-              background-color: #f8fafc;
+            /* Mejoras para el contenido principal */
+            .CMSMainView-root {
+              background-color: #f8fafc !important;
+              padding: 2rem !important;
             }
             
-            .content-header {
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              margin-bottom: 2rem;
-              padding-bottom: 1.5rem;
-              border-bottom: 1px solid var(--border);
-            }
-            
-            .content-title {
-              font-size: 1.75rem;
-              font-weight: 700;
-              color: var(--text);
-              margin: 0;
+            .CMSCollectionHeading-root {
+              font-size: 1.75rem !important;
+              font-weight: 700 !important;
+              color: var(--text) !important;
+              margin-bottom: 2rem !important;
+              padding-bottom: 1rem !important;
+              border-bottom: 1px solid var(--border) !important;
             }
 
-            /* Botones */
-            .btn {
-              display: inline-flex;
-              align-items: center;
-              justify-content: center;
-              padding: 0.625rem 1.25rem;
-              border: none;
-              border-radius: var(--radius);
-              font-weight: 500;
-              cursor: pointer;
-              transition: all 0.2s;
-              text-decoration: none;
+            /* Mejoras para botones */
+            .CSSButton-root {
+              border-radius: var(--radius) !important;
+              font-weight: 500 !important;
+              padding: 0.625rem 1.25rem !important;
             }
             
-            .btn-primary {
-              background-color: var(--primary);
-              color: white;
+            .CSSButton-primary {
+              background-color: var(--primary) !important;
+              color: white !important;
             }
             
-            .btn-primary:hover {
-              background-color: var(--primary-hover);
+            .CSSButton-primary:hover {
+              background-color: var(--primary-hover) !important;
             }
 
-            /* Tarjetas */
-            .card {
-              background-color: var(--card-bg);
-              border-radius: var(--radius);
-              box-shadow: var(--shadow);
-              border: 1px solid var(--border);
-              padding: 1.5rem;
-              margin-bottom: 1.5rem;
-            }
-            
-            .card-header {
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              margin-bottom: 1rem;
-              padding-bottom: 1rem;
-              border-bottom: 1px solid var(--border);
-            }
-            
-            .card-title {
-              font-size: 1.25rem;
-              font-weight: 600;
-              margin: 0;
-              color: var(--text);
+            /* Mejoras para tarjetas */
+            .CSSCard-root {
+              background-color: var(--card-bg) !important;
+              border-radius: var(--radius) !important;
+              box-shadow: var(--shadow) !important;
+              border: 1px solid var(--border) !important;
+              padding: 1.5rem !important;
+              margin-bottom: 1.5rem !important;
             }
 
-            /* Formularios */
-            .form-group {
-              margin-bottom: 1.5rem;
+            /* Mejoras para formularios */
+            .CSSInput-root, .CSSTextarea-root, .CSSSelect-root {
+              border: 1px solid var(--border) !important;
+              border-radius: var(--radius) !important;
+              padding: 0.75rem !important;
+              font-size: 1rem !important;
             }
             
-            .form-label {
-              display: block;
-              font-weight: 600;
-              margin-bottom: 0.5rem;
-              color: var(--text);
-            }
-            
-            .form-control {
-              width: 100%;
-              padding: 0.75rem;
-              border: 1px solid var(--border);
-              border-radius: var(--radius);
-              font-size: 1rem;
-              transition: all 0.2s;
-            }
-            
-            .form-control:focus {
-              outline: none;
-              border-color: var(--primary);
-              box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            .CSSInput-root:focus, .CSSTextarea-root:focus, .CSSSelect-root:focus {
+              outline: none !important;
+              border-color: var(--primary) !important;
+              box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
             }
 
-            /* Utilidades */
-            .text-center { text-align: center; }
-            .mb-4 { margin-bottom: 1rem; }
-
-            /* Responsive */
-            @media (max-width: 768px) {
-              .main-content {
-                padding: 1rem;
-              }
-              
-              .content-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-              }
-              
-              .card {
-                padding: 1rem;
-              }
+            /* Mejoras para imágenes */
+            .CSSImageWrapper-root img {
+              max-width: 100% !important;
+              height: auto !important;
+              border-radius: var(--radius) !important;
+              box-shadow: var(--shadow) !important;
             }
           `;
           
@@ -382,24 +332,46 @@
       injectCustomStyles();
     }
 
-    // Verificar después de 5 segundos si hay problemas de carga
-    setTimeout(() => {
-      const loadingContainer = document.querySelector('.loading-container');
-      if (loadingContainer.style.display !== 'none') {
-        document.querySelector('.loading').textContent = 'Comprobando conexión con GitHub...';
-      }
-    }, 3000);
+    // Manejar estados de carga y errores
+    let loadTimeout = setTimeout(() => {
+      document.getElementById('status-text').textContent = 'La carga está tardando más de lo esperado...';
+      document.getElementById('status-message').className = 'error';
+      document.getElementById('status-message').innerHTML = `
+        Posibles soluciones:<br>
+        1. Verifica que las URLs en GitHub OAuth coincidan exactamente con las mostradas arriba<br>
+        2. Asegúrate de que tu aplicación OAuth esté configurada correctamente<br>
+        3. Recarga la página para intentarlo nuevamente
+      `;
+      document.getElementById('config-status').textContent = 'Error: Tiempo de espera agotado';
+    }, 8000);
 
-    // Manejar posibles errores
+    // Manejar mensajes de error de Static CMS
     window.addEventListener('message', event => {
       if (event.data && event.data.from === 'static-cms') {
+        clearTimeout(loadTimeout);
+        
         if (event.data.message === 'configError' || event.data.message === 'authError') {
+          document.getElementById('status-text').textContent = 'Error de configuración';
           document.getElementById('status-message').className = 'error';
           document.getElementById('status-message').innerHTML = 
-            'Error de autenticación. Verifica que las URLs en GitHub OAuth coincidan exactamente.';
+            'Error de autenticación con GitHub. Verifica la configuración de tu aplicación OAuth.';
+          document.getElementById('config-status').textContent = 'Error: Configuración incorrecta';
+          
+          console.error('Error de Static CMS:', event.data.error);
+        } else if (event.data.message === 'ready') {
+          document.getElementById('status-text').textContent = 'Conexión exitosa!';
+          document.getElementById('status-message').className = 'success';
+          document.getElementById('status-message').textContent = 'Conectado correctamente a GitHub';
+          document.getElementById('config-status').textContent = 'Configuración correcta - CMS cargado';
+          clearTimeout(loadTimeout);
         }
       }
     });
+
+    // Verificar después de 3 segundos
+    setTimeout(() => {
+      document.getElementById('config-status').textContent = 'Configuración aplicada - Esperando respuesta de GitHub';
+    }, 3000);
   </script>
 </body>
 </html>
