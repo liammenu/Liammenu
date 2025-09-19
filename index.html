@@ -256,7 +256,7 @@ let productos = [];
 // Función para cargar los productos desde el archivo YAML
 async function cargarProductosDesdeYAML() {
   try {
-    const response = await fetch('_data/productos.yml');
+    const response = await fetch('data/productos.yml');
     const yamlText = await response.text();
     productos = jsyaml.load(yamlText);
     
