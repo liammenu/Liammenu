@@ -23,6 +23,8 @@
       background: white;
       border-radius: 12px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 90%;
     }
     .loading {
       font-size: 1.2rem;
@@ -36,33 +38,58 @@
       width: 40px;
       height: 40px;
       animation: spin 1s linear infinite;
-      margin: 0 auto;
+      margin: 0 auto 1.5rem auto;
     }
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
+    }
+    .auth-info {
+      background-color: #f1f5f9;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+    }
+    .success {
+      color: #10b981;
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background-color: #ecfdf5;
+      border-radius: 6px;
+      border-left: 4px solid #10b981;
     }
   </style>
 </head>
 <body>
   <div class="loading-container">
     <div class="spinner"></div>
-    <div class="loading">Cargando panel de administración...</div>
-    <p style="font-size: 0.9rem; color: #94a3b8; margin-top: 1rem;">
-      Conectando con el repositorio de GitHub
-    </p>
+    <div class="loading">Iniciando sesión en GitHub...</div>
+    
+    <div class="auth-info">
+      <p><strong>Configuración de GitHub OAuth:</strong></p>
+      <p>Application: <strong>Cms</strong></p>
+      <p>Client ID: <code>Ov23liyjswEELMqTAagb</code></p>
+      <p>Homepage URL: <code>https://liammenu.github.io/Liammenu/admin/</code></p>
+      <p>Callback URL: <code>https://liammenu.github.io/Liammenu/admin/index.html</code></p>
+    </div>
+
+    <div id="status-message" class="success">
+      Client ID integrado correctamente. Conectando con GitHub...
+    </div>
   </div>
 
   <script>
-    // Configuración de Static CMS - Aseguramos la conexión con GitHub
+    // Configuración de Static CMS con GitHub OAuth
     window.CMS.init({
       config: {
         backend: {
           name: 'github',
-          repo: 'liammenu/Liammenu', // Asegúrate que este es el nombre correcto
-          branch: 'main', // o 'master' dependiendo de tu repo
-          base_url: 'https://api.staticcms.org', // Proxy para autenticación
-          auth_endpoint: 'api/auth'
+          repo: 'liammenu/Liammenu',
+          branch: 'main', // Cambia a 'master' si es necesario
+          base_url: 'https://api.staticcms.org',
+          auth_endpoint: 'api/auth',
+          app_id: 'Ov23liyjswEELMqTAagb' // Tu Client ID
         },
         locale: 'es',
         site_url: 'https://liammenu.github.io',
@@ -74,7 +101,7 @@
             name: "productos",
             label: "Productos",
             label_singular: "Producto",
-            folder: "data/productos", // Ruta a tus archivos YAML
+            folder: "data/productos",
             create: true,
             slug: "{{slug}}",
             fields: [
@@ -173,7 +200,7 @@
               padding: 0;
             }
 
-            /* Mejoras para la barra lateral */
+            /* Barra lateral */
             .sidebar {
               background: var(--sidebar-bg);
               color: white;
@@ -221,14 +248,8 @@
               background-color: var(--primary);
               color: white;
             }
-            
-            .sidebar-nav-item i {
-              margin-right: 0.75rem;
-              width: 20px;
-              text-align: center;
-            }
 
-            /* Mejoras para el contenido principal */
+            /* Contenido principal */
             .main-content {
               padding: 2rem;
               background-color: #f8fafc;
@@ -249,12 +270,6 @@
               color: var(--text);
               margin: 0;
             }
-            
-            .content-subtitle {
-              font-size: 1rem;
-              color: var(--text-light);
-              margin-top: 0.5rem;
-            }
 
             /* Botones */
             .btn {
@@ -268,7 +283,6 @@
               cursor: pointer;
               transition: all 0.2s;
               text-decoration: none;
-              gap: 0.5rem;
             }
             
             .btn-primary {
@@ -278,15 +292,6 @@
             
             .btn-primary:hover {
               background-color: var(--primary-hover);
-            }
-            
-            .btn-secondary {
-              background-color: var(--accent);
-              color: var(--text);
-            }
-            
-            .btn-secondary:hover {
-              background-color: #e5e7eb;
             }
 
             /* Tarjetas */
@@ -341,67 +346,10 @@
               border-color: var(--primary);
               box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
             }
-            
-            .form-text {
-              font-size: 0.875rem;
-              color: var(--text-light);
-              margin-top: 0.5rem;
-            }
-
-            /* Tablas */
-            .table {
-              width: 100%;
-              border-collapse: collapse;
-              background-color: var(--card-bg);
-              border-radius: var(--radius);
-              overflow: hidden;
-              box-shadow: var(--shadow);
-            }
-            
-            .table th {
-              background-color: var(--accent);
-              padding: 1rem;
-              text-align: left;
-              font-weight: 600;
-              color: var(--text);
-            }
-            
-            .table td {
-              padding: 1rem;
-              border-top: 1px solid var(--border);
-            }
-            
-            .table tr:hover {
-              background-color: #f9fafb;
-            }
-
-            /* Imágenes */
-            .img-thumbnail {
-              max-width: 100%;
-              height: auto;
-              border-radius: var(--radius);
-              border: 1px solid var(--border);
-            }
-            
-            .img-preview {
-              max-width: 200px;
-              max-height: 200px;
-              object-fit: contain;
-            }
 
             /* Utilidades */
             .text-center { text-align: center; }
-            .text-right { text-align: right; }
-            .d-flex { display: flex; }
-            .justify-between { justify-content: space-between; }
-            .items-center { align-items: center; }
-            .gap-2 { gap: 0.5rem; }
-            .gap-4 { gap: 1rem; }
-            .mb-0 { margin-bottom: 0; }
-            .mb-2 { margin-bottom: 0.5rem; }
             .mb-4 { margin-bottom: 1rem; }
-            .mt-4 { margin-top: 1rem; }
-            .p-4 { padding: 1rem; }
 
             /* Responsive */
             @media (max-width: 768px) {
@@ -434,22 +382,24 @@
       injectCustomStyles();
     }
 
-    // Manejar errores de configuración
+    // Verificar después de 5 segundos si hay problemas de carga
+    setTimeout(() => {
+      const loadingContainer = document.querySelector('.loading-container');
+      if (loadingContainer.style.display !== 'none') {
+        document.querySelector('.loading').textContent = 'Comprobando conexión con GitHub...';
+      }
+    }, 3000);
+
+    // Manejar posibles errores
     window.addEventListener('message', event => {
       if (event.data && event.data.from === 'static-cms') {
-        if (event.data.message === 'configError') {
-          document.querySelector('.loading').textContent = 'Error de configuración. Verificando conexión...';
-          console.error('Error de Static CMS:', event.data.error);
+        if (event.data.message === 'configError' || event.data.message === 'authError') {
+          document.getElementById('status-message').className = 'error';
+          document.getElementById('status-message').innerHTML = 
+            'Error de autenticación. Verifica que las URLs en GitHub OAuth coincidan exactamente.';
         }
       }
     });
-
-    // Verificar después de 5 segundos si hay problemas de carga
-    setTimeout(() => {
-      if (document.querySelector('.loading-container').style.display !== 'none') {
-        document.querySelector('.loading').textContent = 'La carga está tardando más de lo esperado...';
-      }
-    }, 5000);
   </script>
 </body>
 </html>
