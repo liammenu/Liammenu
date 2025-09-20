@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Panel de Administración - Liam's Menu</title>
-  <!-- Decap CMS (antes Netlify CMS) -->
+  <!-- Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   <style>
     body {
@@ -141,23 +141,29 @@
       elements.spinner.style.display = 'none';
     }
 
-    // Inicializar CMS
+    // Inicializar CMS solo cuando el script esté cargado
     function initCMS() {
-      try {
-        elements.statusText.textContent = "Cargando panel de administración...";
-        elements.debugState.textContent = "Inicializando Decap CMS...";
-        window.CMS.init({ config: cmsConfig });
-      } catch (error) {
-        showError('Error al inicializar CMS: ' + error.message);
+      if (typeof window.CMS !== 'undefined') {
+        try {
+          elements.statusText.textContent = "Cargando panel de administración...";
+          elements.debugState.textContent = "Inicializando Decap CMS...";
+          window.CMS.init({ config: cmsConfig });
+        } catch (error) {
+          showError('Error al inicializar CMS: ' + error.message);
+        }
+      } else {
+        showError('Decap CMS no está cargado. Verifica la conexión a Internet o la URL del script.');
       }
     }
 
-    // Iniciar cuando el DOM esté listo
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initCMS);
-    } else {
-      initCMS();
-    }
+    // Esperar a que el script de Decap CMS esté cargado
+    document.addEventListener('DOMContentLoaded', function() {
+      const script = document.querySelector('script[src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"]');
+      script.onload = initCMS;
+      script.onerror = function() {
+        showError('No se pudo cargar el script de Decap CMS. Verifica la URL o tu conexión a Internet.');
+      };
+    });
   </script>
 </body>
 </html>
