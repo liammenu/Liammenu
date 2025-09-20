@@ -216,12 +216,6 @@
       }
     }
 
-    // Verificar si tenemos un código de autorización en la URL
-    function hasAuthorizationCode() {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.has('code');
-    }
-
     // Función de autenticación con GitHub - URL CORRECTA
     function initGitHubAuth() {
       try {
@@ -268,13 +262,15 @@
         elements.debugState.textContent = 'Código de autorización recibido';
         
         try {
-          // Aquí normalmente se canjearía el código por un token de acceso
-          // Pero como estamos del lado del cliente, inicializamos CMS directamente
+          // Limpiar la URL inmediatamente para evitar que Static CMS detecte el código
+          window.history.replaceState({}, document.title, window.location.pathname);
+          
+          // Inicializar CMS después de recibir el código
           elements.statusText.textContent = 'Inicializando panel de administración...';
           initCMS();
           
         } catch (tokenError) {
-          showError('Error al canjear el código por token: ' + tokenError.message);
+          showError('Error al procesar la autorización: ' + tokenError.message);
         }
         return true;
       }
@@ -363,11 +359,6 @@
       hideElement(elements.callbackBox);
       hideElement(elements.codeReceivedBox);
       elements.debugState.textContent = 'CMS completamente cargado';
-      
-      // Limpiar la URL para evitar re-autenticación
-      if (window.location.search.includes('code=')) {
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }
     }
 
     // Inicializar la página
@@ -375,8 +366,7 @@
       updateDebugInfo();
       
       // Verificar si estamos en un callback de GitHub
-      if (hasAuthorizationCode()) {
-        processGitHubCallback();
+      if (processGitHubCallback()) {
         return;
       }
       
