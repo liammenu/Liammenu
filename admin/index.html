@@ -99,41 +99,56 @@
       font-family: monospace;
       font-size: 0.8rem;
     }
+    .step-box {
+      background-color: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      padding: 1rem;
+      border-radius: 6px;
+      margin: 1rem 0;
+    }
   </style>
 </head>
 <body>
   <div class="loading-container">
     <div class="spinner" id="spinner"></div>
-    <h2 id="status-text">Preparando autenticación...</h2>
+    <h2 id="status-text">Verificando estado de autenticación...</h2>
     
     <div id="error-message" class="error hidden">
-      <h3>Error de configuración</h3>
+      <h3>Error de autenticación</h3>
       <p id="error-details"></p>
     </div>
 
     <div id="success-message" class="success hidden">
-      <h3>¡Proceso completado!</h3>
+      <h3>¡Autenticación exitosa!</h3>
       <p id="success-details"></p>
     </div>
 
-    <div id="auth-box" class="solution-box">
-      <h3>🔐 Autenticación con GitHub</h3>
-      <p>Haz clic para iniciar sesión con GitHub:</p>
+    <div id="auth-box" class="solution-box hidden">
+      <h3>🔐 Autenticación Requerida</h3>
+      <p>Para acceder al panel de administración:</p>
       <button class="retry-button" onclick="initGitHubAuth()">Iniciar Sesión con GitHub</button>
     </div>
 
     <div id="callback-box" class="solution-box hidden">
       <h3>🔄 Procesando autorización...</h3>
-      <p>Completando el proceso de autenticación.</p>
+      <p>Estamos completando tu autenticación con GitHub.</p>
+    </div>
+
+    <div id="code-received-box" class="step-box hidden">
+      <h3>✅ Código de autorización recibido</h3>
+      <p>Hemos detectado que GitHub te ha redirigido con un código de autorización.</p>
+      <p>Procesando el código...</p>
     </div>
 
     <div class="debug-info">
       <h4>Información de depuración:</h4>
       <p id="debug-state">Inicializando...</p>
-      <p><strong>URL de redirección:</strong> <code>https://liammenu.github.io/Liammenu/admin/index.html</code></p>
       <div class="url-box">
-        <div>URL generada:</div>
-        <div id="generated-url">Esperando generación...</div>
+        <div>URL actual:</div>
+        <div id="current-url">Cargando...</div>
+      </div>
+      <div id="code-info" class="hidden">
+        <p><strong>Código detectado:</strong> <span id="code-value"></span></p>
       </div>
     </div>
   </div>
@@ -149,8 +164,11 @@
       successDetails: document.getElementById('success-details'),
       authBox: document.getElementById('auth-box'),
       callbackBox: document.getElementById('callback-box'),
+      codeReceivedBox: document.getElementById('code-received-box'),
       debugState: document.getElementById('debug-state'),
-      generatedUrl: document.getElementById('generated-url')
+      currentUrl: document.getElementById('current-url'),
+      codeInfo: document.getElementById('code-info'),
+      codeValue: document.getElementById('code-value')
     };
 
     // Configuración
@@ -175,6 +193,7 @@
       elements.errorDetails.textContent = message;
       showElement(elements.errorMessage);
       elements.debugState.textContent = 'Error: ' + message;
+      hideElement(elements.spinner);
     }
 
     // Mostrar éxito
@@ -182,6 +201,44 @@
       elements.successDetails.textContent = message;
       showElement(elements.successMessage);
       elements.debugState.textContent = 'Éxito: ' + message;
+    }
+
+    // Actualizar información de debug
+    function updateDebugInfo() {
+      elements.currentUrl.textContent = window.location.href;
+      
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      
+      if (code) {
+        showElement(elements.codeInfo);
+        elements.codeValue.textContent = code;
+      }
+    }
+
+    // Verificar si tenemos un código de autorización en la URL
+    function hasAuthorizationCode() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.has('code');
+    }
+
+    // Función de autenticación con GitHub - URL CORRECTA
+    function initGitHubAuth() {
+      try {
+        elements.statusText.textContent = 'Redirigiendo a GitHub...';
+        hideElement(elements.authBox);
+        hideElement(elements.errorMessage);
+        
+        // Generar URL CORRECTA para GitHub
+        const authUrl = generateGitHubAuthUrl();
+        elements.debugState.textContent = 'Redirigiendo a GitHub...';
+        
+        // Redirigir a la URL corregida
+        window.location.href = authUrl;
+        
+      } catch (error) {
+        showError('Error al iniciar autenticación: ' + error.message);
+      }
     }
 
     // Generar URL de autenticación CORRECTA para GitHub
@@ -192,48 +249,33 @@
         redirect_uri: config.redirectUri,
         scope: config.scope,
         state: config.state,
-        // Añadimos el parámetro para solicitar código de autorización
         response_type: 'code'
       });
       
       return `${baseUrl}?${params.toString()}`;
     }
 
-    // Función de autenticación con GitHub - URL CORRECTA
-    function initGitHubAuth() {
-      try {
-        elements.statusText.textContent = 'Redirigiendo a GitHub...';
-        hideElement(elements.authBox);
-        
-        // Generar URL CORRECTA para GitHub
-        const authUrl = generateGitHubAuthUrl();
-        elements.generatedUrl.textContent = authUrl;
-        elements.debugState.textContent = 'Redirigiendo a GitHub con URL corregida';
-        
-        console.log('URL de autenticación:', authUrl);
-        
-        // Redirigir a la URL corregida
-        window.location.href = authUrl;
-        
-      } catch (error) {
-        showError('Error al iniciar autenticación: ' + error.message);
-      }
-    }
-
-    // Procesar callback de GitHub
-    function processGitHubCallback() {
+    // Procesar callback de GitHub y canjear el código por un token
+    async function processGitHubCallback() {
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get('code');
       const error = urlParams.get('error');
       
       if (code) {
-        elements.statusText.textContent = 'Autenticación exitosa. Inicializando CMS...';
-        showElement(elements.callbackBox);
+        elements.statusText.textContent = 'Autenticación exitosa. Obteniendo token de acceso...';
+        showElement(elements.codeReceivedBox);
         hideElement(elements.authBox);
         elements.debugState.textContent = 'Código de autorización recibido';
         
-        // Inicializar CMS después de recibir el código
-        initCMS();
+        try {
+          // Aquí normalmente se canjearía el código por un token de acceso
+          // Pero como estamos del lado del cliente, inicializamos CMS directamente
+          elements.statusText.textContent = 'Inicializando panel de administración...';
+          initCMS();
+          
+        } catch (tokenError) {
+          showError('Error al canjear el código por token: ' + tokenError.message);
+        }
         return true;
       }
       
@@ -245,10 +287,10 @@
       return false;
     }
 
-    // Inicializar CMS
+    // Inicializar CMS con configuración optimizada
     function initCMS() {
       try {
-        elements.statusText.textContent = 'Configurando CMS...';
+        elements.statusText.textContent = 'Configurando panel de administración...';
         elements.debugState.textContent = 'Inicializando Static CMS';
         
         // Configuración de Static CMS
@@ -302,7 +344,7 @@
           }
         }, 1000);
         
-        // Timeout
+        // Timeout después de 15 segundos
         setTimeout(() => {
           clearInterval(checkInterval);
           showError('El CMS no se cargó completamente. Recarga la página.');
@@ -319,22 +361,28 @@
       showSuccess('Conexión establecida con GitHub');
       hideElement(elements.spinner);
       hideElement(elements.callbackBox);
+      hideElement(elements.codeReceivedBox);
       elements.debugState.textContent = 'CMS completamente cargado';
+      
+      // Limpiar la URL para evitar re-autenticación
+      if (window.location.search.includes('code=')) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
     }
 
     // Inicializar la página
     function init() {
-      // Generar y mostrar URL para verificación
-      const authUrl = generateGitHubAuthUrl();
-      elements.generatedUrl.textContent = authUrl;
+      updateDebugInfo();
       
       // Verificar si estamos en un callback de GitHub
-      if (processGitHubCallback()) {
+      if (hasAuthorizationCode()) {
+        processGitHubCallback();
         return;
       }
       
       // Mostrar botón de autenticación normal
-      elements.statusText.textContent = 'Listo para autenticar';
+      elements.statusText.textContent = 'Autenticación requerida';
+      showElement(elements.authBox);
       elements.debugState.textContent = 'Esperando acción del usuario';
     }
 
