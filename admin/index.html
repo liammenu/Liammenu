@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Panel de Administración - Liam's Menu</title>
   
-  <!-- Usamos una versión más estable de Static CMS -->
+  <!-- Versión estable de Static CMS -->
   <script src="https://cdn.jsdelivr.net/npm/@staticcms/app@3.0.0/dist/static-cms-app.js"></script>
   
   <style>
@@ -16,8 +16,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       margin: 0;
+      padding: 20px;
     }
     .loading-container {
       text-align: center;
@@ -49,6 +50,14 @@
       border-left: 4px solid #ef4444;
       margin: 1rem 0;
     }
+    .success {
+      color: #10b981;
+      padding: 0.75rem;
+      background-color: #ecfdf5;
+      border-radius: 6px;
+      border-left: 4px solid #10b981;
+      margin: 1rem 0;
+    }
     .solution-box {
       background-color: #e0f2fe;
       border: 1px solid #38bdf8;
@@ -78,51 +87,62 @@
       font-size: 0.85rem;
       text-align: left;
     }
-    .success {
-      color: #10b981;
-      padding: 0.75rem;
-      background-color: #ecfdf5;
-      border-radius: 6px;
-      border-left: 4px solid #10b981;
-      margin: 1rem 0;
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
   <div class="loading-container">
-    <div class="spinner"></div>
-    <h2 id="status-text">Configurando acceso a GitHub...</h2>
+    <div class="spinner" id="spinner"></div>
+    <h2 id="status-text">Iniciando configuración...</h2>
     
-    <div id="error-message" class="error" style="display: none;">
-      <h3>Error de conexión con GitHub</h3>
+    <div id="error-message" class="error hidden">
+      <h3>Error de conexión</h3>
       <p id="error-details"></p>
     </div>
 
-    <div class="solution-box">
-      <h3>⚠️ Acción Requerida</h3>
-      <p>Para completar la configuración:</p>
-      <ol>
-        <li>Se abrirá una ventana de login de GitHub</li>
-        <li>Autoriza la aplicación "Cms"</li>
-        <li>Serás redirigido de vuelta al panel</li>
-      </ol>
-      <button class="retry-button" onclick="initGitHubAuth()">Iniciar Autenticación con GitHub</button>
+    <div id="success-message" class="success hidden">
+      <h3>¡Autenticación exitosa!</h3>
+      <p id="success-details"></p>
+    </div>
+
+    <div id="auth-box" class="solution-box hidden">
+      <h3>🔐 Autenticación Requerida</h3>
+      <p>Para acceder al panel de administración:</p>
+      <button class="retry-button" onclick="initGitHubAuth()">Iniciar Sesión con GitHub</button>
+    </div>
+
+    <div id="callback-box" class="solution-box hidden">
+      <h3>🔄 Procesando autorización...</h3>
+      <p>Estamos completando tu autenticación con GitHub.</p>
     </div>
 
     <div class="debug-info">
-      <h4>Información de Configuración:</h4>
-      <p><strong>Client ID:</strong> Ov23liyjswEELMqTAagb</p>
-      <p><strong>Repositorio:</strong> liammenu/Liammenu</p>
-      <p><strong>URLs Configuradas:</strong></p>
-      <ul>
-        <li>Homepage: <code>https://liammenu.github.io/Liammenu/admin/</code></li>
-        <li>Callback: <code>https://liammenu.github.io/Liammenu/admin/index.html</code></li>
-      </ul>
+      <h4>Información de Estado:</h4>
+      <p id="debug-state">Inicializando...</p>
+      <p id="debug-url">URL: <code></code></p>
+      <p id="debug-params">Parámetros: Ninguno</p>
     </div>
   </div>
 
   <script>
-    // Configuración simplificada y mejorada
+    // Elementos del DOM
+    const elements = {
+      spinner: document.getElementById('spinner'),
+      statusText: document.getElementById('status-text'),
+      errorMessage: document.getElementById('error-message'),
+      errorDetails: document.getElementById('error-details'),
+      successMessage: document.getElementById('success-message'),
+      successDetails: document.getElementById('success-details'),
+      authBox: document.getElementById('auth-box'),
+      callbackBox: document.getElementById('callback-box'),
+      debugState: document.getElementById('debug-state'),
+      debugUrl: document.getElementById('debug-url'),
+      debugParams: document.getElementById('debug-params')
+    };
+
+    // Configuración
     const config = {
       backend: {
         name: 'github',
@@ -163,92 +183,150 @@
       ]
     };
 
-    // Función para mostrar errores
-    const showError = (message) => {
-      document.getElementById('error-message').style.display = 'block';
-      document.getElementById('error-details').textContent = message;
-      document.getElementById('status-text').textContent = 'Error de Configuración';
-    };
+    // Mostrar/Ocultar elementos
+    function showElement(element) {
+      element.classList.remove('hidden');
+    }
 
-    // Función para iniciar autenticación manualmente
-    const initGitHubAuth = () => {
+    function hideElement(element) {
+      element.classList.add('hidden');
+    }
+
+    // Mostrar error
+    function showError(message) {
+      elements.errorDetails.textContent = message;
+      showElement(elements.errorMessage);
+      elements.debugState.textContent = 'Error: ' + message;
+    }
+
+    // Mostrar éxito
+    function showSuccess(message) {
+      elements.successDetails.textContent = message;
+      showElement(elements.successMessage);
+      elements.debugState.textContent = 'Éxito: ' + message;
+    }
+
+    // Actualizar información de debug
+    function updateDebugInfo() {
+      elements.debugUrl.innerHTML = `URL: <code>${window.location.href}</code>`;
+      
+      const urlParams = new URLSearchParams(window.location.search);
+      const params = [];
+      for (const [key, value] of urlParams) {
+        params.push(`${key}=${value}`);
+      }
+      elements.debugParams.textContent = `Parámetros: ${params.length ? params.join(', ') : 'Ninguno'}`;
+    }
+
+    // Función de autenticación con GitHub
+    function initGitHubAuth() {
       try {
-        document.getElementById('status-text').textContent = 'Redirigiendo a GitHub...';
+        elements.statusText.textContent = 'Redirigiendo a GitHub...';
+        hideElement(elements.authBox);
         
-        // URL de autenticación directa con GitHub (EVITANDO api.staticcms.org)
-        const authUrl = `https://github.com/login/oauth/authorize?client_id=Ov23liyjswEELMqTAagb&redirect_uri=${encodeURIComponent('https://liammenu.github.io/Liammenu/admin/index.html')}&scope=repo&state=${Math.random().toString(36).substring(2, 15)}`;
+        // URL de autenticación directa con GitHub
+        const redirectUri = encodeURIComponent('https://liammenu.github.io/Liammenu/admin/index.html');
+        const authUrl = `https://github.com/login/oauth/authorize?client_id=Ov23liyjswEELMqTAagb&redirect_uri=${redirectUri}&scope=repo&state=github_auth_${Date.now()}`;
         
         window.location.href = authUrl;
         
       } catch (error) {
         showError('Error al iniciar autenticación: ' + error.message);
       }
-    };
+    }
 
-    // Verificar si ya estamos en un callback de GitHub
-    const checkGitHubCallback = () => {
+    // Procesar callback de GitHub
+    function processGitHubCallback() {
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get('code');
       const error = urlParams.get('error');
       
       if (code) {
-        document.getElementById('status-text').textContent = 'Procesando autorización de GitHub...';
-        document.querySelector('.solution-box').style.display = 'none';
+        elements.statusText.textContent = 'Autenticación exitosa. Inicializando CMS...';
+        showElement(elements.callbackBox);
+        hideElement(elements.authBox);
+        elements.debugState.textContent = 'Código de autorización recibido';
         
-        // Tenemos un código de autorización, inicializar CMS
-        initCMS();
+        // Inicializar CMS después de recibir el código
+        setTimeout(initCMS, 1000);
         return true;
       }
       
       if (error) {
-        showError(`Error de GitHub: ${error} - ${urlParams.get('error_description') || 'No se pudo autorizar'}`);
+        showError(`Error de GitHub: ${error} - ${urlParams.get('error_description') || 'Error desconocido'}`);
         return true;
       }
       
       return false;
-    };
+    }
 
-    // Inicializar CMS después de autenticación
-    const initCMS = () => {
+    // Inicializar CMS
+    function initCMS() {
       try {
-        window.CMS.init({
-          config: config
-        });
+        elements.statusText.textContent = 'Cargando panel de administración...';
+        elements.debugState.textContent = 'Inicializando Static CMS';
         
-        document.getElementById('status-text').textContent = 'Cargando interfaz de administración...';
+        window.CMS.init({ config: config });
+        
+        // Esperar a que CMS se cargue
+        checkCMSLoaded();
         
       } catch (error) {
         showError('Error al inicializar CMS: ' + error.message);
       }
-    };
+    }
 
-    // Verificar estado actual al cargar la página
-    document.addEventListener('DOMContentLoaded', () => {
-      if (!checkGitHubCallback()) {
-        document.getElementById('status-text').textContent = 'Presiona el botón para autenticar con GitHub';
+    // Verificar si CMS se cargó
+    function checkCMSLoaded() {
+      const checkInterval = setInterval(() => {
+        const cmsElement = document.querySelector('static-cms');
+        if (cmsElement) {
+          clearInterval(checkInterval);
+          elements.statusText.textContent = '¡Panel cargado exitosamente!';
+          showSuccess('Autenticación y carga completadas');
+          hideElement(elements.spinner);
+          hideElement(elements.callbackBox);
+          elements.debugState.textContent = 'CMS completamente cargado';
+        }
+      }, 500);
+
+      // Timeout después de 10 segundos
+      setTimeout(() => {
+        clearInterval(checkInterval);
+        showError('El CMS no se cargó completamente. Recarga la página.');
+      }, 10000);
+    }
+
+    // Inicializar la página
+    function init() {
+      updateDebugInfo();
+      
+      if (processGitHubCallback()) {
+        // Estamos en un callback de GitHub
+        return;
       }
-    });
+      
+      // Mostrar botón de autenticación
+      elements.statusText.textContent = 'Autenticación requerida';
+      showElement(elements.authBox);
+      elements.debugState.textContent = 'Esperando autenticación del usuario';
+    }
 
-    // Manejar mensajes del CMS
+    // Iniciar cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', init);
+
+    // Manejar mensajes del CMS (por si acaso)
     window.addEventListener('message', (event) => {
       if (event.data && event.data.from === 'static-cms') {
         if (event.data.message === 'ready') {
-          document.getElementById('status-text').textContent = '¡Panel cargado exitosamente!';
-          document.querySelector('.loading-container').style.display = 'none';
+          showSuccess('CMS completamente inicializado');
+          hideElement(elements.spinner);
         }
         if (event.data.message === 'error') {
           showError('Error del CMS: ' + (event.data.error || 'Error desconocido'));
         }
       }
     });
-
-    // Timeout para detectar problemas
-    setTimeout(() => {
-      if (document.querySelector('.loading-container').style.display !== 'none' && 
-          !document.getElementById('error-message').style.display) {
-        showError('Tiempo de espera agotado. Presiona el botón para iniciar autenticación manual.');
-      }
-    }, 8000);
   </script>
 </body>
 </html>
