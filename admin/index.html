@@ -107,7 +107,7 @@
       <p id="success-details"></p>
     </div>
 
-    <div id="auth-box" class="solution-box hidden">
+    <div id="auth-box" class="solution-box">
       <h3>🔐 Autenticación Requerida</h3>
       <p>Para acceder al panel de administración:</p>
       <button class="retry-button" onclick="initGitHubAuth()">Iniciar Sesión con GitHub</button>
@@ -142,19 +142,19 @@
       debugParams: document.getElementById('debug-params')
     };
 
-    // Configuración
+    // Configuración CORREGIDA - Sin Netlify Auth
     const config = {
       backend: {
         name: 'github',
         repo: 'liammenu/Liammenu',
         branch: 'main',
+        // REMOVEMOS completamente la configuración de Netlify Auth
         api_root: 'https://api.github.com',
-        auth_endpoint: 'api/auth',
         app_id: 'Ov23liyjswEELMqTAagb',
         auth_scope: 'repo'
       },
       locale: 'es',
-      site_url: window.location.origin,
+      site_url: 'https://liammenu.github.io',
       display_url: 'https://liammenu.github.io/Liammenu',
       media_folder: "static/images",
       public_folder: "/images",
@@ -218,16 +218,17 @@
       elements.debugParams.textContent = `Parámetros: ${params.length ? params.join(', ') : 'Ninguno'}`;
     }
 
-    // Función de autenticación con GitHub
+    // Función de autenticación con GitHub DIRECTA (sin Netlify)
     function initGitHubAuth() {
       try {
         elements.statusText.textContent = 'Redirigiendo a GitHub...';
         hideElement(elements.authBox);
         
-        // URL de autenticación directa con GitHub
+        // URL de autenticación directa con GitHub - EVITANDO Netlify
         const redirectUri = encodeURIComponent('https://liammenu.github.io/Liammenu/admin/index.html');
         const authUrl = `https://github.com/login/oauth/authorize?client_id=Ov23liyjswEELMqTAagb&redirect_uri=${redirectUri}&scope=repo&state=github_auth_${Date.now()}`;
         
+        elements.debugState.textContent = 'Redirigiendo a: ' + authUrl;
         window.location.href = authUrl;
         
       } catch (error) {
@@ -248,7 +249,7 @@
         elements.debugState.textContent = 'Código de autorización recibido';
         
         // Inicializar CMS después de recibir el código
-        setTimeout(initCMS, 1000);
+        initCMS();
         return true;
       }
       
@@ -260,73 +261,84 @@
       return false;
     }
 
-    // Inicializar CMS
+    // Inicializar CMS manualmente
     function initCMS() {
       try {
-        elements.statusText.textContent = 'Cargando panel de administración...';
+        elements.statusText.textContent = 'Configurando CMS...';
         elements.debugState.textContent = 'Inicializando Static CMS';
         
+        // Inicializar CMS con configuración manual
         window.CMS.init({ config: config });
         
-        // Esperar a que CMS se cargue
-        checkCMSLoaded();
+        // Verificar cada segundo si el CMS se cargó
+        const checkInterval = setInterval(() => {
+          const cmsElement = document.querySelector('static-cms');
+          if (cmsElement && cmsElement.shadowRoot) {
+            clearInterval(checkInterval);
+            onCMSLoaded();
+          }
+        }, 1000);
+        
+        // Timeout después de 15 segundos
+        setTimeout(() => {
+          clearInterval(checkInterval);
+          showError('El CMS no se cargó completamente. Recarga la página.');
+        }, 15000);
         
       } catch (error) {
         showError('Error al inicializar CMS: ' + error.message);
       }
     }
 
-    // Verificar si CMS se cargó
-    function checkCMSLoaded() {
-      const checkInterval = setInterval(() => {
-        const cmsElement = document.querySelector('static-cms');
-        if (cmsElement) {
-          clearInterval(checkInterval);
-          elements.statusText.textContent = '¡Panel cargado exitosamente!';
-          showSuccess('Autenticación y carga completadas');
-          hideElement(elements.spinner);
-          hideElement(elements.callbackBox);
-          elements.debugState.textContent = 'CMS completamente cargado';
-        }
-      }, 500);
+    // Cuando el CMS se carga exitosamente
+    function onCMSLoaded() {
+      elements.statusText.textContent = '¡Panel cargado exitosamente!';
+      showSuccess('Autenticación y carga completadas');
+      hideElement(elements.spinner);
+      hideElement(elements.callbackBox);
+      elements.debugState.textContent = 'CMS completamente cargado';
+      
+      // Inyectar estilos personalizados
+      injectCustomStyles();
+    }
 
-      // Timeout después de 10 segundos
-      setTimeout(() => {
-        clearInterval(checkInterval);
-        showError('El CMS no se cargó completamente. Recarga la página.');
-      }, 10000);
+    // Inyectar estilos personalizados en el Shadow DOM
+    function injectCustomStyles() {
+      const cmsElement = document.querySelector('static-cms');
+      if (cmsElement && cmsElement.shadowRoot) {
+        const style = document.createElement('style');
+        style.textContent = `
+          /* Estilos personalizados para Static CMS */
+          body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          }
+          .CSSSidebar-root {
+            background: #1f2937 !important;
+          }
+          .CSSButton-primary {
+            background-color: #3b82f6 !important;
+          }
+        `;
+        cmsElement.shadowRoot.appendChild(style);
+      }
     }
 
     // Inicializar la página
     function init() {
       updateDebugInfo();
       
+      // Verificar si estamos en un callback de GitHub
       if (processGitHubCallback()) {
-        // Estamos en un callback de GitHub
         return;
       }
       
-      // Mostrar botón de autenticación
-      elements.statusText.textContent = 'Autenticación requerida';
-      showElement(elements.authBox);
+      // Mostrar botón de autenticación normal
+      elements.statusText.textContent = 'Autenticación requerida para acceder al panel';
       elements.debugState.textContent = 'Esperando autenticación del usuario';
     }
 
     // Iniciar cuando el DOM esté listo
     document.addEventListener('DOMContentLoaded', init);
-
-    // Manejar mensajes del CMS (por si acaso)
-    window.addEventListener('message', (event) => {
-      if (event.data && event.data.from === 'static-cms') {
-        if (event.data.message === 'ready') {
-          showSuccess('CMS completamente inicializado');
-          hideElement(elements.spinner);
-        }
-        if (event.data.message === 'error') {
-          showError('Error del CMS: ' + (event.data.error || 'Error desconocido'));
-        }
-      }
-    });
   </script>
 </body>
 </html>
