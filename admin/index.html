@@ -4,7 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Panel de Administración - Liam's Menu</title>
-  <script src="https://cdn.jsdelivr.net/npm/@staticcms/app@4.0.0/dist/static-cms-app.js"></script>
+  
+  <!-- Usamos una versión más estable de Static CMS -->
+  <script src="https://cdn.jsdelivr.net/npm/@staticcms/app@3.0.0/dist/static-cms-app.js"></script>
+  
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -75,203 +78,177 @@
       font-size: 0.85rem;
       text-align: left;
     }
+    .success {
+      color: #10b981;
+      padding: 0.75rem;
+      background-color: #ecfdf5;
+      border-radius: 6px;
+      border-left: 4px solid #10b981;
+      margin: 1rem 0;
+    }
   </style>
 </head>
 <body>
   <div class="loading-container">
     <div class="spinner"></div>
-    <h2 id="status-text">Conectando con GitHub...</h2>
+    <h2 id="status-text">Configurando acceso a GitHub...</h2>
     
     <div id="error-message" class="error" style="display: none;">
       <h3>Error de conexión con GitHub</h3>
-      <p id="error-details">Tiempo de espera agotado</p>
+      <p id="error-details"></p>
     </div>
 
     <div class="solution-box">
-      <h3>🚨 Solución Requerida</h3>
-      <p>Problema de conexión con GitHub. Por favor:</p>
+      <h3>⚠️ Acción Requerida</h3>
+      <p>Para completar la configuración:</p>
       <ol>
-        <li>Verifica que tu aplicación OAuth en GitHub tenga EXACTAMENTE estas URLs:</li>
-        <li><strong>Homepage URL:</strong> <code>https://liammenu.github.io/Liammenu/admin/</code></li>
-        <li><strong>Callback URL:</strong> <code>https://liammenu.github.io/Liammenu/admin/index.html</code></li>
-        <li>Asegúrate de que GitHub no esté bloqueado por tu firewall o red</li>
+        <li>Se abrirá una ventana de login de GitHub</li>
+        <li>Autoriza la aplicación "Cms"</li>
+        <li>Serás redirigido de vuelta al panel</li>
       </ol>
-      <button class="retry-button" onclick="window.location.reload()">Reintentar Conexión</button>
+      <button class="retry-button" onclick="initGitHubAuth()">Iniciar Autenticación con GitHub</button>
     </div>
 
     <div class="debug-info">
-      <h4>Información de Depuración:</h4>
-      <p><strong>URL actual:</strong> <span id="current-url"></span></p>
-      <p><strong>Estado:</strong> <span id="connection-status">Iniciando...</span></p>
+      <h4>Información de Configuración:</h4>
       <p><strong>Client ID:</strong> Ov23liyjswEELMqTAagb</p>
+      <p><strong>Repositorio:</strong> liammenu/Liammenu</p>
+      <p><strong>URLs Configuradas:</strong></p>
+      <ul>
+        <li>Homepage: <code>https://liammenu.github.io/Liammenu/admin/</code></li>
+        <li>Callback: <code>https://liammenu.github.io/Liammenu/admin/index.html</code></li>
+      </ul>
     </div>
   </div>
 
   <script>
-    // Mostrar información de depuración
-    document.getElementById('current-url').textContent = window.location.href;
-    
-    // Configuración de Static CMS con manejo de errores mejorado
-    const initCMS = () => {
-      try {
-        window.CMS.init({
-          config: {
-            backend: {
-              name: 'github',
-              repo: 'liammenu/Liammenu',
-              branch: 'main',
-              base_url: 'https://api.staticcms.org',
-              auth_endpoint: 'api/auth',
-              app_id: 'Ov23liyjswEELMqTAagb'
+    // Configuración simplificada y mejorada
+    const config = {
+      backend: {
+        name: 'github',
+        repo: 'liammenu/Liammenu',
+        branch: 'main',
+        api_root: 'https://api.github.com',
+        auth_endpoint: 'api/auth',
+        app_id: 'Ov23liyjswEELMqTAagb',
+        auth_scope: 'repo'
+      },
+      locale: 'es',
+      site_url: window.location.origin,
+      display_url: 'https://liammenu.github.io/Liammenu',
+      media_folder: "static/images",
+      public_folder: "/images",
+      collections: [
+        {
+          name: "productos",
+          label: "Productos",
+          label_singular: "Producto",
+          folder: "data/productos",
+          create: true,
+          slug: "{{slug}}",
+          fields: [
+            { name: "title", label: "Título", widget: "string" },
+            { name: "price", label: "Precio", widget: "number" },
+            { name: "image", label: "Imagen", widget: "image" },
+            { name: "description", label: "Descripción", widget: "text" },
+            { 
+              name: "categoria", 
+              label: "Categoría", 
+              widget: "select", 
+              options: ["OFERTAS", "PIZZAS", "LOMOS", "MILANESAS", "ZAPPIN Y PAPAS", "PATYS"] 
             },
-            locale: 'es',
-            site_url: 'https://liammenu.github.io',
-            display_url: 'https://liammenu.github.io/Liammenu',
-            media_folder: "static/images",
-            public_folder: "/images",
-            collections: [
-              {
-                name: "productos",
-                label: "Productos",
-                label_singular: "Producto",
-                folder: "data/productos",
-                create: true,
-                slug: "{{slug}}",
-                fields: [
-                  { 
-                    name: "title", 
-                    label: "Título", 
-                    widget: "string",
-                    hint: "Nombre del producto tal como aparecerá en el menú"
-                  },
-                  { 
-                    name: "price", 
-                    label: "Precio", 
-                    widget: "number",
-                    min: 0,
-                    step: 0.01,
-                    value_type: "float"
-                  },
-                  { 
-                    name: "image", 
-                    label: "Imagen", 
-                    widget: "image",
-                    hint: "Imagen del producto (relación aspecto recomendada: 1:1)",
-                    allow_multiple: false
-                  },
-                  { 
-                    name: "description", 
-                    label: "Descripción", 
-                    widget: "text",
-                    hint: "Descripción detallada del producto"
-                  },
-                  { 
-                    name: "categoria", 
-                    label: "Categoría", 
-                    widget: "select", 
-                    options: [
-                      { label: "OFERTAS", value: "OFERTAS" },
-                      { label: "PIZZAS", value: "PIZZAS" },
-                      { label: "LOMOS", value: "LOMOS" },
-                      { label: "MILANESAS", value: "MILANESAS" },
-                      { label: "ZAPPIN Y PAPAS", value: "ZAPPIN Y PAPAS" },
-                      { label: "PATYS", value: "PATYS" }
-                    ] 
-                  },
-                  { 
-                    name: "disponible", 
-                    label: "Disponible", 
-                    widget: "boolean", 
-                    default: true,
-                    hint: "¿Este producto está actualmente disponible?"
-                  }
-                ]
-              }
-            ]
-          }
-        });
-        
-        document.getElementById('connection-status').textContent = 'CMS inicializado - Esperando GitHub';
-        
-      } catch (error) {
-        showError('Error al inicializar CMS: ' + error.message);
-      }
+            { name: "disponible", label: "Disponible", widget: "boolean", default: true }
+          ]
+        }
+      ]
     };
 
     // Función para mostrar errores
     const showError = (message) => {
       document.getElementById('error-message').style.display = 'block';
       document.getElementById('error-details').textContent = message;
-      document.getElementById('status-text').textContent = 'Error de Conexión';
-      document.getElementById('connection-status').textContent = 'Error: ' + message;
+      document.getElementById('status-text').textContent = 'Error de Configuración';
     };
 
-    // Verificar si hay un error de autenticación en la URL
-    const checkUrlForErrors = () => {
+    // Función para iniciar autenticación manualmente
+    const initGitHubAuth = () => {
+      try {
+        document.getElementById('status-text').textContent = 'Redirigiendo a GitHub...';
+        
+        // URL de autenticación directa con GitHub (EVITANDO api.staticcms.org)
+        const authUrl = `https://github.com/login/oauth/authorize?client_id=Ov23liyjswEELMqTAagb&redirect_uri=${encodeURIComponent('https://liammenu.github.io/Liammenu/admin/index.html')}&scope=repo&state=${Math.random().toString(36).substring(2, 15)}`;
+        
+        window.location.href = authUrl;
+        
+      } catch (error) {
+        showError('Error al iniciar autenticación: ' + error.message);
+      }
+    };
+
+    // Verificar si ya estamos en un callback de GitHub
+    const checkGitHubCallback = () => {
       const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
       const error = urlParams.get('error');
-      const errorDescription = urlParams.get('error_description');
       
-      if (error) {
-        showError(`Error de GitHub: ${error} - ${errorDescription || 'Sin detalles'}`);
+      if (code) {
+        document.getElementById('status-text').textContent = 'Procesando autorización de GitHub...';
+        document.querySelector('.solution-box').style.display = 'none';
+        
+        // Tenemos un código de autorización, inicializar CMS
+        initCMS();
         return true;
       }
+      
+      if (error) {
+        showError(`Error de GitHub: ${error} - ${urlParams.get('error_description') || 'No se pudo autorizar'}`);
+        return true;
+      }
+      
       return false;
     };
 
-    // Inicializar después de un breve delay
-    setTimeout(() => {
-      if (!checkUrlForErrors()) {
-        document.getElementById('connection-status').textContent = 'Inicializando CMS...';
-        initCMS();
-      }
-    }, 1000);
-
-    // Timeout para detectar si la conexión falla
-    setTimeout(() => {
-      if (document.querySelector('.loading-container').style.display !== 'none') {
-        showError('Tiempo de espera agotado. GitHub no respondió.');
+    // Inicializar CMS después de autenticación
+    const initCMS = () => {
+      try {
+        window.CMS.init({
+          config: config
+        });
         
-        // Sugerencias específicas para timeout
-        const errorDetails = document.getElementById('error-details');
-        errorDetails.innerHTML += `
-          <br><br><strong>Posibles soluciones:</strong>
-          <ul>
-            <li>Verifica que tu aplicación OAuth en GitHub tenga las URLs exactas</li>
-            <li>Intenta desde una red diferente (a veces firewalls bloquean GitHub)</li>
-            <li>Espera unos minutos e intenta nuevamente</li>
-            <li>Verifica que GitHub no esté presentando intermitencias</li>
-          </ul>
-        `;
+        document.getElementById('status-text').textContent = 'Cargando interfaz de administración...';
+        
+      } catch (error) {
+        showError('Error al inicializar CMS: ' + error.message);
       }
-    }, 10000);
-
-    // Función para inyectar estilos cuando CMS cargue
-    const injectCustomStyles = () => {
-      const checkForShadowRoot = setInterval(() => {
-        const cmsElement = document.querySelector('static-cms');
-        if (cmsElement && cmsElement.shadowRoot) {
-          clearInterval(checkForShadowRoot);
-          document.querySelector('.loading-container').style.display = 'none';
-        }
-      }, 100);
     };
 
-    // Escuchar mensajes de éxito de Static CMS
+    // Verificar estado actual al cargar la página
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!checkGitHubCallback()) {
+        document.getElementById('status-text').textContent = 'Presiona el botón para autenticar con GitHub';
+      }
+    });
+
+    // Manejar mensajes del CMS
     window.addEventListener('message', (event) => {
       if (event.data && event.data.from === 'static-cms') {
         if (event.data.message === 'ready') {
-          document.getElementById('connection-status').textContent = '¡Conectado exitosamente!';
-          injectCustomStyles();
+          document.getElementById('status-text').textContent = '¡Panel cargado exitosamente!';
+          document.querySelector('.loading-container').style.display = 'none';
         }
-        if (event.data.message === 'authError') {
-          showError('Error de autenticación: ' + (event.data.error || 'Verifica las URLs en GitHub OAuth'));
+        if (event.data.message === 'error') {
+          showError('Error del CMS: ' + (event.data.error || 'Error desconocido'));
         }
       }
     });
 
-    // Iniciar la inyección de estilos después de 2 segundos
-    setTimeout(injectCustomStyles, 2000);
+    // Timeout para detectar problemas
+    setTimeout(() => {
+      if (document.querySelector('.loading-container').style.display !== 'none' && 
+          !document.getElementById('error-message').style.display) {
+        showError('Tiempo de espera agotado. Presiona el botón para iniciar autenticación manual.');
+      }
+    }, 8000);
   </script>
 </body>
 </html>
