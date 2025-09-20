@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Panel de Administración - Liam's Menu</title>
   
-  <!-- Cargamos Static CMS pero lo inicializamos MANUALMENTE -->
+  <!-- Static CMS -->
   <script src="https://cdn.jsdelivr.net/npm/@staticcms/app@3.0.0/dist/static-cms-app.js"></script>
   
   <style>
@@ -90,39 +90,51 @@
     .hidden {
       display: none;
     }
+    .url-box {
+      background-color: #f1f5f9;
+      padding: 0.75rem;
+      border-radius: 6px;
+      margin: 1rem 0;
+      overflow-x: auto;
+      font-family: monospace;
+      font-size: 0.8rem;
+    }
   </style>
 </head>
 <body>
   <div class="loading-container">
     <div class="spinner" id="spinner"></div>
-    <h2 id="status-text">Iniciando configuración...</h2>
+    <h2 id="status-text">Preparando autenticación...</h2>
     
     <div id="error-message" class="error hidden">
-      <h3>Error de conexión</h3>
+      <h3>Error de configuración</h3>
       <p id="error-details"></p>
     </div>
 
     <div id="success-message" class="success hidden">
-      <h3>¡Autenticación exitosa!</h3>
+      <h3>¡Proceso completado!</h3>
       <p id="success-details"></p>
     </div>
 
     <div id="auth-box" class="solution-box">
-      <h3>🔐 Autenticación Requerida</h3>
-      <p>Para acceder al panel de administración:</p>
+      <h3>🔐 Autenticación con GitHub</h3>
+      <p>Haz clic para iniciar sesión con GitHub:</p>
       <button class="retry-button" onclick="initGitHubAuth()">Iniciar Sesión con GitHub</button>
     </div>
 
     <div id="callback-box" class="solution-box hidden">
       <h3>🔄 Procesando autorización...</h3>
-      <p>Estamos completando tu autenticación con GitHub.</p>
+      <p>Completando el proceso de autenticación.</p>
     </div>
 
     <div class="debug-info">
-      <h4>Información de Estado:</h4>
+      <h4>Información de depuración:</h4>
       <p id="debug-state">Inicializando...</p>
-      <p id="debug-url">URL: <code></code></p>
-      <p id="debug-params">Parámetros: Ninguno</p>
+      <p><strong>URL de redirección:</strong> <code>https://liammenu.github.io/Liammenu/admin/index.html</code></p>
+      <div class="url-box">
+        <div>URL generada:</div>
+        <div id="generated-url">Esperando generación...</div>
+      </div>
     </div>
   </div>
 
@@ -138,8 +150,15 @@
       authBox: document.getElementById('auth-box'),
       callbackBox: document.getElementById('callback-box'),
       debugState: document.getElementById('debug-state'),
-      debugUrl: document.getElementById('debug-url'),
-      debugParams: document.getElementById('debug-params')
+      generatedUrl: document.getElementById('generated-url')
+    };
+
+    // Configuración
+    const config = {
+      clientId: 'Ov23liyjswEELMqTAagb',
+      redirectUri: 'https://liammenu.github.io/Liammenu/admin/index.html',
+      scope: 'repo',
+      state: 'github_auth_' + Date.now()
     };
 
     // Mostrar/Ocultar elementos
@@ -165,32 +184,35 @@
       elements.debugState.textContent = 'Éxito: ' + message;
     }
 
-    // Actualizar información de debug
-    function updateDebugInfo() {
-      elements.debugUrl.innerHTML = `URL: <code>${window.location.href}</code>`;
+    // Generar URL de autenticación CORRECTA para GitHub
+    function generateGitHubAuthUrl() {
+      const baseUrl = 'https://github.com/login/oauth/authorize';
+      const params = new URLSearchParams({
+        client_id: config.clientId,
+        redirect_uri: config.redirectUri,
+        scope: config.scope,
+        state: config.state,
+        // Añadimos el parámetro para solicitar código de autorización
+        response_type: 'code'
+      });
       
-      const urlParams = new URLSearchParams(window.location.search);
-      const params = [];
-      for (const [key, value] of urlParams) {
-        params.push(`${key}=${value}`);
-      }
-      elements.debugParams.textContent = `Parámetros: ${params.length ? params.join(', ') : 'Ninguno'}`;
+      return `${baseUrl}?${params.toString()}`;
     }
 
-    // Función de autenticación DIRECTA con GitHub - EVITANDO COMPLETAMENTE Netlify
+    // Función de autenticación con GitHub - URL CORRECTA
     function initGitHubAuth() {
       try {
         elements.statusText.textContent = 'Redirigiendo a GitHub...';
         hideElement(elements.authBox);
-        elements.debugState.textContent = 'Iniciando autenticación directa con GitHub';
         
-        // URL de autenticación DIRECTA con GitHub - COMPLETAMENTE manual
-        const redirectUri = encodeURIComponent('https://liammenu.github.io/Liammenu/admin/index.html');
-        const authUrl = `https://github.com/login/oauth/authorize?client_id=Ov23liyjswEELMqTAagb&redirect_uri=${redirectUri}&scope=repo&state=github_direct_${Date.now()}`;
+        // Generar URL CORRECTA para GitHub
+        const authUrl = generateGitHubAuthUrl();
+        elements.generatedUrl.textContent = authUrl;
+        elements.debugState.textContent = 'Redirigiendo a GitHub con URL corregida';
         
-        elements.debugState.textContent = 'Redirigiendo a GitHub directamente...';
+        console.log('URL de autenticación:', authUrl);
         
-        // Redirigir inmediatamente - sin pasar por Static CMS
+        // Redirigir a la URL corregida
         window.location.href = authUrl;
         
       } catch (error) {
@@ -198,7 +220,7 @@
       }
     }
 
-    // Procesar callback de GitHub manualmente
+    // Procesar callback de GitHub
     function processGitHubCallback() {
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get('code');
@@ -208,13 +230,9 @@
         elements.statusText.textContent = 'Autenticación exitosa. Inicializando CMS...';
         showElement(elements.callbackBox);
         hideElement(elements.authBox);
-        elements.debugState.textContent = 'Código de autorización recibido de GitHub';
+        elements.debugState.textContent = 'Código de autorización recibido';
         
-        // Guardar el código de autorización manualmente
-        localStorage.setItem('github_oauth_code', code);
-        localStorage.setItem('github_oauth_timestamp', Date.now());
-        
-        // Inicializar CMS manualmente después de recibir el código
+        // Inicializar CMS después de recibir el código
         initCMS();
         return true;
       }
@@ -227,66 +245,52 @@
       return false;
     }
 
-    // Configuración MANUAL de Static CMS - Forzando GitHub directo
-    function getCMSConfig() {
-      return {
-        backend: {
-          name: 'github',
-          repo: 'liammenu/Liammenu',
-          branch: 'main',
-          // Configuración EXPLÍCITA para GitHub directo
-          api_root: 'https://api.github.com',
-          auth_endpoint: 'https://github.com/login/oauth/access_token',
-          app_id: 'Ov23liyjswEELMqTAagb',
-          auth_scope: 'repo',
-          // Forzar que use nuestro código de acceso manualmente
-          base_url: window.location.origin
-        },
-        locale: 'es',
-        site_url: 'https://liammenu.github.io',
-        display_url: 'https://liammenu.github.io/Liammenu',
-        media_folder: "static/images",
-        public_folder: "/images",
-        collections: [
-          {
-            name: "productos",
-            label: "Productos",
-            label_singular: "Producto",
-            folder: "data/productos",
-            create: true,
-            slug: "{{slug}}",
-            fields: [
-              { name: "title", label: "Título", widget: "string" },
-              { name: "price", label: "Precio", widget: "number" },
-              { name: "image", label: "Imagen", widget: "image" },
-              { name: "description", label: "Descripción", widget: "text" },
-              { 
-                name: "categoria", 
-                label: "Categoría", 
-                widget: "select", 
-                options: ["OFERTAS", "PIZZAS", "LOMOS", "MILANESAS", "ZAPPIN Y PAPAS", "PATYS"] 
-              },
-              { name: "disponible", label: "Disponible", widget: "boolean", default: true }
-            ]
-          }
-        ]
-      };
-    }
-
-    // Inicializar CMS manualmente con configuración forzada
+    // Inicializar CMS
     function initCMS() {
       try {
-        elements.statusText.textContent = 'Configurando CMS con acceso directo...';
-        elements.debugState.textContent = 'Inicializando Static CMS con configuración manual';
+        elements.statusText.textContent = 'Configurando CMS...';
+        elements.debugState.textContent = 'Inicializando Static CMS';
         
-        // Obtener código de acceso guardado
-        const oauthCode = localStorage.getItem('github_oauth_code');
-        if (oauthCode) {
-          elements.debugState.textContent = 'Usando código OAuth existente';
-        }
+        // Configuración de Static CMS
+        const cmsConfig = {
+          backend: {
+            name: 'github',
+            repo: 'liammenu/Liammenu',
+            branch: 'main',
+            api_root: 'https://api.github.com',
+            app_id: config.clientId,
+            auth_scope: config.scope
+          },
+          locale: 'es',
+          site_url: 'https://liammenu.github.io',
+          display_url: 'https://liammenu.github.io/Liammenu',
+          media_folder: "static/images",
+          public_folder: "/images",
+          collections: [
+            {
+              name: "productos",
+              label: "Productos",
+              label_singular: "Producto",
+              folder: "data/productos",
+              create: true,
+              slug: "{{slug}}",
+              fields: [
+                { name: "title", label: "Título", widget: "string" },
+                { name: "price", label: "Precio", widget: "number" },
+                { name: "image", label: "Imagen", widget: "image" },
+                { name: "description", label: "Descripción", widget: "text" },
+                { 
+                  name: "categoria", 
+                  label: "Categoría", 
+                  widget: "select", 
+                  options: ["OFERTAS", "PIZZAS", "LOMOS", "MILANESAS", "ZAPPIN Y PAPAS", "PATYS"] 
+                },
+                { name: "disponible", label: "Disponible", widget: "boolean", default: true }
+              ]
+            }
+          ]
+        };
         
-        // Inicializar CMS con configuración MANUAL
-        const cmsConfig = getCMSConfig();
         window.CMS.init({ config: cmsConfig });
         
         // Verificar si el CMS se carga
@@ -298,11 +302,11 @@
           }
         }, 1000);
         
-        // Timeout después de 20 segundos
+        // Timeout
         setTimeout(() => {
           clearInterval(checkInterval);
-          showError('El CMS no se cargó. Intenta recargar la página.');
-        }, 20000);
+          showError('El CMS no se cargó completamente. Recarga la página.');
+        }, 15000);
         
       } catch (error) {
         showError('Error al inicializar CMS: ' + error.message);
@@ -312,44 +316,26 @@
     // Cuando el CMS se carga exitosamente
     function onCMSLoaded() {
       elements.statusText.textContent = '¡Panel cargado exitosamente!';
-      showSuccess('Conexión directa con GitHub establecida');
+      showSuccess('Conexión establecida con GitHub');
       hideElement(elements.spinner);
       hideElement(elements.callbackBox);
-      elements.debugState.textContent = 'CMS completamente cargado - Sin Netlify';
-      
-      // Limpiar parámetros de la URL para evitar re-autenticación
-      if (window.location.search.includes('code=')) {
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }
+      elements.debugState.textContent = 'CMS completamente cargado';
     }
 
     // Inicializar la página
     function init() {
-      updateDebugInfo();
+      // Generar y mostrar URL para verificación
+      const authUrl = generateGitHubAuthUrl();
+      elements.generatedUrl.textContent = authUrl;
       
       // Verificar si estamos en un callback de GitHub
       if (processGitHubCallback()) {
         return;
       }
       
-      // Verificar si ya tenemos un código de acceso guardado
-      const existingCode = localStorage.getItem('github_oauth_code');
-      const codeTimestamp = localStorage.getItem('github_oauth_timestamp');
-      const isCodeValid = codeTimestamp && (Date.now() - parseInt(codeTimestamp)) < 3600000; // 1 hora
-      
-      if (existingCode && isCodeValid) {
-        elements.statusText.textContent = 'Reutilizando autenticación existente...';
-        elements.debugState.textContent = 'Usando código OAuth guardado';
-        initCMS();
-      } else {
-        // Limpiar código expirado
-        if (existingCode) localStorage.removeItem('github_oauth_code');
-        if (codeTimestamp) localStorage.removeItem('github_oauth_timestamp');
-        
-        // Mostrar botón de autenticación
-        elements.statusText.textContent = 'Autenticación requerida';
-        elements.debugState.textContent = 'Esperando autenticación del usuario';
-      }
+      // Mostrar botón de autenticación normal
+      elements.statusText.textContent = 'Listo para autenticar';
+      elements.debugState.textContent = 'Esperando acción del usuario';
     }
 
     // Iniciar cuando el DOM esté listo
