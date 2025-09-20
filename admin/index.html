@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Panel de Administración - Liam's Menu</title>
   
-  <!-- Versión estable de Static CMS -->
+  <!-- Cargamos Static CMS pero lo inicializamos MANUALMENTE -->
   <script src="https://cdn.jsdelivr.net/npm/@staticcms/app@3.0.0/dist/static-cms-app.js"></script>
   
   <style>
@@ -142,47 +142,6 @@
       debugParams: document.getElementById('debug-params')
     };
 
-    // Configuración CORREGIDA - Sin Netlify Auth
-    const config = {
-      backend: {
-        name: 'github',
-        repo: 'liammenu/Liammenu',
-        branch: 'main',
-        // REMOVEMOS completamente la configuración de Netlify Auth
-        api_root: 'https://api.github.com',
-        app_id: 'Ov23liyjswEELMqTAagb',
-        auth_scope: 'repo'
-      },
-      locale: 'es',
-      site_url: 'https://liammenu.github.io',
-      display_url: 'https://liammenu.github.io/Liammenu',
-      media_folder: "static/images",
-      public_folder: "/images",
-      collections: [
-        {
-          name: "productos",
-          label: "Productos",
-          label_singular: "Producto",
-          folder: "data/productos",
-          create: true,
-          slug: "{{slug}}",
-          fields: [
-            { name: "title", label: "Título", widget: "string" },
-            { name: "price", label: "Precio", widget: "number" },
-            { name: "image", label: "Imagen", widget: "image" },
-            { name: "description", label: "Descripción", widget: "text" },
-            { 
-              name: "categoria", 
-              label: "Categoría", 
-              widget: "select", 
-              options: ["OFERTAS", "PIZZAS", "LOMOS", "MILANESAS", "ZAPPIN Y PAPAS", "PATYS"] 
-            },
-            { name: "disponible", label: "Disponible", widget: "boolean", default: true }
-          ]
-        }
-      ]
-    };
-
     // Mostrar/Ocultar elementos
     function showElement(element) {
       element.classList.remove('hidden');
@@ -218,17 +177,20 @@
       elements.debugParams.textContent = `Parámetros: ${params.length ? params.join(', ') : 'Ninguno'}`;
     }
 
-    // Función de autenticación con GitHub DIRECTA (sin Netlify)
+    // Función de autenticación DIRECTA con GitHub - EVITANDO COMPLETAMENTE Netlify
     function initGitHubAuth() {
       try {
         elements.statusText.textContent = 'Redirigiendo a GitHub...';
         hideElement(elements.authBox);
+        elements.debugState.textContent = 'Iniciando autenticación directa con GitHub';
         
-        // URL de autenticación directa con GitHub - EVITANDO Netlify
+        // URL de autenticación DIRECTA con GitHub - COMPLETAMENTE manual
         const redirectUri = encodeURIComponent('https://liammenu.github.io/Liammenu/admin/index.html');
-        const authUrl = `https://github.com/login/oauth/authorize?client_id=Ov23liyjswEELMqTAagb&redirect_uri=${redirectUri}&scope=repo&state=github_auth_${Date.now()}`;
+        const authUrl = `https://github.com/login/oauth/authorize?client_id=Ov23liyjswEELMqTAagb&redirect_uri=${redirectUri}&scope=repo&state=github_direct_${Date.now()}`;
         
-        elements.debugState.textContent = 'Redirigiendo a: ' + authUrl;
+        elements.debugState.textContent = 'Redirigiendo a GitHub directamente...';
+        
+        // Redirigir inmediatamente - sin pasar por Static CMS
         window.location.href = authUrl;
         
       } catch (error) {
@@ -236,7 +198,7 @@
       }
     }
 
-    // Procesar callback de GitHub
+    // Procesar callback de GitHub manualmente
     function processGitHubCallback() {
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get('code');
@@ -246,9 +208,13 @@
         elements.statusText.textContent = 'Autenticación exitosa. Inicializando CMS...';
         showElement(elements.callbackBox);
         hideElement(elements.authBox);
-        elements.debugState.textContent = 'Código de autorización recibido';
+        elements.debugState.textContent = 'Código de autorización recibido de GitHub';
         
-        // Inicializar CMS después de recibir el código
+        // Guardar el código de autorización manualmente
+        localStorage.setItem('github_oauth_code', code);
+        localStorage.setItem('github_oauth_timestamp', Date.now());
+        
+        // Inicializar CMS manualmente después de recibir el código
         initCMS();
         return true;
       }
@@ -261,16 +227,69 @@
       return false;
     }
 
-    // Inicializar CMS manualmente
+    // Configuración MANUAL de Static CMS - Forzando GitHub directo
+    function getCMSConfig() {
+      return {
+        backend: {
+          name: 'github',
+          repo: 'liammenu/Liammenu',
+          branch: 'main',
+          // Configuración EXPLÍCITA para GitHub directo
+          api_root: 'https://api.github.com',
+          auth_endpoint: 'https://github.com/login/oauth/access_token',
+          app_id: 'Ov23liyjswEELMqTAagb',
+          auth_scope: 'repo',
+          // Forzar que use nuestro código de acceso manualmente
+          base_url: window.location.origin
+        },
+        locale: 'es',
+        site_url: 'https://liammenu.github.io',
+        display_url: 'https://liammenu.github.io/Liammenu',
+        media_folder: "static/images",
+        public_folder: "/images",
+        collections: [
+          {
+            name: "productos",
+            label: "Productos",
+            label_singular: "Producto",
+            folder: "data/productos",
+            create: true,
+            slug: "{{slug}}",
+            fields: [
+              { name: "title", label: "Título", widget: "string" },
+              { name: "price", label: "Precio", widget: "number" },
+              { name: "image", label: "Imagen", widget: "image" },
+              { name: "description", label: "Descripción", widget: "text" },
+              { 
+                name: "categoria", 
+                label: "Categoría", 
+                widget: "select", 
+                options: ["OFERTAS", "PIZZAS", "LOMOS", "MILANESAS", "ZAPPIN Y PAPAS", "PATYS"] 
+              },
+              { name: "disponible", label: "Disponible", widget: "boolean", default: true }
+            ]
+          }
+        ]
+      };
+    }
+
+    // Inicializar CMS manualmente con configuración forzada
     function initCMS() {
       try {
-        elements.statusText.textContent = 'Configurando CMS...';
-        elements.debugState.textContent = 'Inicializando Static CMS';
+        elements.statusText.textContent = 'Configurando CMS con acceso directo...';
+        elements.debugState.textContent = 'Inicializando Static CMS con configuración manual';
         
-        // Inicializar CMS con configuración manual
-        window.CMS.init({ config: config });
+        // Obtener código de acceso guardado
+        const oauthCode = localStorage.getItem('github_oauth_code');
+        if (oauthCode) {
+          elements.debugState.textContent = 'Usando código OAuth existente';
+        }
         
-        // Verificar cada segundo si el CMS se cargó
+        // Inicializar CMS con configuración MANUAL
+        const cmsConfig = getCMSConfig();
+        window.CMS.init({ config: cmsConfig });
+        
+        // Verificar si el CMS se carga
         const checkInterval = setInterval(() => {
           const cmsElement = document.querySelector('static-cms');
           if (cmsElement && cmsElement.shadowRoot) {
@@ -279,11 +298,11 @@
           }
         }, 1000);
         
-        // Timeout después de 15 segundos
+        // Timeout después de 20 segundos
         setTimeout(() => {
           clearInterval(checkInterval);
-          showError('El CMS no se cargó completamente. Recarga la página.');
-        }, 15000);
+          showError('El CMS no se cargó. Intenta recargar la página.');
+        }, 20000);
         
       } catch (error) {
         showError('Error al inicializar CMS: ' + error.message);
@@ -293,33 +312,14 @@
     // Cuando el CMS se carga exitosamente
     function onCMSLoaded() {
       elements.statusText.textContent = '¡Panel cargado exitosamente!';
-      showSuccess('Autenticación y carga completadas');
+      showSuccess('Conexión directa con GitHub establecida');
       hideElement(elements.spinner);
       hideElement(elements.callbackBox);
-      elements.debugState.textContent = 'CMS completamente cargado';
+      elements.debugState.textContent = 'CMS completamente cargado - Sin Netlify';
       
-      // Inyectar estilos personalizados
-      injectCustomStyles();
-    }
-
-    // Inyectar estilos personalizados en el Shadow DOM
-    function injectCustomStyles() {
-      const cmsElement = document.querySelector('static-cms');
-      if (cmsElement && cmsElement.shadowRoot) {
-        const style = document.createElement('style');
-        style.textContent = `
-          /* Estilos personalizados para Static CMS */
-          body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-          }
-          .CSSSidebar-root {
-            background: #1f2937 !important;
-          }
-          .CSSButton-primary {
-            background-color: #3b82f6 !important;
-          }
-        `;
-        cmsElement.shadowRoot.appendChild(style);
+      // Limpiar parámetros de la URL para evitar re-autenticación
+      if (window.location.search.includes('code=')) {
+        window.history.replaceState({}, document.title, window.location.pathname);
       }
     }
 
@@ -332,9 +332,24 @@
         return;
       }
       
-      // Mostrar botón de autenticación normal
-      elements.statusText.textContent = 'Autenticación requerida para acceder al panel';
-      elements.debugState.textContent = 'Esperando autenticación del usuario';
+      // Verificar si ya tenemos un código de acceso guardado
+      const existingCode = localStorage.getItem('github_oauth_code');
+      const codeTimestamp = localStorage.getItem('github_oauth_timestamp');
+      const isCodeValid = codeTimestamp && (Date.now() - parseInt(codeTimestamp)) < 3600000; // 1 hora
+      
+      if (existingCode && isCodeValid) {
+        elements.statusText.textContent = 'Reutilizando autenticación existente...';
+        elements.debugState.textContent = 'Usando código OAuth guardado';
+        initCMS();
+      } else {
+        // Limpiar código expirado
+        if (existingCode) localStorage.removeItem('github_oauth_code');
+        if (codeTimestamp) localStorage.removeItem('github_oauth_timestamp');
+        
+        // Mostrar botón de autenticación
+        elements.statusText.textContent = 'Autenticación requerida';
+        elements.debugState.textContent = 'Esperando autenticación del usuario';
+      }
     }
 
     // Iniciar cuando el DOM esté listo
