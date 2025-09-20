@@ -90,11 +90,20 @@
     .hidden {
       display: none;
     }
-    .manual-auth-box {
-      background-color: #fffbeb;
-      border: 2px dashed #f59e0b;
-      padding: 1.5rem;
-      border-radius: 8px;
+    .url-box {
+      background-color: #f1f5f9;
+      padding: 0.75rem;
+      border-radius: 6px;
+      margin: 1rem 0;
+      overflow-x: auto;
+      font-family: monospace;
+      font-size: 0.8rem;
+    }
+    .warning-box {
+      background-color: #fef3c7;
+      border: 1px solid #f59e0b;
+      padding: 1rem;
+      border-radius: 6px;
       margin: 1rem 0;
     }
   </style>
@@ -102,15 +111,15 @@
 <body>
   <div class="loading-container">
     <div class="spinner" id="spinner"></div>
-    <h2 id="status-text">Iniciando sistema de administración...</h2>
+    <h2 id="status-text">Inicializando sistema de autenticación...</h2>
     
     <div id="error-message" class="error hidden">
-      <h3>Error en el proceso</h3>
+      <h3>Error crítico de configuración</h3>
       <p id="error-details"></p>
     </div>
 
     <div id="success-message" class="success hidden">
-      <h3>¡Proceso completado!</h3>
+      <h3>¡Sistema configurado correctamente!</h3>
       <p id="success-details"></p>
     </div>
 
@@ -120,21 +129,22 @@
       <button class="retry-button" onclick="initGitHubAuth()">Iniciar Sesión con GitHub</button>
     </div>
 
-    <div id="manual-auth-box" class="manual-auth-box hidden">
-      <h3>🛠️ Autenticación Manual</h3>
-      <p>Si el proceso automático falla, puedes:</p>
-      <ol>
-        <li>Abrir manualmente: <a href="#" id="manual-auth-link">Iniciar sesión en GitHub</a></li>
-        <li>Después de autorizar, regresa a esta página</li>
-        <li>Haz clic en: <button class="retry-button" onclick="completeManualAuth()">Completar Autenticación</button></li>
-      </ol>
+    <div id="warning-box" class="warning-box hidden">
+      <h3>⚠️ Interceptando redirección a Netlify</h3>
+      <p>Hemos detectado que Static CMS intenta redirigir a Netlify.</p>
+      <p>Esta redirección será bloqueada y se usará el método de autenticación directa.</p>
     </div>
 
     <div class="debug-info">
-      <h4>Estado del sistema:</h4>
+      <h4>Información de diagnóstico:</h4>
       <p id="debug-state">Inicializando...</p>
-      <p id="debug-url">URL: <code>Cargando...</code></p>
-      <p id="debug-time">Tiempo: <span id="timer">0</span> segundos</p>
+      <div class="url-box">
+        <div>URL actual:</div>
+        <div id="current-url">Cargando...</div>
+      </div>
+      <div id="redirect-info" class="hidden">
+        <p><strong>Redirección interceptada:</strong> <span id="redirect-url"></span></p>
+      </div>
     </div>
   </div>
 
@@ -148,24 +158,23 @@
       successMessage: document.getElementById('success-message'),
       successDetails: document.getElementById('success-details'),
       authBox: document.getElementById('auth-box'),
-      manualAuthBox: document.getElementById('manual-auth-box'),
-      manualAuthLink: document.getElementById('manual-auth-link'),
+      warningBox: document.getElementById('warning-box'),
       debugState: document.getElementById('debug-state'),
-      debugUrl: document.getElementById('debug-url'),
-      timer: document.getElementById('timer')
+      currentUrl: document.getElementById('current-url'),
+      redirectInfo: document.getElementById('redirect-info'),
+      redirectUrl: document.getElementById('redirect-url')
     };
 
     // Configuración
     const config = {
       clientId: 'Ov23liyjswEELMqTAagb',
       redirectUri: 'https://liammenu.github.io/Liammenu/admin/index.html',
-      scope: 'repo'
+      scope: 'repo',
+      state: 'github_auth_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9)
     };
 
     // Variables de estado
-    let authState = 'github_auth_' + Date.now();
-    let timerInterval = null;
-    let startTime = Date.now();
+    let hasInterceptedNetlify = false;
 
     // Mostrar/Ocultar elementos
     function showElement(element) {
@@ -182,7 +191,6 @@
       showElement(elements.errorMessage);
       elements.debugState.textContent = 'Error: ' + message;
       hideElement(elements.spinner);
-      stopTimer();
     }
 
     // Mostrar éxito
@@ -190,39 +198,87 @@
       elements.successDetails.textContent = message;
       showElement(elements.successMessage);
       elements.debugState.textContent = 'Éxito: ' + message;
-      hideElement(elements.spinner);
-      stopTimer();
     }
 
-    // Timer para seguimiento
-    function startTimer() {
-      startTime = Date.now();
-      timerInterval = setInterval(() => {
-        const seconds = Math.floor((Date.now() - startTime) / 1000);
-        elements.timer.textContent = seconds;
-      }, 1000);
+    // Actualizar información de debug
+    function updateDebugInfo() {
+      elements.currentUrl.textContent = window.location.href;
     }
 
-    function stopTimer() {
-      if (timerInterval) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-      }
+    // Interceptar todas las redirecciones a Netlify
+    function interceptNetlifyRedirects() {
+      // Interceptar window.location changes
+      const originalLocation = window.location;
+      const originalHref = Object.getOwnPropertyDescriptor(originalLocation, 'href');
+      
+      Object.defineProperty(window.location, 'href', {
+        set: function(value) {
+          if (value.includes('api.netlify.com/auth')) {
+            elements.debugState.textContent = 'Interceptando redirección a Netlify';
+            showElement(elements.warningBox);
+            elements.redirectUrl.textContent = value;
+            showElement(elements.redirectInfo);
+            hasInterceptedNetlify = true;
+            
+            // En lugar de redirigir a Netlify, usar nuestro método
+            initGitHubAuth();
+            return;
+          }
+          originalHref.set.call(window.location, value);
+        },
+        get: function() {
+          return originalHref.get.call(window.location);
+        }
+      });
+      
+      // Interceptar window.open
+      const originalOpen = window.open;
+      window.open = function(url, name, features) {
+        if (url && url.includes('api.netlify.com/auth')) {
+          elements.debugState.textContent = 'Interceptando ventana emergente de Netlify';
+          showElement(elements.warningBox);
+          elements.redirectUrl.textContent = url;
+          showElement(elements.redirectInfo);
+          hasInterceptedNetlify = true;
+          
+          // En lugar de abrir ventana de Netlify, usar nuestro método
+          initGitHubAuth();
+          return null;
+        }
+        return originalOpen.call(window, url, name, features);
+      };
+      
+      // Interceptar click events en elementos que podrían redirigir a Netlify
+      document.addEventListener('click', function(e) {
+        const target = e.target.closest('a');
+        if (target && target.href && target.href.includes('api.netlify.com/auth')) {
+          e.preventDefault();
+          e.stopPropagation();
+          elements.debugState.textContent = 'Interceptando clic a Netlify';
+          showElement(elements.warningBox);
+          elements.redirectUrl.textContent = target.href;
+          showElement(elements.redirectInfo);
+          hasInterceptedNetlify = true;
+          
+          initGitHubAuth();
+          return false;
+        }
+      }, true);
     }
 
-    // Función de autenticación con GitHub
+    // Función de autenticación con GitHub - URL CORRECTA
     function initGitHubAuth() {
       try {
         elements.statusText.textContent = 'Redirigiendo a GitHub...';
         hideElement(elements.authBox);
         hideElement(elements.errorMessage);
-        elements.debugState.textContent = 'Iniciando autenticación';
+        hideElement(elements.warningBox);
         
-        // Generar URL para GitHub
+        // Generar URL CORRECTA para GitHub
         const authUrl = generateGitHubAuthUrl();
-        elements.debugUrl.innerHTML = `URL: <code>${authUrl}</code>`;
+        elements.debugState.textContent = 'Redirigiendo a GitHub (URL corregida)';
         
-        // Redirigir inmediatamente
+        // Forzar redirección inmediata
         window.location.href = authUrl;
         
       } catch (error) {
@@ -230,15 +286,16 @@
       }
     }
 
-    // Generar URL de autenticación
+    // Generar URL de autenticación CORRECTA para GitHub
     function generateGitHubAuthUrl() {
       const baseUrl = 'https://github.com/login/oauth/authorize';
       const params = new URLSearchParams({
         client_id: config.clientId,
         redirect_uri: config.redirectUri,
         scope: config.scope,
-        state: authState,
-        response_type: 'code'
+        state: config.state,
+        response_type: 'code',
+        allow_signup: 'false'
       });
       
       return `${baseUrl}?${params.toString()}`;
@@ -250,47 +307,37 @@
       return urlParams.has('code');
     }
 
-    // Procesar autenticación manual
-    function completeManualAuth() {
-      if (hasAuthCode()) {
-        processAuthCode();
-      } else {
-        showError('No se detectó código de autorización. Por favor inicia sesión primero.');
-        showElement(elements.manualAuthBox);
-      }
-    }
-
-    // Procesar código de autenticación
-    function processAuthCode() {
+    // Procesar callback de GitHub
+    function processGitHubCallback() {
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get('code');
       const error = urlParams.get('error');
       
-      if (error) {
-        showError(`Error de GitHub: ${error}`);
-        return false;
-      }
-      
       if (code) {
-        elements.statusText.textContent = 'Procesando autorización...';
+        elements.statusText.textContent = 'Autenticación exitosa. Configurando CMS...';
         elements.debugState.textContent = 'Código de autorización recibido';
         
-        // Limpiar URL inmediatamente
+        // Limpiar URL inmediatamente para evitar que Static CMS detecte el código
         window.history.replaceState({}, document.title, window.location.pathname);
         
-        // Inicializar CMS
+        // Inicializar CMS después de recibir el código
         setTimeout(initCMS, 1000);
+        return true;
+      }
+      
+      if (error) {
+        showError(`Error de GitHub: ${error} - ${urlParams.get('error_description') || 'Error desconocido'}`);
         return true;
       }
       
       return false;
     }
 
-    // Inicializar CMS
+    // Inicializar CMS con configuración optimizada
     function initCMS() {
       try {
         elements.statusText.textContent = 'Inicializando panel de administración...';
-        elements.debugState.textContent = 'Cargando Static CMS';
+        elements.debugState.textContent = 'Configurando Static CMS';
         
         const cmsConfig = {
           backend: {
@@ -333,7 +380,7 @@
         
         window.CMS.init({ config: cmsConfig });
         
-        // Verificar carga del CMS
+        // Verificar si el CMS se carga
         checkCMSLoad();
         
       } catch (error) {
@@ -344,7 +391,7 @@
     // Verificar si el CMS se cargó
     function checkCMSLoad() {
       let checks = 0;
-      const maxChecks = 30; // 30 segundos máximo
+      const maxChecks = 30;
       
       const checkInterval = setInterval(() => {
         checks++;
@@ -355,35 +402,32 @@
           onCMSLoaded();
         } else if (checks >= maxChecks) {
           clearInterval(checkInterval);
-          showError('El CMS no se cargó en el tiempo esperado. Recarga la página.');
-          showElement(elements.manualAuthBox);
+          showError('El CMS no se cargó. Recarga la página o contacta soporte.');
         }
       }, 1000);
     }
 
-    // Cuando el CMS se carga
+    // Cuando el CMS se carga exitosamente
     function onCMSLoaded() {
       elements.statusText.textContent = '¡Panel cargado exitosamente!';
-      showSuccess('Sistema de administración listo');
+      showSuccess('Conexión establecida con GitHub');
       hideElement(elements.spinner);
       elements.debugState.textContent = 'CMS completamente operativo';
     }
 
     // Inicializar la página
     function init() {
-      startTimer();
-      elements.debugUrl.innerHTML = `URL: <code>${window.location.href}</code>`;
+      updateDebugInfo();
       
-      // Configurar enlace manual
-      elements.manualAuthLink.href = generateGitHubAuthUrl();
-      elements.manualAuthLink.target = '_blank';
+      // Interceptar redirecciones a Netlify inmediatamente
+      interceptNetlifyRedirects();
       
-      // Verificar si ya tenemos código de autenticación
-      if (processAuthCode()) {
+      // Verificar si estamos en un callback de GitHub
+      if (processGitHubCallback()) {
         return;
       }
       
-      // Mostrar opción de autenticación
+      // Mostrar botón de autenticación normal
       elements.statusText.textContent = 'Sistema listo para autenticar';
       showElement(elements.authBox);
       elements.debugState.textContent = 'Esperando inicio de autenticación';
