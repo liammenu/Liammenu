@@ -5,8 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Content Manager - Liammenu</title>
   <script src="https://cdn.jsdelivr.net/npm/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <script src="https://unpkg.com/decap-cms-backend-github@^0.10.0/dist/decap-cms-backend-github.js"></script>
 </head>
 <body>
-  <!-- Decap CMS se cargará aquí -->
+  <script>
+    CMS.registerBackend('github', CMS.Backend.GitHub);
+    
+    CMS.init({
+      config: {
+        backend: {
+          name: 'github',
+          repo: 'liammenu/Liammenu',
+          branch: 'main',
+          api_root: 'https://api.github.com',
+          base_url: 'https://github.com',
+          auth_endpoint: 'auth',
+          auth_type: 'implicit',
+          app_id: 'Ov23liyjswEELMqTAagb'
+        },
+        media_folder: "assets/images",
+        public_folder: "/assets/images",
+        collections: [
+          {
+            name: "menu",
+            label: "Menú",
+            folder: "_menu",
+            create: true,
+            slug: "{{year}}-{{month}}-{{day}}-{{slug}}",
+            fields: [
+              { label: "Título", name: "title", widget: "string" },
+              { label: "Descripción", name: "description", widget: "text" },
+              { label: "Imagen", name: "image", widget: "image" },
+              { label: "Precio", name: "price", widget: "number" },
+              { label: "Categoría", name: "category", widget: "select", options: ["Entradas", "Platos Principales", "Postres", "Bebidas"] }
+            ]
+          }
+        ]
+      }
+    });
+  </script>
 </body>
 </html>
