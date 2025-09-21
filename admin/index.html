@@ -5,52 +5,57 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Content Manager</title>
 
-  <!-- Load Decap CMS -->
+  <!-- Load Decap CMS script -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-
-  <!-- Load Decap Bridge -->
-  <script src="https://decapbridge.com/decap-bridge.js"></script>
-
-  <!-- Load your config file -->
-  <script>
-    DecapBridge.init({
-      config: {
-        backend: {
-          name: 'git-gateway',
-          repo: 'liammenu/Liammenu',
-          branch: 'main',
-          identity_url: 'https://auth.decapbridge.com/sites/f73a5bd9-5d5a-456d-88ce-5fc9e282b117',
-          gateway_url: 'https://gateway.decapbridge.com'
-        },
-        media_folder: 'assets/uploads',
-        public_folder: '/uploads',
-        collections: [
-          {
-            name: 'productos',
-            label: 'Productos',
-            files: [
-              {
-                label: 'Lista de Productos',
-                name: 'productos',
-                file: 'data/productos.yml',
-                fields: [
-                  { label: 'Nombre', name: 'nombre', widget: 'string' },
-                  { label: 'Precio', name: 'precio', widget: 'number' },
-                  { label: 'Descripción', name: 'descripcion', widget: 'text' },
-                  { label: 'Imagen', name: 'imagen', widget: 'image', required: false }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    });
-  </script>
 </head>
 <body>
-  <!-- Initialize Decap CMS -->
+  <!-- Initialize Decap CMS with Decap Bridge -->
   <script>
-    DecapBridge.initCMS();
+    window.DecapBridge = window.DecapBridge || {};
+    DecapBridge.init = function() {
+      CMS.init({
+        config: {
+          backend: {
+            name: 'git-gateway',
+            repo: 'liammenu/Liammenu',
+            branch: 'main',
+            identity_url: 'https://auth.decapbridge.com/sites/f73a5bd9-5d5a-456d-88ce-5fc9e282b117',
+            gateway_url: 'https://gateway.decapbridge.com'
+          },
+          media_folder: 'assets/uploads',
+          public_folder: '/uploads',
+          site_url: 'https://liammenu.github.io',
+          logo_url: 'https://decapbridge.com/decapcms-with-bridge.svg',
+          collections: [
+            {
+              name: 'productos',
+              label: 'Productos',
+              files: [
+                {
+                  label: 'Lista de Productos',
+                  name: 'productos',
+                  file: 'data/productos.yml',
+                  fields: [
+                    { label: 'Nombre', name: 'nombre', widget: 'string' },
+                    { label: 'Precio', name: 'precio', widget: 'number' },
+                    { label: 'Descripción', name: 'descripcion', widget: 'text' },
+                    { label: 'Imagen', name: 'imagen', widget: 'image', required: false }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      });
+    };
+
+    // Load Decap Bridge script
+    var script = document.createElement('script');
+    script.src = 'https://decapbridge.com/decap-bridge.js';
+    script.onload = function() {
+      DecapBridge.init();
+    };
+    document.head.appendChild(script);
   </script>
 </body>
 </html>
