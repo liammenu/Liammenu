@@ -7,38 +7,6 @@
   <script src="https://cdn.jsdelivr.net/npm/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </head>
 <body>
-  <script>
-    // Configuración para GitHub OAuth
-    window.CMS_MANUAL_INIT = true;
-    CMS.init({
-      config: {
-        backend: {
-          name: 'git-gateway',
-          branch: 'main',
-          repo: 'liammenu/Liammenu',
-          identity_url: 'https://api.github.com',
-          gateway_url: 'https://github.com/login/oauth'
-        },
-        media_folder: "assets/images",
-        public_folder: "/assets/images",
-        collections: [
-          {
-            name: "menu",
-            label: "Menú",
-            folder: "_menu",
-            create: true,
-            slug: "{{year}}-{{month}}-{{day}}-{{slug}}",
-            fields: [
-              { label: "Título", name: "title", widget: "string" },
-              { label: "Descripción", name: "description", widget: "text" },
-              { label: "Imagen", name: "image", widget: "image" },
-              { label: "Precio", name: "price", widget: "number" },
-              { label: "Categoría", name: "category", widget: "select", options: ["Entradas", "Platos Principales", "Postres", "Bebidas"] }
-            ]
-          }
-        ]
-      }
-    });
-  </script>
+  <!-- Decap CMS se inicializará automáticamente -->
 </body>
 </html>
