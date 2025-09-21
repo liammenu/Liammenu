@@ -1,61 +1,57 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Content Manager</title>
-
-  <!-- Load Decap CMS script -->
+  <!-- Load Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </head>
 <body>
   <!-- Initialize Decap CMS with Decap Bridge -->
   <script>
-    window.DecapBridge = window.DecapBridge || {};
-    DecapBridge.init = function() {
-      CMS.init({
-        config: {
-          backend: {
-            name: 'git-gateway',
-            repo: 'liammenu/Liammenu',
-            branch: 'main',
-            identity_url: 'https://auth.decapbridge.com/sites/f73a5bd9-5d5a-456d-88ce-5fc9e282b117',
-            gateway_url: 'https://gateway.decapbridge.com'
-          },
-          media_folder: 'assets/uploads',
-          public_folder: '/uploads',
-          site_url: 'https://liammenu.github.io',
-          logo_url: 'https://decapbridge.com/decapcms-with-bridge.svg',
-          collections: [
-            {
-              name: 'productos',
-              label: 'Productos',
-              files: [
-                {
-                  label: 'Lista de Productos',
-                  name: 'productos',
-                  file: 'data/productos.yml',
-                  fields: [
-                    { label: 'Nombre', name: 'nombre', widget: 'string' },
-                    { label: 'Precio', name: 'precio', widget: 'number' },
-                    { label: 'Descripción', name: 'descripcion', widget: 'text' },
-                    { label: 'Imagen', name: 'imagen', widget: 'image', required: false }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      });
-    };
-
-    // Load Decap Bridge script
-    var script = document.createElement('script');
-    script.src = 'https://decapbridge.com/decap-bridge.js';
-    script.onload = function() {
-      DecapBridge.init();
-    };
-    document.head.appendChild(script);
+    document.addEventListener('DOMContentLoaded', function() {
+      var script = document.createElement('script');
+      script.src = 'https://decapbridge.com/decap-bridge.js';
+      script.onload = function() {
+        DecapBridge.init({
+          config: {
+            backend: {
+              name: 'git-gateway',
+              repo: 'liammenu/Liammenu',
+              branch: 'main',
+              identity_url: 'https://auth.decapbridge.com/sites/f73a5bd9-5d5a-456d-88ce-5fc9e282b117',
+              gateway_url: 'https://gateway.decapbridge.com'
+            },
+            media_folder: 'assets/uploads',
+            public_folder: '/uploads',
+            site_url: 'https://liammenu.github.io',
+            logo_url: 'https://decapbridge.com/decapcms-with-bridge.svg',
+            collections: [
+              {
+                name: 'productos',
+                label: 'Productos',
+                files: [
+                  {
+                    label: 'Lista de Productos',
+                    name: 'productos',
+                    file: 'data/productos.yml',
+                    fields: [
+                      { label: 'Nombre', name: 'nombre', widget: 'string' },
+                      { label: 'Precio', name: 'precio', widget: 'number' },
+                      { label: 'Descripción', name: 'descripcion', widget: 'text' },
+                      { label: 'Imagen', name: 'imagen', widget: 'image', required: false }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        });
+      };
+      document.head.appendChild(script);
+    });
   </script>
 </body>
-</html>
+</html
+>
