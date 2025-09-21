@@ -3,61 +3,54 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Content Manager - Liammenu</title>
-  <!-- Cargar React antes de Decap CMS -->
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <!-- Cargar Decap CMS -->
+  <title>Content Manager</title>
+
+  <!-- Load Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-  <!-- Estilos para Decap CMS -->
-  <link rel="stylesheet" href="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.css" />
+
+  <!-- Load Decap Bridge -->
+  <script src="https://decapbridge.com/decap-bridge.js"></script>
+
+  <!-- Load your config file -->
+  <script>
+    DecapBridge.init({
+      config: {
+        backend: {
+          name: 'git-gateway',
+          repo: 'liammenu/Liammenu',
+          branch: 'main',
+          identity_url: 'https://auth.decapbridge.com/sites/f73a5bd9-5d5a-456d-88ce-5fc9e282b117',
+          gateway_url: 'https://gateway.decapbridge.com'
+        },
+        media_folder: 'assets/uploads',
+        public_folder: '/uploads',
+        collections: [
+          {
+            name: 'productos',
+            label: 'Productos',
+            files: [
+              {
+                label: 'Lista de Productos',
+                name: 'productos',
+                file: 'data/productos.yml',
+                fields: [
+                  { label: 'Nombre', name: 'nombre', widget: 'string' },
+                  { label: 'Precio', name: 'precio', widget: 'number' },
+                  { label: 'Descripción', name: 'descripcion', widget: 'text' },
+                  { label: 'Imagen', name: 'imagen', widget: 'image', required: false }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    });
+  </script>
 </head>
 <body>
-  <!-- El contenedor para Decap CMS -->
-  <div id="cms-root"></div>
-  
+  <!-- Initialize Decap CMS -->
   <script>
-    // Esperar a que el DOM esté completamente cargado
-    document.addEventListener('DOMContentLoaded', function() {
-      // Inicializar Decap CMS
-      CMS.init({
-        config: {
-          backend: {
-            name: 'github',
-            repo: 'liammenu/Liammenu',
-            branch: 'main',
-            api_root: 'https://api.github.com',
-            base_url: 'https://github.com',
-            auth_endpoint: 'auth',
-            auth_type: 'implicit',
-            app_id: 'Ov23liyjswEELMqTAagb'
-          },
-          media_folder: "assets/images",
-          public_folder: "/assets/images",
-          collections: [
-            {
-              name: "menu",
-              label: "Menú",
-              folder: "_menu",
-              create: true,
-              slug: "{{year}}-{{month}}-{{day}}-{{slug}}",
-              fields: [
-                { label: "Título", name: "title", widget: "string" },
-                { label: "Descripción", name: "description", widget: "text" },
-                { label: "Imagen", name: "image", widget: "image" },
-                { label: "Precio", name: "price", widget: "number" },
-                { label: "Categoría", name: "category", widget: "select", options: ["Entradas", "Platos Principales", "Postres", "Bebidas"] }
-              ]
-            }
-          ]
-        }
-      });
-      
-      // Verificar si hay errores en la consola
-      window.addEventListener('error', function(e) {
-        console.error('Error en la página:', e.error);
-      });
-    });
+    DecapBridge.initCMS();
   </script>
 </body>
 </html>
