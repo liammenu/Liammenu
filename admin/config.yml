@@ -1,21 +1,17 @@
 backend:
   name: github
-  repo: liammenu/Liammenu
-  branch: main
+  repo: Liammmenu/liammenu   # <-- usuario/repositorio de GitHub
+  branch: main               # o master, depende de cómo se llame tu rama principal
 
-media_folder: "images"
-public_folder: "/images"
+media_folder: "static/uploads"   # Carpeta donde se guardan las imágenes
+public_folder: "/uploads"
 
 collections:
-  - name: "productos"
-    label: "Productos"
-    folder: "data/productos"
+  - name: "paginas"
+    label: "Páginas"
+    folder: "content/paginas"
     create: true
     slug: "{{slug}}"
     fields:
-      - { name: "title", label: "Título", widget: "string" }
-      - { name: "price", label: "Precio", widget: "number" }
-      - { name: "image", label: "Imagen", widget: "image" }
-      - { name: "description", label: "Descripción", widget: "text" }
-      - { name: "categoria", label: "Categoría", widget: "select", options: ["OFERTAS", "PIZZAS", "LOMOS", "MILANESAS", "ZAPPIN Y PAPAS", "PATYS"] }
-      - { name: "disponible", label: "Disponible", widget: "boolean", default: true }
+      - { label: "Título", name: "title", widget: "string" }
+      - { label: "Contenido", name: "body", widget: "markdown" }
