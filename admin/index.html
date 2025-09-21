@@ -1,161 +1,23 @@
-<html lang="es">
+<!DOCTYPE html>
+<html>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Panel de Administración - Liam's Menu</title>
-  <!-- Decap CMS desde jsdelivr -->
-  <script src="https://cdn.jsdelivr.net/npm/decap-cms@3.0.0/dist/decap-cms.min.js"></script>
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-      color: #334155;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 20px;
-    }
-    .loading-container {
-      text-align: center;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-      max-width: 500px;
-      width: 90%;
-    }
-    .spinner {
-      border: 4px solid #f1f5f9;
-      border-top: 4px solid #3b82f6;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 1.5rem auto;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    .error {
-      color: #ef4444;
-      padding: 0.75rem;
-      background-color: #fef2f2;
-      border-radius: 6px;
-      border-left: 4px solid #ef4444;
-      margin: 1rem 0;
-    }
-    .success {
-      color: #10b981;
-      padding: 0.75rem;
-      background-color: #ecfdf5;
-      border-radius: 6px;
-      border-left: 4px solid #10b981;
-      margin: 1rem 0;
-    }
-    .debug-info {
-      background-color: #fffbeb;
-      border: 1px solid #fcd34d;
-      padding: 1rem;
-      border-radius: 6px;
-      margin-top: 1rem;
-      font-size: 0.85rem;
-      text-align: left;
-    }
-    .hidden {
-      display: none;
-    }
-  </style>
+  <title>Content Manager - Liammenu</title>
+  <script src="https://cdn.jsdelivr.net/npm/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
-  <div class="loading-container">
-    <div class="spinner" id="spinner"></div>
-    <h2 id="status-text">Inicializando panel de administración...</h2>
-    <div id="error-message" class="error hidden">
-      <h3>Error de configuración</h3>
-      <p id="error-details"></p>
-    </div>
-    <div class="debug-info">
-      <h4>Información de diagnóstico:</h4>
-      <p id="debug-state">Cargando configuración...</p>
-    </div>
-  </div>
-
   <script>
-    const elements = {
-      spinner: document.getElementById('spinner'),
-      statusText: document.getElementById('status-text'),
-      errorMessage: document.getElementById('error-message'),
-      errorDetails: document.getElementById('error-details'),
-      debugState: document.getElementById('debug-state'),
-    };
-
-    const cmsConfig = {
-      backend: {
-        name: "github",
-        repo: "liammenu/Liammenu",
-        branch: "main",
-      },
-      locale: "es",
-      site_url: "https://liammenu.github.io",
-      display_url: "https://liammenu.github.io/Liammenu",
-      media_folder: "images",
-      public_folder: "/images",
-      collections: [
-        {
-          name: "productos",
-          label: "Productos",
-          label_singular: "Producto",
-          folder: "data/productos",
-          create: true,
-          slug: "{{slug}}",
-          fields: [
-            { name: "title", label: "Título", widget: "string" },
-            { name: "price", label: "Precio", widget: "number" },
-            { name: "image", label: "Imagen", widget: "image" },
-            { name: "description", label: "Descripción", widget: "text" },
-            {
-              name: "categoria",
-              label: "Categoría",
-              widget: "select",
-              options: ["OFERTAS", "PIZZAS", "LOMOS", "MILANESAS", "ZAPPIN Y PAPAS", "PATYS"],
-            },
-            { name: "disponible", label: "Disponible", widget: "boolean", default: true },
-          ],
-        },
-      ],
-    };
-
-    function showError(message) {
-      elements.errorDetails.textContent = message;
-      elements.errorMessage.classList.remove('hidden');
-      elements.debugState.textContent = 'Error: ' + message;
-      elements.spinner.style.display = 'none';
-    }
-
-    function initCMS() {
-      if (typeof window.CMS !== 'undefined') {
-        try {
-          elements.statusText.textContent = "Cargando panel de administración...";
-          elements.debugState.textContent = "Inicializando Decap CMS...";
-          window.CMS.init({ config: cmsConfig });
-        } catch (error) {
-          showError('Error al inicializar CMS: ' + error.message);
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", user => {
+        if (!user) {
+          window.netlifyIdentity.on("login", () => {
+            document.location.href = "/admin/";
+          });
         }
-      } else {
-        showError('El script de Decap CMS no se ha cargado.');
-      }
+      });
     }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      const script = document.querySelector('script[src*="decap-cms"]');
-      script.onload = initCMS;
-      script.onerror = function() {
-        showError('No se pudo cargar el script de Decap CMS.');
-      };
-    });
   </script>
 </body>
 </html>
