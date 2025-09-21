@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
@@ -85,7 +84,6 @@
   </div>
 
   <script>
-    // Elementos del DOM
     const elements = {
       spinner: document.getElementById('spinner'),
       statusText: document.getElementById('status-text'),
@@ -94,19 +92,16 @@
       debugState: document.getElementById('debug-state'),
     };
 
-    // Configuración de Decap CMS
     const cmsConfig = {
       backend: {
         name: "github",
         repo: "liammenu/Liammenu",
         branch: "main",
-        client_id: "Ov23liyjswEELMqTAagb",
-        auth_scope: "repo",
       },
       locale: "es",
       site_url: "https://liammenu.github.io",
       display_url: "https://liammenu.github.io/Liammenu",
-      media_folder: "static/images",
+      media_folder: "images",
       public_folder: "/images",
       collections: [
         {
@@ -133,7 +128,6 @@
       ],
     };
 
-    // Mostrar error
     function showError(message) {
       elements.errorDetails.textContent = message;
       elements.errorMessage.classList.remove('hidden');
@@ -141,7 +135,6 @@
       elements.spinner.style.display = 'none';
     }
 
-    // Inicializar CMS
     function initCMS() {
       if (typeof window.CMS !== 'undefined') {
         try {
@@ -152,16 +145,15 @@
           showError('Error al inicializar CMS: ' + error.message);
         }
       } else {
-        showError('El script de Decap CMS no se ha cargado. Verifica la conexión a Internet o la URL del script.');
+        showError('El script de Decap CMS no se ha cargado.');
       }
     }
 
-    // Esperar a que el script de Decap CMS esté cargado
     document.addEventListener('DOMContentLoaded', function() {
-      const script = document.querySelector('script[src="https://cdn.jsdelivr.net/npm/decap-cms@3.0.0/dist/decap-cms.min.js"]');
+      const script = document.querySelector('script[src*="decap-cms"]');
       script.onload = initCMS;
       script.onerror = function() {
-        showError('No se pudo cargar el script de Decap CMS. Verifica la URL o tu conexión a Internet.');
+        showError('No se pudo cargar el script de Decap CMS.');
       };
     });
   </script>
