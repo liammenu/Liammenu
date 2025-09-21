@@ -5,19 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Content Manager - Liammenu</title>
   <script src="https://cdn.jsdelivr.net/npm/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
   <script>
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", user => {
-        if (!user) {
-          window.netlifyIdentity.on("login", () => {
-            document.location.href = "/admin/";
-          });
-        }
-      });
-    }
+    // Configuración para GitHub OAuth
+    window.CMS_MANUAL_INIT = true;
+    CMS.init({
+      config: {
+        backend: {
+          name: 'git-gateway',
+          branch: 'main',
+          repo: 'liammenu/Liammenu',
+          identity_url: 'https://api.github.com',
+          gateway_url: 'https://github.com/login/oauth'
+        },
+        media_folder: "assets/images",
+        public_folder: "/assets/images",
+        collections: [
+          {
+            name: "menu",
+            label: "Menú",
+            folder: "_menu",
+            create: true,
+            slug: "{{year}}-{{month}}-{{day}}-{{slug}}",
+            fields: [
+              { label: "Título", name: "title", widget: "string" },
+              { label: "Descripción", name: "description", widget: "text" },
+              { label: "Imagen", name: "image", widget: "image" },
+              { label: "Precio", name: "price", widget: "number" },
+              { label: "Categoría", name: "category", widget: "select", options: ["Entradas", "Platos Principales", "Postres", "Bebidas"] }
+            ]
+          }
+        ]
+      }
+    });
   </script>
 </body>
 </html>
