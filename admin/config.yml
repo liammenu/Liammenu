@@ -1,7 +1,9 @@
 backend:
   name: git-gateway
-  branch: main # o master dependiendo de tu rama principal
-  repo: liammenu/Liammenu # tu usuario/repositorio
+  branch: main
+  repo: liammenu/Liammenu
+  identity_url: https://api.github.com
+  gateway_url: https://github.com/login/oauth
 
 media_folder: "assets/images"
 public_folder: "/assets/images"
