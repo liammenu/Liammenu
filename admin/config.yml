@@ -2,8 +2,6 @@ backend:
   name: github
   repo: liammenu/Liammenu
   branch: main
-  auth_scope: repo
-  token: {{ secrets.TOKEN_GITHUB }}
 
 media_folder: "images"
 public_folder: "/images"
@@ -11,8 +9,9 @@ public_folder: "/images"
 collections:
   - name: "productos"
     label: "Productos"
-    folder: "_data/productos"
+    folder: "data/productos"
     create: true
+    slug: "{{slug}}"
     fields:
       - { name: "title", label: "Título", widget: "string" }
       - { name: "price", label: "Precio", widget: "number" }
