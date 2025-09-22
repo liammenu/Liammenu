@@ -8,6 +8,9 @@
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </head>
 <body>
+  <!-- Elemento raíz para Decap CMS -->
+  <div id="cms-root"></div>
+  
   <!-- Initialize Decap CMS with Decap Bridge -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -37,10 +40,17 @@
                     name: 'productos',
                     file: 'data/productos.yml',
                     fields: [
-                      { label: 'Nombre', name: 'nombre', widget: 'string' },
-                      { label: 'Precio', name: 'precio', widget: 'number' },
-                      { label: 'Descripción', name: 'descripcion', widget: 'text' },
-                      { label: 'Imagen', name: 'imagen', widget: 'image', required: false }
+                      {
+                        label: 'Productos',
+                        name: 'productos',
+                        widget: 'list',
+                        fields: [
+                          { label: 'Nombre', name: 'nombre', widget: 'string' },
+                          { label: 'Precio', name: 'precio', widget: 'number' },
+                          { label: 'Descripción', name: 'descripcion', widget: 'text' },
+                          { label: 'Imagen', name: 'imagen', widget: 'image', required: false }
+                        ]
+                      }
                     ]
                   }
                 ]
@@ -53,5 +63,4 @@
     });
   </script>
 </body>
-</html
->
+</html>
