@@ -10,20 +10,21 @@ media_folder: "images"
 public_folder: "/images"
 
 collections:
-  - name: "productos"
-    label: "Productos"
-    label_singular: "Producto"
-    folder: "data"
+  # ---------- PIZZAS (archivos individuales) ----------
+  - name: "pizzas"
+    label: "Pizzas"
+    label_singular: "Pizza"
+    folder: "data/pizzas"
     format: json
     extension: json
     create: true
     slug: "{{slug}}"
     identifier_field: title
-    summary: "{{title}} ({{categoria}}) – ${{price}}"
+    summary: "{{title}} – ${{price}}"
     fields:
       - { label: "Nombre", name: "title", widget: "string", required: true }
       - { label: "Precio", name: "price", widget: "number", value_type: "int", min: 0, required: true }
       - { label: "Imagen", name: "image", widget: "image", required: false }
       - { label: "Descripción", name: "description", widget: "text", required: false }
-      - { label: "Categoría", name: "categoria", widget: "select", options: ["OFERTAS", "PIZZAS", "LOMOS", "MILANESAS", "ZAPPIN Y PAPAS", "PATYS"], required: true }
+      - { label: "Categoría", name: "categoria", widget: "select", options: ["PIZZAS"], required: true }
       - { label: "¿Disponible?", name: "disponible", widget: "boolean", default: true }
