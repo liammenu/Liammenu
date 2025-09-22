@@ -5,40 +5,26 @@ backend:
   identity_url: https://auth.decapbridge.com/sites/f73a5bd9-5d5a-456d-88ce-5fc9e282b117
   gateway_url: https://gateway.decapbridge.com
 
-publish_mode: editorial_workflow
+publish_mode: simple   # ahora guarda directo en main
 media_folder: "images"
 public_folder: "/images"
 
 collections:
-  # ---------- PRODUCTOS (JSON completo) ----------
   - name: "productos"
     label: "Productos"
-    label_singular: "Producto"
-    file: "data/productos.json"
-    format: json
-    extension: json
-    create: false
-    fields:
-      - name: "productos"
-        label: "Lista de productos"
-        widget: "list"
-        summary: "{{fields.title}} ({{fields.categoria}}) – ${{fields.price}}"
-        field:
-          - { label: "Nombre", name: "title", widget: "string", required: true }
-          - { label: "Precio", name: "price", widget: "number", value_type: "int", min: 0, required: true }
-          - { label: "Imagen", name: "image", widget: "image", required: false }
-          - { label: "Descripción", name: "description", widget: "text", required: false }
-          - { label: "Categoría", name: "categoria", widget: "select", options: ["OFERTAS", "PIZZAS", "LOMOS", "MILANESAS", "ZAPPIN Y PAPAS", "PATYS"], required: true }
-          - { label: "¿Disponible?", name: "disponible", widget: "boolean", default: true }
-
-  # ---------- CATEGORÍAS (opcional) ----------
-  - name: "categorias"
-    label: "Categorías"
-    label_singular: "Categoría"
-    folder: "data"
-    file: "data/categorias.yml"
-    format: yml
-    extension: yml
-    create: false
-    fields:
-      - { label: "Lista de categorías", name: "categorias", widget: "list", summary: "{{fields.nombre}}", field: { label: "Nombre", name: "nombre", widget: "string" } }
+    files:
+      - label: "Lista de productos"
+        name: "productos_file"
+        file: "data/productos.json"
+        format: json
+        fields:
+          - label: "Productos"
+            name: "productos"
+            widget: "list"
+            fields:
+              - { label: "Nombre", name: "title", widget: "string", required: true }
+              - { label: "Precio", name: "price", widget: "number", value_type: "int", min: 0, required: true }
+              - { label: "Imagen", name: "image", widget: "image", required: false }
+              - { label: "Descripción", name: "description", widget: "text", required: false }
+              - { label: "Categoría", name: "categoria", widget: "select", options: ["OFERTAS","PIZZAS","LOMOS","MILANESAS","ZAPPIN Y PAPAS","PATYS"], required: true }
+              - { label: "¿Disponible?", name: "disponible", widget: "boolean", default: true }
