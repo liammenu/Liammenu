@@ -251,20 +251,13 @@ async function cargarImagenesCarrusel(contenedorId, prefijo, max = 6) {
   }
 }
 
-// ---------- LEE TODOS LOS .json INDIVIDUALES ----------
-fetch('data/pizzas/')
-  .then(r => r.text())
-  .then(html => {
-    const files = [];
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    doc.querySelectorAll('a[href$=".json"]').forEach(a => files.push(a.getAttribute('href')));
-    return Promise.all(files.map(f => fetch(`data/pizzas/${f}`).then(r => r.json())));
-  })
-  .then(pizzas => {
+// ---------- LEE DIRECTAMENTE el archivo que creaste ----------
+fetch('data/pizzas/doble-queso.json')
+  .then(r => r.json())
+  .then(p => {
     const cont = document.getElementById('pizzas-content');
     cont.innerHTML = '';                 // limpia
-    pizzas.filter(p => p.disponible).forEach(p => {
+    if (p.disponible) {                  // solo si está disponible
       const item = document.createElement('div');
       item.className = 'item';
       item.innerHTML = `
@@ -277,9 +270,9 @@ fetch('data/pizzas/')
         <button class="btnAgregar" onclick="confirmar('${p.title}', ${p.price})">+</button>
       `;
       cont.appendChild(item);
-    });
+    }
   })
-  .catch(err => console.error('Error cargando pizzas:', err));
+  .catch(err => console.error('Error cargando pizza:', err));
 
 // ---------- INICIALIZAR CARRUSELES ----------
 window.addEventListener('DOMContentLoaded', async () => {
