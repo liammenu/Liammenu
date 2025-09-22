@@ -251,13 +251,26 @@ async function cargarImagenesCarrusel(contenedorId, prefijo, max = 6) {
   }
 }
 
-// ---------- LEE DIRECTAMENTE el archivo que creaste ----------
-fetch('data/pizzas/doble-queso.json')
-  .then(r => r.json())
-  .then(p => {
+// ---------- LEE TODOS LOS .json INDIVIDUALES ----------
+fetch('data/pizzas.json')               // fallback por si no hay index
+  .catch(() => [])                       // si no existe el array global
+  .then(arr => {
+    if (arr.length) return arr;          // si hay array, lo usa
+    // si NO hay array, lee carpeta individual
+    return fetch('data/pizzas/')
+      .then(r => r.text())               // obtenemos el "index" de GitHub
+      .then(html => {
+        const files = [];
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        doc.querySelectorAll('a[href$=".json"]').forEach(a => files.push(a.getAttribute('href')));
+        return Promise.all(files.map(f => fetch(`data/pizzas/${f}`).then(r => r.json())));
+      });
+  })
+  .then(pizzas => {
     const cont = document.getElementById('pizzas-content');
     cont.innerHTML = '';                 // limpia
-    if (p.disponible) {                  // solo si está disponible
+    pizzas.filter(p => p.disponible).forEach(p => {
       const item = document.createElement('div');
       item.className = 'item';
       item.innerHTML = `
@@ -270,9 +283,9 @@ fetch('data/pizzas/doble-queso.json')
         <button class="btnAgregar" onclick="confirmar('${p.title}', ${p.price})">+</button>
       `;
       cont.appendChild(item);
-    }
+    });
   })
-  .catch(err => console.error('Error cargando pizza:', err));
+  .catch(err => console.error('Error cargando pizzas:', err));
 
 // ---------- INICIALIZAR CARRUSELES ----------
 window.addEventListener('DOMContentLoaded', async () => {
