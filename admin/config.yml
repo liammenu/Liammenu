@@ -1,4 +1,4 @@
-# Decap Bridge backend (sin cambios)
+# Decap Bridge backend (sin tocar)
 backend:
   name: git-gateway
   repo: liammenu/Liammenu
@@ -22,14 +22,14 @@ media_folder: "images"
 public_folder: "/images"
 
 collections:
-  # ---------- PRODUCTOS (lee / escribe data/productos.yml) ----------
+  # ---------- PRODUCTOS (JSON) ----------
   - name: "productos"
     label: "Productos"
     label_singular: "Producto"
     folder: "data"
-    file: "data/productos.yml"
-    format: yml
-    extension: yml
+    file: "data/productos.json"
+    format: json
+    extension: json
     create: true
     slug: "{{slug}}"
     identifier_field: title
@@ -42,7 +42,7 @@ collections:
       - { label: "Categoría", name: "categoria", widget: "select", options: ["OFERTAS", "PIZZAS", "LOMOS", "MILANESAS", "ZAPPIN Y PAPAS", "PATYS"], required: true }
       - { label: "¿Disponible?", name: "disponible", widget: "boolean", default: true, hint: "Si está apagado aparecerá 'No disponible' en la carta" }
 
-  # ---------- CATEGORÍAS (para agregar o renombrar sin tocar código) ----------
+  # ---------- CATEGORÍAS (opcional) ----------
   - name: "categorias"
     label: "Categorías"
     label_singular: "Categoría"
