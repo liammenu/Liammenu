@@ -11,4 +11,17 @@ public_folder: "/images"
 
 files:
   - name: "productos"
-    label:
+    label: "Productos"
+    file: "data/productos.json"
+    description: "Lista completa de productos"
+    fields:
+      - label: "Productos"
+        name: "productos"
+        widget: "list"
+        fields:
+          - { label: "Nombre", name: "title", widget: "string", required: true }
+          - { label: "Precio", name: "price", widget: "number", value_type: "int", min: 0, required: true }
+          - { label: "Imagen", name: "image", widget: "image", required: false }
+          - { label: "Descripción", name: "description", widget: "text", required: false }
+          - { label: "Categoría", name: "categoria", widget: "select", options: ["OFERTAS", "PIZZAS", "LOMOS", "MILANESAS", "ZAPPIN Y PAPAS", "PATYS"], required: true }
+          - { label: "¿Disponible?", name: "disponible", widget: "boolean", default: true }
