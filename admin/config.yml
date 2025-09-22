@@ -1,27 +1,19 @@
-backend:
-  name: git-gateway
-  repo: liammenu/Liammenu
-  branch: main
-  identity_url: https://auth.decapbridge.com/sites/f73a5bd9-5d5a-456d-88ce-5fc9e282b117
-  gateway_url: https://gateway.decapbridge.com
-
-publish_mode: editorial_workflow
-media_folder: "images"
-public_folder: "/images"
-
-files:
+collections:
   - name: "productos"
     label: "Productos"
-    file: "data/productos.json"
-    description: "Lista completa de productos"
+    label_singular: "Producto"
+    folder: "data"
+    format: json
+    extension: json
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{title}} ({{categoria}}) – ${{price}}"
+    files: ["productos.json"]  # <-- Añade esta línea
     fields:
-      - label: "Productos"
-        name: "productos"
-        widget: "list"
-        fields:
-          - { label: "Nombre", name: "title", widget: "string", required: true }
-          - { label: "Precio", name: "price", widget: "number", value_type: "int", min: 0, required: true }
-          - { label: "Imagen", name: "image", widget: "image", required: false }
-          - { label: "Descripción", name: "description", widget: "text", required: false }
-          - { label: "Categoría", name: "categoria", widget: "select", options: ["OFERTAS", "PIZZAS", "LOMOS", "MILANESAS", "ZAPPIN Y PAPAS", "PATYS"], required: true }
-          - { label: "¿Disponible?", name: "disponible", widget: "boolean", default: true }
+      - { label: "Nombre", name: "title", widget: "string", required: true }
+      - { label: "Precio", name: "price", widget: "number", value_type: "int", min: 0, required: true }
+      - { label: "Imagen", name: "image", widget: "image", required: false }
+      - { label: "Descripción", name: "description", widget: "text", required: false }
+      - { label: "Categoría", name: "categoria", widget: "select", options: ["OFERTAS", "PIZZAS", "LOMOS", "MILANESAS", "ZAPPIN Y PAPAS", "PATYS"], required: true }
+      - { label: "¿Disponible?", name: "disponible", widget: "boolean", default: true }
