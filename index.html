@@ -251,26 +251,47 @@ async function cargarImagenesCarrusel(contenedorId, prefijo, max = 6) {
   }
 }
 
-// ---------- CARGA DE PIZZAS DESDE JSON ----------
-fetch('data/pizzas.json')
-  .then(r => r.json())
+// ---------- CARGA DINÁMICA: TODAS LAS PIZZAS ----------
+fetch('data/pizzas.json')               // fallback por si no hay index
+  .catch(() => [])                       // si no existe el array global
+  .then(arr => {
+    if (arr.length) return arr;          // si hay array, lo usa
+    // si NO hay array, lee carpeta individual
+    return fetch('data/pizzas/')
+      .then(r => r.text())               // obtenemos el "index" de GitHub
+      .then(html => {
+        // extraemos todos los .json que vea
+        const files = [];
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        doc.querySelectorAll('a[href$=".json"]').forEach(a => {
+          files.push(a.getAttribute('href'));
+        });
+        // leemos cada archivo
+        return Promise.all(
+          files.map(f => fetch(`data/pizzas/${f}`).then(r => r.json()))
+        );
+      });
+  })
   .then(pizzas => {
     const cont = document.getElementById('pizzas-content');
-    pizzas.forEach(p => {
-      if (!p.disponible) return;
-      const item = document.createElement('div');
-      item.className = 'item';
-      item.innerHTML = `
-        <div>
-          <span class="itemNombre">${p.title}</span>
-          ${p.description ? `<div class="itemDesc">${p.description}</div>` : ''}
-        </div>
-        <span class="puntos"></span>
-        <span class="precioBox">$${p.price.toLocaleString()}</span>
-        <button class="btnAgregar" onclick="confirmar('${p.title}', ${p.price})">+</button>
-      `;
-      cont.appendChild(item);
-    });
+    cont.innerHTML = '';                 // limpia anterior
+    pizzas
+      .filter(p => p.disponible)         // solo disponibles
+      .forEach(p => {
+        const item = document.createElement('div');
+        item.className = 'item';
+        item.innerHTML = `
+          <div>
+            <span class="itemNombre">${p.title}</span>
+            ${p.description ? `<div class="itemDesc">${p.description}</div>` : ''}
+          </div>
+          <span class="puntos"></span>
+          <span class="precioBox">$${p.price.toLocaleString()}</span>
+          <button class="btnAgregar" onclick="confirmar('${p.title}', ${p.price})">+</button>
+        `;
+        cont.appendChild(item);
+      });
   })
   .catch(err => console.error('Error cargando pizzas:', err));
 
