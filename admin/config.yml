@@ -1,4 +1,4 @@
-# USE DECAP BRIDGE – NO TOCAR backend ni identity_url
+# Decap Bridge backend (sin cambios)
 backend:
   name: git-gateway
   repo: liammenu/Liammenu
@@ -22,15 +22,34 @@ media_folder: "images"
 public_folder: "/images"
 
 collections:
+  # ---------- PRODUCTOS (lee / escribe data/productos.yml) ----------
   - name: "productos"
     label: "Productos"
+    label_singular: "Producto"
     folder: "data"
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - {label: "Nombre", name: "nombre", widget: "string"}
-      - {label: "Precio", name: "precio", widget: "number", value_type: "float"}
-      - {label: "Descripción", name: "descripcion", widget: "text"}
-      - {label: "Imagen", name: "imagen", widget: "image", required: false}
+    file: "data/productos.yml"
     format: yml
     extension: yml
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{title}} ({{categoria}}) – ${{price}}"
+    fields:
+      - { label: "Nombre", name: "title", widget: "string", required: true }
+      - { label: "Precio", name: "price", widget: "number", value_type: "int", min: 0, required: true }
+      - { label: "Imagen", name: "image", widget: "image", required: false, hint: "Sube o elige de /images" }
+      - { label: "Descripción", name: "description", widget: "text", required: false }
+      - { label: "Categoría", name: "categoria", widget: "select", options: ["OFERTAS", "PIZZAS", "LOMOS", "MILANESAS", "ZAPPIN Y PAPAS", "PATYS"], required: true }
+      - { label: "¿Disponible?", name: "disponible", widget: "boolean", default: true, hint: "Si está apagado aparecerá 'No disponible' en la carta" }
+
+  # ---------- CATEGORÍAS (para agregar o renombrar sin tocar código) ----------
+  - name: "categorias"
+    label: "Categorías"
+    label_singular: "Categoría"
+    folder: "data"
+    file: "data/categorias.yml"
+    format: yml
+    extension: yml
+    create: false
+    fields:
+      - { label: "Lista de categorías", name: "categorias", widget: "list", summary: "{{fields.nombre}}", field: { label: "Nombre", name: "nombre", widget: "string" } }
