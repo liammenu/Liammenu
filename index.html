@@ -227,146 +227,56 @@
 const NUMERO_WHATSAPP = 543834619831;
 let carrito = [];
 let tempProducto = null;
-let productos = [];
 
-// FUNCION NUEVA: lee JSON en vez de YAML
-async function cargarProductosDesdeJSON() {
-  try {
-    const response = await fetch('data/productos.json');
-    productos = await response.json();
-    
-    // Agrupar productos por categoría
-    const categorias = {
-      'OFERTAS': document.getElementById('ofertas-content'),
-      'PIZZAS': document.getElementById('pizzas-content'),
-      'LOMOS': document.getElementById('lomos-content'),
-      'MILANESAS': document.getElementById('milas-content'),
-      'ZAPPIN Y PAPAS': document.getElementById('zappin-content'),
-      'PATYS': document.getElementById('patys-content')
-    };
-    
-    // Limpiar contenidos existentes (pero mantener elementos especiales como la leyenda de patys)
-    Object.keys(categorias).forEach(cat => {
-      const contenido = categorias[cat];
-      if (contenido) {
-        const elementosParaMantener = Array.from(contenido.children).filter(el => 
-          el.classList.contains('leyendaPatys') || el.classList.contains('separadorCategoria')
-        );
-        contenido.innerHTML = '';
-        elementosParaMantener.forEach(el => contenido.appendChild(el));
-      }
-    });
-    
-    // Agregar productos dinámicamente
-    productos.forEach(producto => {
-      if (producto.disponible && categorias[producto.categoria]) {
-        const item = document.createElement('div');
-        item.className = 'item';
-        
-        let descripcionHTML = '';
-        if (producto.description && producto.description.trim() !== '') {
-          descripcionHTML = `<div class="itemDesc">${producto.description}</div>`;
-        }
-        
-        item.innerHTML = `
-          <div>
-            <span class="itemNombre">${producto.title}</span>
-            ${descripcionHTML}
-          </div>
-          <span class="puntos"></span>
-          <span class="precioBox">$${producto.price.toLocaleString()}</span>
-          <button class="btnAgregar" onclick="confirmar('${producto.title}', ${producto.price})">+</button>
-        `;
-        
-        categorias[producto.categoria].appendChild(item);
-      }
-    });
-    
-    console.log('Productos cargados correctamente desde JSON');
-  } catch (error) {
-    console.error('Error al cargar productos desde JSON:', error);
-    console.log('Manteniendo productos estáticos como fallback');
-  }
-}
-
-// Función para verificar si una imagen existe
-function imagenExiste(url) {
+// ---------- CARRUSEL E IMÁGENES ----------
+async function imagenExiste(url) {
   return new Promise(resolve => {
-    const img = new Image();
-    img.onload = () => resolve(true);
-    img.onerror = () => resolve(false);
-    img.src = url;
+    const img = new Image(); img.onload = () => resolve(true); img.onerror = () => resolve(false); img.src = url;
   });
 }
-
-// Función para cargar imágenes existentes en un carrusel
 async function cargarImagenesCarrusel(contenedorId, prefijo, max = 6) {
   const contenedor = document.getElementById(contenedorId);
   const imagenesValidas = [];
-  
-  // Verificar qué imágenes existen
-  for (let i = 1; i <= max; i++) {
-    const url = `images/${prefijo}_${i}.jpg`;
-    if (await imagenExiste(url)) {
-      imagenesValidas.push(url);
-    }
-  }
-  
-  // Si no hay imágenes válidas, ocultar el carrusel
-  if (imagenesValidas.length === 0) {
-    contenedor.style.display = 'none';
-    return;
-  }
-  
-  // Cargar imágenes válidas en el carrusel
+  for (let i = 1; i <= max; i++) if (await imagenExiste(`images/${prefijo}_${i}.jpg`)) imagenesValidas.push(`images/${prefijo}_${i}.jpg`);
+  if (imagenesValidas.length === 0) { contenedor.style.display = 'none'; return; }
   if (contenedorId === 'headerCarrusel') {
-    // Para el header, necesitamos duplicar las imágenes para el bucle infinito
-    imagenesValidas.forEach(url => {
-      const img = document.createElement('img');
-      img.src = url;
-      img.alt = url.split('/').pop().split('.')[0];
-      contenedor.appendChild(img);
-    });
-    
-    // Duplicar las imágenes para el bucle infinito
-    imagenesValidas.forEach(url => {
-      const img = document.createElement('img');
-      img.src = url;
-      img.alt = url.split('/').pop().split('.')[0];
-      contenedor.appendChild(img);
-    });
-    
-    // Ajustar la animación según la cantidad de imágenes
+    imagenesValidas.forEach(url => { const img = document.createElement('img'); img.src = url; img.alt = url.split('/').pop().split('.')[0]; contenedor.appendChild(img); });
+    imagenesValidas.forEach(url => { const img = document.createElement('img'); img.src = url; img.alt = url.split('/').pop().split('.')[0]; contenedor.appendChild(img); });
     const porcentaje = 100 / imagenesValidas.length;
     contenedor.style.animation = `slideInfinito ${13.68 * imagenesValidas.length / 6}s infinite linear`;
     document.documentElement.style.setProperty('--slide-distance', `-${porcentaje}%`);
   } else {
-    // Para las secciones, cargar imágenes con animación de desvanecimiento
-    imagenesValidas.forEach((url, index) => {
-      const img = document.createElement('img');
-      img.src = url;
-      img.alt = url.split('/').pop().split('.')[0];
-      img.style.animationDelay = `${index * 3}s`;
-      contenedor.appendChild(img);
-    });
-    
-    // Ajustar la duración de la animación según la cantidad de imágenes
-    const duracion = 3 * imagenesValidas.length;
-    Array.from(contenedor.children).forEach(img => {
-      img.style.animationDuration = `${duracion}s`;
-    });
+    imagenesValidas.forEach((url, index) => { const img = document.createElement('img'); img.src = url; img.alt = url.split('/').pop().split('.')[0]; img.style.animationDelay = `${index * 3}s`; contenedor.appendChild(img); });
+    const duracion = 3 * imagenesValidas.length; Array.from(contenedor.children).forEach(img => img.style.animationDuration = `${duracion}s`);
   }
 }
 
-// Inicializar carruseles y productos cuando se carga la página
+// ---------- CARGA DE PIZZAS DESDE JSON ----------
+fetch('data/pizzas.json')
+  .then(r => r.json())
+  .then(pizzas => {
+    const cont = document.getElementById('pizzas-content');
+    pizzas.forEach(p => {
+      if (!p.disponible) return;
+      const item = document.createElement('div');
+      item.className = 'item';
+      item.innerHTML = `
+        <div>
+          <span class="itemNombre">${p.title}</span>
+          ${p.description ? `<div class="itemDesc">${p.description}</div>` : ''}
+        </div>
+        <span class="puntos"></span>
+        <span class="precioBox">$${p.price.toLocaleString()}</span>
+        <button class="btnAgregar" onclick="confirmar('${p.title}', ${p.price})">+</button>
+      `;
+      cont.appendChild(item);
+    });
+  })
+  .catch(err => console.error('Error cargando pizzas:', err));
+
+// ---------- INICIALIZAR CARRUSELES ----------
 window.addEventListener('DOMContentLoaded', async () => {
-  // Cargar productos desde JSON
-  await cargarProductosDesdeJSON();
-  
-  // Cargar carrusel del header
   await cargarImagenesCarrusel('headerCarrusel', 'pizza', 6);
-  
-  // Cargar carruseles de las secciones
   await cargarImagenesCarrusel('ofertasCarrusel', 'oferta', 3);
   await cargarImagenesCarrusel('pizzaCarrusel', 'pizza', 6);
   await cargarImagenesCarrusel('lomoCarrusel', 'lomo', 6);
@@ -381,11 +291,7 @@ function confirmar(nombre, precio) {
   document.getElementById('modalConfirm').classList.remove('oculto');
 }
 function confirmarSi() {
-  if (tempProducto) {
-    carrito.push(tempProducto);
-    actualizarUI();
-    tempProducto = null;
-  }
+  if (tempProducto) { carrito.push(tempProducto); actualizarUI(); tempProducto = null; }
   document.getElementById('modalConfirm').classList.add('oculto');
 }
 function confirmarNo() {
@@ -398,26 +304,13 @@ function actualizarUI() {
   document.getElementById('carritoCant').textContent = cant;
   document.getElementById('totalBadge').textContent = `Total: $${total.toLocaleString()}`;
   const editarBtn = document.getElementById('editarBtn');
-  
-  if (cant > 0) {
-    editarBtn.style.display = 'block';
-    editarBtn.classList.add('visible');
-    editarBtn.style.zIndex = '1000';
-    console.log('Mostrando botón de editar carrito');
-  } else {
-    editarBtn.style.display = 'none';
-    editarBtn.classList.remove('visible');
-    console.log('Ocultando botón de editar carrito');
-  }
+  if (cant > 0) { editarBtn.style.display = 'block'; editarBtn.classList.add('visible'); editarBtn.style.zIndex = '1000'; }
+  else { editarBtn.style.display = 'none'; editarBtn.classList.remove('visible'); }
 }
 function enviarWhatsApp() {
   if (carrito.length === 0) { alert('El carrito está vacío'); return; }
-  let texto = `Hola, quiero hacer este pedido:\n`;
-  let total = 0;
-  carrito.forEach(p => {
-    texto += `· ${p.nombre} $${p.precio.toLocaleString()}\n`;
-    total += p.precio;
-  });
+  let texto = `Hola, quiero hacer este pedido:\n`; let total = 0;
+  carrito.forEach(p => { texto += `· ${p.nombre} $${p.precio.toLocaleString()}\n`; total += p.precio; });
   texto += `\nTotal: $${total.toLocaleString()}`;
   window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(texto)}`);
 }
@@ -425,27 +318,20 @@ function mostrarEditor() {
   const editor = document.getElementById('editorModal');
   const lista = document.getElementById('editorLista');
   lista.innerHTML = '';
-  if (carrito.length === 0) {
-    lista.innerHTML = '<p>El carrito está vacío</p>';
-  } else {
-    carrito.forEach((p, i) => {
-      const div = document.createElement('div');
-      div.className = 'editorItem';
-      div.innerHTML = `<span>${p.nombre} - $${p.precio.toLocaleString()}</span><button onclick="quitarDelCarrito(${i})">Quitar</button>`;
-      lista.appendChild(div);
-    });
-  }
+  if (carrito.length === 0) lista.innerHTML = '<p>El carrito está vacío</p>';
+  else carrito.forEach((p, i) => {
+    const div = document.createElement('div'); div.className = 'editorItem';
+    div.innerHTML = `<span>${p.nombre} - $${p.precio.toLocaleString()}</span><button onclick="quitarDelCarrito(${i})">Quitar</button>`;
+    lista.appendChild(div);
+  });
   editor.classList.remove('oculto');
 }
 function quitarDelCarrito(index) {
-  carrito.splice(index, 1);
-  actualizarUI();
-  mostrarEditor(); // refrescar lista
+  carrito.splice(index, 1); actualizarUI(); mostrarEditor();
 }
 function cerrarEditor() {
   document.getElementById('editorModal').classList.add('oculto');
 }
-// Inicializar
 actualizarUI();
 </script>
 </body>
