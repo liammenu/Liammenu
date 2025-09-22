@@ -2,18 +2,22 @@ collections:
   - name: "productos"
     label: "Productos"
     label_singular: "Producto"
-    folder: "data"
-    format: json
-    extension: json
-    create: true
-    slug: "{{slug}}"
-    identifier_field: title
-    summary: "{{title}} ({{categoria}}) – ${{price}}"
-    files: ["productos.json"]  # <-- Añade esta línea
-    fields:
-      - { label: "Nombre", name: "title", widget: "string", required: true }
-      - { label: "Precio", name: "price", widget: "number", value_type: "int", min: 0, required: true }
-      - { label: "Imagen", name: "image", widget: "image", required: false }
-      - { label: "Descripción", name: "description", widget: "text", required: false }
-      - { label: "Categoría", name: "categoria", widget: "select", options: ["OFERTAS", "PIZZAS", "LOMOS", "MILANESAS", "ZAPPIN Y PAPAS", "PATYS"], required: true }
-      - { label: "¿Disponible?", name: "disponible", widget: "boolean", default: true }
+    # Cambia de 'folder' a 'files' para apuntar al archivo específico
+    files:
+      - label: "Carta de Productos"
+        name: "productos"
+        file: "data/productos.json"
+        fields:
+          - label: "Lista de Productos"
+            name: "productos"  # Este nombre debe coincidir con la clave del array en JSON
+            widget: "list"
+            allow_add: true
+            allow_delete: true
+            summary: "{{fields.title}} ({{fields.categoria}}) – ${{fields.price}}"
+            fields:
+              - { label: "Nombre", name: "title", widget: "string", required: true }
+              - { label: "Precio", name: "price", widget: "number", value_type: "int", min: 0, required: true }
+              - { label: "Imagen", name: "image", widget: "image", required: false }
+              - { label: "Descripción", name: "description", widget: "text", required: false }
+              - { label: "Categoría", name: "categoria", widget: "select", options: ["OFERTAS", "PIZZAS", "LOMOS", "MILANESAS", "ZAPPIN Y PAPAS", "PATYS"], required: true }
+              - { label: "¿Disponible?", name: "disponible", widget: "boolean", default: true }
