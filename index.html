@@ -251,42 +251,20 @@ async function cargarImagenesCarrusel(contenedorId, prefijo, max = 6) {
   }
 }
 
-// ---------- CARGA DINÁMICA: PIZZAS (conserva anteriores) ----------
-fetch('data/pizzas.json')               // array global que YA tenías
-  .then(r => r.json())                  // si existe, lo usa
-  .then(arr => {
-    const cont = document.getElementById('pizzas-content');
-    // 1º pinta las pizzas del array global
-    arr.filter(p => p.disponible).forEach(p => {
-      const item = document.createElement('div');
-      item.className = 'item';
-      item.innerHTML = `
-        <div>
-          <span class="itemNombre">${p.title}</span>
-          ${p.description ? `<div class="itemDesc">${p.description}</div>` : ''}
-        </div>
-        <span class="puntos"></span>
-        <span class="precioBox">$${p.price.toLocaleString()}</span>
-        <button class="btnAgregar" onclick="confirmar('${p.title}', ${p.price})">+</button>
-      `;
-      cont.appendChild(item);
-    });
-    // 2º lee carpeta individual para agregar más después
-    return fetch('data/pizzas/')
-      .then(r => r.text())
-      .then(html => {
-        const files = [];
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        doc.querySelectorAll('a[href$=".json"]').forEach(a => files.push(a.getAttribute('href')));
-        return Promise.all(files.map(f => fetch(`data/pizzas/${f}`).then(r => r.json())));
-      });
+// ---------- LEE TODOS LOS .json INDIVIDUALES ----------
+fetch('data/pizzas/')
+  .then(r => r.text())
+  .then(html => {
+    const files = [];
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    doc.querySelectorAll('a[href$=".json"]').forEach(a => files.push(a.getAttribute('href')));
+    return Promise.all(files.map(f => fetch(`data/pizzas/${f}`).then(r => r.json())));
   })
-  .then(extra => {
+  .then(pizzas => {
     const cont = document.getElementById('pizzas-content');
-    // evita duplicados: si el título ya está en el array global, no lo pinta de nuevo
-    const titulos = Array.from(cont.querySelectorAll('.itemNombre')).map(span => span.textContent);
-    extra.filter(p => p.disponible && !titulos.includes(p.title)).forEach(p => {
+    cont.innerHTML = '';                 // limpia
+    pizzas.filter(p => p.disponible).forEach(p => {
       const item = document.createElement('div');
       item.className = 'item';
       item.innerHTML = `
