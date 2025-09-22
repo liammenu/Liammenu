@@ -105,9 +105,7 @@
 <body>
 
 <header>
-  <div class="fondoCarrusel" id="headerCarrusel">
-    <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
-  </div>
+  <div class="fondoCarrusel" id="headerCarrusel"></div>
   <h1>LIAM BURGER</h1>
   <p>Pedidos: (383) 461-9831</p>
 </header>
@@ -117,13 +115,11 @@
   <input type="checkbox" id="ofertas">
   <label for="ofertas" class="accordion-label ofertas">OFERTAS</label>
   <div class="section-background">
-    <div class="carrusel" id="ofertasCarrusel">
-      <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
-    </div>
+    <div class="carrusel" id="ofertasCarrusel"></div>
     <div class="section-overlay"></div>
   </div>
   <div class="accordion-content" id="ofertas-content">
-    <!-- Los productos se cargarán dinámicamente -->
+    <div class="leyendaPatys">¡Todo con papas + pote de mayo!</div>
   </div>
 </div>
 
@@ -135,14 +131,10 @@
     <img class="labelImagen" src="images/pizza_1.jpg" alt="pizza">
   </label>
   <div class="section-background">
-    <div class="carrusel" id="pizzaCarrusel">
-      <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
-    </div>
+    <div class="carrusel" id="pizzaCarrusel"></div>
     <div class="section-overlay"></div>
   </div>
-  <div class="accordion-content" id="pizzas-content">
-    <!-- Los productos se cargarán dinámicamente -->
-  </div>
+  <div class="accordion-content" id="pizzas-content"></div>
 </div>
 
 <!-- LOMOS -->
@@ -153,14 +145,10 @@
     <img class="labelImagen" src="images/lomo_1.jpg" alt="lomo">
   </label>
   <div class="section-background">
-    <div class="carrusel" id="lomoCarrusel">
-      <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
-    </div>
+    <div class="carrusel" id="lomoCarrusel"></div>
     <div class="section-overlay"></div>
   </div>
-  <div class="accordion-content" id="lomos-content">
-    <!-- Los productos se cargarán dinámicamente -->
-  </div>
+  <div class="accordion-content" id="lomos-content"></div>
 </div>
 
 <!-- MILANESAS -->
@@ -171,14 +159,10 @@
     <img class="labelImagen" src="images/mila_1.jpg" alt="mila">
   </label>
   <div class="section-background">
-    <div class="carrusel" id="milaCarrusel">
-      <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
-    </div>
+    <div class="carrusel" id="milaCarrusel"></div>
     <div class="section-overlay"></div>
   </div>
-  <div class="accordion-content" id="milas-content">
-    <!-- Los productos se cargarán dinámicamente -->
-  </div>
+  <div class="accordion-content" id="milas-content"></div>
 </div>
 
 <!-- ZAPPIN Y PAPAS -->
@@ -189,14 +173,10 @@
     <img class="labelImagen" src="images/hamb_4.jpg" alt="zappin">
   </label>
   <div class="section-background">
-    <div class="carrusel" id="hambCarrusel">
-      <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
-    </div>
+    <div class="carrusel" id="hambCarrusel"></div>
     <div class="section-overlay"></div>
   </div>
-  <div class="accordion-content" id="zappin-content">
-    <!-- Los productos se cargarán dinámicamente -->
-  </div>
+  <div class="accordion-content" id="zappin-content"></div>
 </div>
 
 <!-- PATYS -->
@@ -207,13 +187,10 @@
     <img class="labelImagen" src="images/patys_1.jpg" alt="patys">
   </label>
   <div class="section-background">
-    <div class="carrusel" id="patysCarrusel">
-      <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
-    </div>
+    <div class="carrusel" id="patysCarrusel"></div>
     <div class="section-overlay"></div>
   </div>
   <div class="accordion-content" id="patys-content">
-    <!-- Los productos se cargarán dinámicamente -->
     <div class="leyendaPatys">¡Todo con papas + pote de mayo!</div>
   </div>
 </div>
@@ -246,19 +223,17 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 <script>
 const NUMERO_WHATSAPP = 543834619831;
 let carrito = [];
 let tempProducto = null;
 let productos = [];
 
-// Función para cargar los productos desde el archivo YAML
-async function cargarProductosDesdeYAML() {
+// FUNCION NUEVA: lee JSON en vez de YAML
+async function cargarProductosDesdeJSON() {
   try {
-    const response = await fetch('data/productos.yml');
-    const yamlText = await response.text();
-    productos = jsyaml.load(yamlText);
+    const response = await fetch('data/productos.json');
+    productos = await response.json();
     
     // Agrupar productos por categoría
     const categorias = {
@@ -307,9 +282,9 @@ async function cargarProductosDesdeYAML() {
       }
     });
     
-    console.log('Productos cargados correctamente desde YAML');
+    console.log('Productos cargados correctamente desde JSON');
   } catch (error) {
-    console.error('Error al cargar productos desde YAML:', error);
+    console.error('Error al cargar productos desde JSON:', error);
     console.log('Manteniendo productos estáticos como fallback');
   }
 }
@@ -385,8 +360,8 @@ async function cargarImagenesCarrusel(contenedorId, prefijo, max = 6) {
 
 // Inicializar carruseles y productos cuando se carga la página
 window.addEventListener('DOMContentLoaded', async () => {
-  // Cargar productos desde YAML
-  await cargarProductosDesdeYAML();
+  // Cargar productos desde JSON
+  await cargarProductosDesdeJSON();
   
   // Cargar carrusel del header
   await cargarImagenesCarrusel('headerCarrusel', 'pizza', 6);
