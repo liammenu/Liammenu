@@ -10,7 +10,27 @@ media_folder: "images"
 public_folder: "/images"
 
 collections:
-  # ---------- PIZZAS (archivos individuales) ----------
+
+  # ---------- OFERTAS ----------
+  - name: "ofertas"
+    label: "Ofertas"
+    label_singular: "Oferta"
+    folder: "data/ofertas"
+    format: json
+    extension: json
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{title}} – ${{price}}"
+    fields:
+      - { label: "Nombre", name: "title", widget: "string", required: true }
+      - { label: "Precio", name: "price", widget: "number", value_type: "int", min: 0, required: true }
+      - { label: "Imagen", name: "image", widget: "image", required: false }
+      - { label: "Descripción", name: "description", widget: "text", required: false }
+      - { label: "Categoría", name: "categoria", widget: "hidden", default: "OFERTAS" }
+      - { label: "¿Disponible?", name: "disponible", widget: "boolean", default: true }
+
+  # ---------- PIZZAS ----------
   - name: "pizzas"
     label: "Pizzas"
     label_singular: "Pizza"
@@ -26,5 +46,81 @@ collections:
       - { label: "Precio", name: "price", widget: "number", value_type: "int", min: 0, required: true }
       - { label: "Imagen", name: "image", widget: "image", required: false }
       - { label: "Descripción", name: "description", widget: "text", required: false }
-      - { label: "Categoría", name: "categoria", widget: "select", options: ["PIZZAS"], required: true }
+      - { label: "Categoría", name: "categoria", widget: "hidden", default: "PIZZAS" }
+      - { label: "¿Disponible?", name: "disponible", widget: "boolean", default: true }
+
+  # ---------- LOMOS ----------
+  - name: "lomos"
+    label: "Lomos"
+    label_singular: "Lomo"
+    folder: "data/lomos"
+    format: json
+    extension: json
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{title}} – ${{price}}"
+    fields:
+      - { label: "Nombre", name: "title", widget: "string", required: true }
+      - { label: "Precio", name: "price", widget: "number", value_type: "int", min: 0, required: true }
+      - { label: "Imagen", name: "image", widget: "image", required: false }
+      - { label: "Descripción", name: "description", widget: "text", required: false }
+      - { label: "Categoría", name: "categoria", widget: "hidden", default: "LOMOS" }
+      - { label: "¿Disponible?", name: "disponible", widget: "boolean", default: true }
+
+  # ---------- MILANESAS ----------
+  - name: "milanesas"
+    label: "Milanesas"
+    label_singular: "Milanesa"
+    folder: "data/milanesas"
+    format: json
+    extension: json
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{title}} – ${{price}}"
+    fields:
+      - { label: "Nombre", name: "title", widget: "string", required: true }
+      - { label: "Precio", name: "price", widget: "number", value_type: "int", min: 0, required: true }
+      - { label: "Imagen", name: "image", widget: "image", required: false }
+      - { label: "Descripción", name: "description", widget: "text", required: false }
+      - { label: "Categoría", name: "categoria", widget: "hidden", default: "MILANESAS" }
+      - { label: "¿Disponible?", name: "disponible", widget: "boolean", default: true }
+
+  # ---------- ZAPPIN Y PAPAS ----------
+  - name: "zappin"
+    label: "Zappin y Papas"
+    label_singular: "Zappin"
+    folder: "data/zappin"
+    format: json
+    extension: json
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{title}} – ${{price}}"
+    fields:
+      - { label: "Nombre", name: "title", widget: "string", required: true }
+      - { label: "Precio", name: "price", widget: "number", value_type: "int", min: 0, required: true }
+      - { label: "Imagen", name: "image", widget: "image", required: false }
+      - { label: "Descripción", name: "description", widget: "text", required: false }
+      - { label: "Categoría", name: "categoria", widget: "hidden", default: "ZAPPIN Y PAPAS" }
+      - { label: "¿Disponible?", name: "disponible", widget: "boolean", default: true }
+
+  # ---------- PATYS ----------
+  - name: "patys"
+    label: "Patys"
+    label_singular: "Paty"
+    folder: "data/patys"
+    format: json
+    extension: json
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{title}} – ${{price}}"
+    fields:
+      - { label: "Nombre", name: "title", widget: "string", required: true }
+      - { label: "Precio", name: "price", widget: "number", value_type: "int", min: 0, required: true }
+      - { label: "Imagen", name: "image", widget: "image", required: false }
+      - { label: "Descripción", name: "description", widget: "text", required: false }
+      - { label: "Categoría", name: "categoria", widget: "hidden", default: "PATYS" }
       - { label: "¿Disponible?", name: "disponible", widget: "boolean", default: true }
