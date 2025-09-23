@@ -1,0 +1,32 @@
+[
+  {
+    "disponible": true,
+    "title": "Doble queso",
+    "price": 20000,
+    "categoria": "PIZZAS"
+  },
+  {
+    "disponible": true,
+    "title": "Napolitana",
+    "price": 22000,
+    "categoria": "PIZZAS"
+  },
+  {
+    "disponible": true,
+    "title": "Fugazzeta",
+    "price": 21000,
+    "categoria": "PIZZAS"
+  },
+  {
+    "disponible": true,
+    "title": "Calabresa",
+    "price": 23000,
+    "categoria": "PIZZAS"
+  },
+  {
+    "disponible": true,
+    "title": "Margarita",
+    "price": 20000,
+    "categoria": "PIZZAS"
+  }
+]
