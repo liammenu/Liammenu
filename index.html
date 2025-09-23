@@ -248,30 +248,39 @@ async function cargarImagenesCarrusel(contenedorId, prefijo, max = 6) {
   }
 }
 
-// ---------- LEE PRODUCTOS.JSON Y FILTRA PIZZAS ----------
-fetch('data/productos.json')
+// ---------- LEE LISTA DE PIZZAS Y LUEGO CADA ARCHIVO INDIVIDUAL ----------
+fetch('data/pizzas-lista.json')
   .then(res => res.json())
-  .then(productos => {
-    const pizzas = productos.filter(p => p.categoria === 'PIZZAS' && p.disponible);
+  .then(lista => {
     const cont = document.getElementById('pizzas-content');
     cont.innerHTML = '';
-    pizzas.forEach(p => {
-      const item = document.createElement('div');
-      item.className = 'item';
-      item.innerHTML = `
-        <div>
-          <span class="itemNombre">${p.title}</span>
-          ${p.description ? `<div class="itemDesc">${p.description}</div>` : ''}
-        </div>
-        <span class="puntos"></span>
-        <span class="precioBox">$${p.price.toLocaleString()}</span>
-        <button class="btnAgregar" onclick="confirmar('${p.title}', ${p.price})">+</button>
-      `;
-      cont.appendChild(item);
-    });
+    const promises = lista.map(file =>
+      fetch(`data/pizzas/${file}`)
+        .then(res => res.json())
+        .catch(() => null)
+    );
+    return Promise.all(promises);
   })
-  .catch(err => console.error('Error cargando productos:', err));
-
+  .then(pizzas => {
+    const cont = document.getElementById('pizzas-content');
+    pizzas
+      .filter(p => p && p.disponible)
+      .forEach(p => {
+        const item = document.createElement('div');
+        item.className = 'item';
+        item.innerHTML = `
+          <div>
+            <span class="itemNombre">${p.title}</span>
+            ${p.description ? `<div class="itemDesc">${p.description}</div>` : ''}
+          </div>
+          <span class="puntos"></span>
+          <span class="precioBox">$${p.price.toLocaleString()}</span>
+          <button class="btnAgregar" onclick="confirmar('${p.title}', ${p.price})">+</button>
+        `;
+        cont.appendChild(item);
+      });
+  })
+  .catch(err => console.error('Error cargando pizzas:', err));
 // ---------- INICIALIZAR CARRUSELES ----------
 window.addEventListener('DOMContentLoaded', async () => {
   await cargarImagenesCarrusel('headerCarrusel', 'pizza', 6);
