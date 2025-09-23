@@ -248,39 +248,65 @@ async function cargarImagenesCarrusel(contenedorId, prefijo, max = 6) {
   }
 }
 
-// ---------- LEE LISTA DE PIZZAS Y LUEGO CADA ARCHIVO INDIVIDUAL ----------
-fetch('data/pizzas-lista.json')
-  .then(res => res.json())
-  .then(lista => {
-    const cont = document.getElementById('pizzas-content');
-    cont.innerHTML = '';
-    const promises = lista.map(file =>
-      fetch(`data/pizzas/${file}`)
-        .then(res => res.json())
-        .catch(() => null)
-    );
-    return Promise.all(promises);
-  })
-  .then(pizzas => {
-    const cont = document.getElementById('pizzas-content');
-    pizzas
-      .filter(p => p && p.disponible)
-      .forEach(p => {
-        const item = document.createElement('div');
-        item.className = 'item';
-        item.innerHTML = `
-          <div>
-            <span class="itemNombre">${p.title}</span>
-            ${p.description ? `<div class="itemDesc">${p.description}</div>` : ''}
-          </div>
-          <span class="puntos"></span>
-          <span class="precioBox">$${p.price.toLocaleString()}</span>
-          <button class="btnAgregar" onclick="confirmar('${p.title}', ${p.price})">+</button>
-        `;
-        cont.appendChild(item);
-      });
-  })
-  .catch(err => console.error('Error cargando pizzas:', err));
+// ---------- FUNCIÓN UNIVERSAL: CARGA CUALQUIER SECCIÓN ----------
+async function cargarSeccion(carpeta, listaFile, contenedorId) {
+  const cont = document.getElementById(contenedorId);
+  cont.innerHTML = '';
+
+  // 1. Intentamos leer la lista
+  const listaRes = await fetch(listaFile);
+  let archivos = [];
+
+  if (listaRes.ok) {
+    archivos = await listaRes.json();
+  } else {
+    // 2. Si no existe, listamos la carpeta desde GitHub
+    const githubIndex = await fetch(`https://api.github.com/repos/liammenu/Liammenu/contents/${carpeta}?ref=main`);
+    if (githubIndex.ok) {
+      const data = await githubIndex.json();
+      archivos = data
+        .filter(item => item.type === 'file' && item.name.endsWith('.json'))
+        .map(item => item.name);
+    } else {
+      console.warn(`No se pudo obtener lista para ${carpeta}`);
+      return;
+    }
+  }
+
+  // 3. Leemos cada archivo
+  const promesas = archivos.map(file =>
+    fetch(`${carpeta}/${file}`)
+      .then(res => res.json())
+      .catch(() => null)
+  );
+
+  const productos = await Promise.all(promesas);
+  productos
+    .filter(p => p && p.disponible)
+    .forEach(p => {
+      const item = document.createElement('div');
+      item.className = 'item';
+      item.innerHTML = `
+        <div>
+          <span class="itemNombre">${p.title}</span>
+          ${p.description ? `<div class="itemDesc">${p.description}</div>` : ''}
+        </div>
+        <span class="puntos"></span>
+        <span class="precioBox">$${p.price.toLocaleString()}</span>
+        <button class="btnAgregar" onclick="confirmar('${p.title}', ${p.price})">+</button>
+      `;
+      cont.appendChild(item);
+    });
+}
+
+// ---------- CARGAR CADA SECCIÓN ----------
+window.addEventListener('DOMContentLoaded', () => {
+  cargarSeccion('data/pizzas', 'data/pizzas-lista.json', 'pizzas-content');
+  cargarSeccion('data/lomos', 'data/lomos-lista.json', 'lomos-content');
+  cargarSeccion('data/milanesas', 'data/milanesas-lista.json', 'milas-content');
+  cargarSeccion('data/zappin', 'data/zappin-lista.json', 'zappin-content');
+  cargarSeccion('data/patys', 'data/patys-lista.json', 'patys-content');
+});
 // ---------- INICIALIZAR CARRUSELES ----------
 window.addEventListener('DOMContentLoaded', async () => {
   await cargarImagenesCarrusel('headerCarrusel', 'pizza', 6);
