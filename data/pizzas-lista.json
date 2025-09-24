@@ -1,9 +1,9 @@
 [
-  "muzzarela.json",
-  "especial.json",
-  "napolitana.json",
-  "napolitana-especial.json",
   "argentina.json",
   "calabresa.json",
-  "fugazzeta.json"
+  "especial.json",
+  "fugazzeta.json",
+  "muzzarela.json",
+  "napolitana-especial.json",
+  "napolitana.json"
 ]
