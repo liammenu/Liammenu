@@ -68,7 +68,7 @@
   /* LEYENDA */
   .leyendaPatys{background:rgba(255,199,44,0.85);color:var(--rojo);padding:.8rem;margin-top:.5rem;border-radius:6px;text-align:center;font-weight:900;font-size:1rem;}
 
-  /* BOTÓN MERCADO PAGO FIJO */
+  /* BOTÓN MERCADO PAGO */
   .btnMercadoPago{width:100%;background:var(--celeste);color:#fff;border:none;padding:1rem;font-size:1.3rem;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;margin:0;border-top:4px solid #fff;box-shadow:0 -2px 8px rgba(0,0,0,.2);}
   .btnMercadoPago img{height:24px;}
 
@@ -214,50 +214,154 @@ let tempProducto = null;
 const menuBtn = document.getElementById('menuBtn');
 const sideMenu = document.getElementById('sideMenu');
 const closeMenu = document.getElementById('closeMenu');
-const overlay = document.createElement('div');
-overlay.className = 'side-overlay';
-overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1001;display:none;';
-document.body.appendChild(overlay);
 
-function abrirMenu(){sideMenu.classList.add('open');overlay.style.display='block';}
-function cerrarMenu(){sideMenu.classList.remove('open');overlay.style.display='none';}
+function abrirMenu(){sideMenu.classList.add('open');}
+function cerrarMenu(){sideMenu.classList.remove('open');}
+
 menuBtn.addEventListener('click',abrirMenu);
 closeMenu.addEventListener('click',cerrarMenu);
-overlay.addEventListener('click',cerrarMenu);
 
 /* CARRUSELES */
 async function imagenExiste(url){return new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(true);img.onerror=()=>resolve(false);img.src=url;});}
-async function cargarImagenesCarrusel(contenedorId,prefijo,max=6){const cont=document.getElementById(contenedorId);const imagenesValidas=[];for(let i=1;i<=max;i++)if(await imagenExiste(`images/${prefijo}_${i}.jpg`))imagenesValidas.push(`images/${prefijo}_${i}.jpg`);if(imagenesValidas.length===0){cont.style.display='none';return;}if(contenedorId==='headerCarrusel'){imagenesValidas.forEach(url=>{const img=document.createElement('img');img.src=url;img.alt=url.split('/').pop().split('.')[0];contenedor.appendChild(img);});imagenesValidas.forEach(url=>{const img=document.createElement('img');img.src=url;img.alt=url.split('/').pop().split('.')[0];contenedor.appendChild(img);});const porcentaje=100/imagenesValidas.length;contenedor.style.animation=`slideInfinito ${13.68*imagenesValidas.length/6}s infinite linear`;document.documentElement.style.setProperty('--slide-distance',`-${porcentaje}%`);}else{imagenesValidas.forEach((url,index)=>{const img=document.createElement('img');img.src=url;img.alt=url.split('/').pop().split('.')[0];img.style.animationDelay=`${index*3}s`;contenedor.appendChild(img);});const duracion=3*imagenesValidas.length;Array.from(contenedor.children).forEach(img=>img.style.animationDuration=`${duracion}s`);}}
+async function cargarImagenesCarrusel(contenedorId,prefijo,max=6){const cont=document.getElementById(contenedorId);const imagenesValidas=[];for(let i=1;i<=max;i++)if(await imagenExiste(`images/${prefijo}_${i}.jpg`))imagenesValidas.push(`images/${prefijo}_${i}.jpg`);if(imagenesValidas.length===0){cont.style.display='none';return;}if(contenedorId==='headerCarrusel'){imagenesValidas.forEach(url=>{const img=document.createElement('img');img.src=url;img.alt=url.split('/').pop().split('.')[0];cont.appendChild(img);});imagenesValidas.forEach(url=>{const img=document.createElement('img');img.src=url;img.alt=url.split('/').pop().split('.')[0];cont.appendChild(img);});const porcentaje=100/imagenesValidas.length;contenedor.style.animation=`slideInfinito ${13.68*imagenesValidas.length/6}s infinite linear`;document.documentElement.style.setProperty('--slide-distance',`-${porcentaje}%`);}else{imagenesValidas.forEach((url,index)=>{const img=document.createElement('img');img.src=url;img.alt=url.split('/').pop().split('.')[0];img.style.animationDelay=`${index*3}s`;cont.appendChild(img);});const duracion=3*imagenesValidas.length;Array.from(contenedor.children).forEach(img=>img.style.animationDuration=`${duracion}s`);}}
 
-/* CARGA DE SECCIONES */
-async function cargarSeccion(carpeta,listaFile,contenedorId){const cont=document.getElementById(contenedorId);cont.innerHTML='';const listaRes=await fetch(listaFile);let archivos=[];if(listaRes.ok){archivos=await listaRes.json();}else{const githubIndex=await fetch(`https://api.github.com/repos/liammenu/Liammenu/contents/${carpeta}?ref=main`);if(githubIndex.ok){const data=await githubIndex.json();archivos=data.filter(item=>item.type==='file'&&item.name.endsWith('.json')).map(item=>item.name);}else{console.warn(`No se pudo obtener lista para ${carpeta}`);return;}}const promesas=archivos.map(file=>fetch(`${carpeta}/${file}`).then(res=>res.json()).catch(()=>null));const productos=await Promise.all(promesas);productos.filter(p=>p&&p.disponible).forEach(p=>{const item=document.createElement('div');item.className='item';item.innerHTML=`<div><span class="itemNombre">${p.title}</span>${p.description?`<div class="itemDesc">${p.description}</div>`:''}</div><span class="puntos"></span><span class="precioBox">$${p.price.toLocaleString()}</span><button class="btnAgregar" onclick="confirmar('${p.title}',${p.price})">+</button>`;cont.appendChild(item);});}
+/* ---------- CARGA DE SECCIONES (VIEJO CONFIABLE) ---------- */
+// PIZZAS
+fetch('data/pizzas-lista.json')
+  .then(res => res.json())
+  .then(lista => {
+    const cont = document.getElementById('pizzas-content');
+    cont.innerHTML = '';
+    const promises = lista.map(file =>
+      fetch(`data/pizzas/${file}`)
+        .then(res => res.json())
+        .catch(() => null)
+    );
+    return Promise.all(promises);
+  })
+  .then(pizzas => {
+    const cont = document.getElementById('pizzas-content');
+    pizzas
+      .filter(p => p && p.disponible)
+      .forEach(p => {
+        const item = document.createElement('div');
+        item.className = 'item';
+        item.innerHTML = `
+          <div>
+            <span class="itemNombre">${p.title}</span>
+            ${p.description ? `<div class="itemDesc">${p.description}</div>` : ''}
+          </div>
+          <span class="puntos"></span>
+          <span class="precioBox">$${p.price.toLocaleString()}</span>
+          <button class="btnAgregar" onclick="confirmar('${p.title}', ${p.price})">+</button>
+        `;
+        cont.appendChild(item);
+      });
+  })
+  .catch(err => console.error('Error cargando pizzas:', err));
 
-/* CARGAR CADA SECCIÓN */
-window.addEventListener('DOMContentLoaded',async()=>{
-  await cargarImagenesCarrusel('headerCarrusel','pizza',6);
-  await cargarImagenesCarrusel('ofertasCarrusel','oferta',3);
-  await cargarImagenesCarrusel('pizzaCarrusel','pizza',6);
-  await cargarImagenesCarrusel('lomoCarrusel','lomo',6);
-  await cargarImagenesCarrusel('milaCarrusel','mila',6);
-  await cargarImagenesCarrusel('hambCarrusel','hamb',6);
-  await cargarImagenesCarrusel('patysCarrusel','patys',6);
-  cargarSeccion('data/pizzas','data/pizzas-lista.json','pizzas-content');
-  cargarSeccion('data/lomos','data/lomos-lista.json','lomos-content');
-  cargarSeccion('data/milanesas','data/milanesas-lista.json','milas-content');
-  cargarSeccion('data/zappin','data/zappin-lista.json','zappin-content');
-  cargarSeccion('data/patys','data/patys-lista.json','patys-content');
-  cargarSeccion('data/ofertas','data/ofertas-lista.json','ofertas-content');
+// RESTO DE SECCIONES
+window.addEventListener('DOMContentLoaded', async () => {
+  await cargarImagenesCarrusel('headerCarrusel', 'pizza', 6);
+  await cargarImagenesCarrusel('ofertasCarrusel', 'oferta', 3);
+  await cargarImagenesCarrusel('pizzaCarrusel', 'pizza', 6);
+  await cargarImagenesCarrusel('lomoCarrusel', 'lomo', 6);
+  await cargarImagenesCarrusel('milaCarrusel', 'mila', 6);
+  await cargarImagenesCarrusel('hambCarrusel', 'hamb', 6);
+  await cargarImagenesCarrusel('patysCarrusel', 'patys', 6);
+  
+  // Llamadas para el resto de las secciones
+  cargarSeccion('data/lomos', 'data/lomos-lista.json', 'lomos-content');
+  cargarSeccion('data/milanesas', 'data/milanesas-lista.json', 'milas-content');
+  cargarSeccion('data/zappin', 'data/zappin-lista.json', 'zappin-content');
+  cargarSeccion('data/patys', 'data/patys-lista.json', 'patys-content');
+  cargarSeccion('data/ofertas', 'data/ofertas-lista.json', 'ofertas-content');
 });
 
+/* ---------- FUNCIONES AUXILIARES ---------- */
+async function cargarSeccion(carpeta, listaFile, contenedorId) {
+  const cont = document.getElementById(contenedorId);
+  cont.innerHTML = '';
+  const listaRes = await fetch(listaFile);
+  let archivos = [];
+  if (listaRes.ok) {
+    archivos = await listaRes.json();
+  } else {
+    const githubIndex = await fetch(`https://api.github.com/repos/liammenu/Liammenu/contents/${carpeta}?ref=main`);
+    if (githubIndex.ok) {
+      const data = await githubIndex.json();
+      archivos = data.filter(item => item.type === 'file' && item.name.endsWith('.json')).map(item => item.name);
+    } else {
+      console.warn(`No se pudo obtener lista para ${carpeta}`);
+      return;
+    }
+  }
+  const promesas = archivos.map(file => fetch(`${carpeta}/${file}`).then(res => res.json()).catch(() => null));
+  const productos = await Promise.all(promesas);
+  productos.filter(p => p && p.disponible).forEach(p => {
+    const item = document.createElement('div');
+    item.className = 'item';
+    item.innerHTML = `
+      <div>
+        <span class="itemNombre">${p.title}</span>
+        ${p.description ? `<div class="itemDesc">${p.description}</div>` : ''}
+      </div>
+      <span class="puntos"></span>
+      <span class="precioBox">$${p.price.toLocaleString()}</span>
+      <button class="btnAgregar" onclick="confirmar('${p.title}', ${p.price})">+</button>
+    `;
+    cont.appendChild(item);
+  });
+}
+
 /* CARRITO */
-function confirmar(nombre,precio){tempProducto={nombre,precio};document.getElementById('modalConfirm').classList.remove('oculto');}
-function confirmarSi(){if(tempProducto){carrito.push(tempProducto);actualizarUI();tempProducto=null;}document.getElementById('modalConfirm').classList.add('oculto');}
-function confirmarNo(){tempProducto=null;document.getElementById('modalConfirm').classList.add('oculto');}
-function actualizarUI(){const cant=carrito.length;const total=carrito.reduce((sum,p)=>sum+p.precio,0);document.getElementById('carritoCant').textContent=cant;document.getElementById('totalBadge').textContent=`Total: $${total.toLocaleString()}`;const editarBtn=document.getElementById('editarBtn');if(cant>0){editarBtn.style.display='block';editarBtn.classList.add('visible');editarBtn.style.zIndex='1000';}else{editarBtn.style.display='none';editarBtn.classList.remove('visible');}}
-function enviarWhatsApp(){if(carrito.length===0){alert('El carrito está vacío');return;}let texto=`Hola, quiero hacer este pedido:\n`;let total=0;carrito.forEach(p=>{texto+=`· ${p.nombre} $${p.precio.toLocaleString()}\n`;total+=p.precio;});texto+=`\nTotal: $${total.toLocaleString()}`;window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(texto)}`);}
-function mostrarEditor(){const editor=document.getElementById('editorModal');const lista=document.getElementById('editorLista');lista.innerHTML='';if(carrito.length===0)lista.innerHTML='<p>El carrito está vacío</p>';else carrito.forEach((p,i)=>{const div=document.createElement('div');div.className='editorItem';div.innerHTML=`<span>${p.nombre} - $${p.precio.toLocaleString()}</span><button onclick="quitarDelCarrito(${i})">Quitar</button>`;lista.appendChild(div);});editor.classList.remove('oculto');}
-function quitarDelCarrito(index){carrito.splice(index,1);actualizarUI();mostrarEditor();}
-function cerrarEditor(){document.getElementById('editorModal').classList.add('oculto');}
+function confirmar(nombre, precio) {
+  tempProducto = { nombre, precio };
+  document.getElementById('modalConfirm').classList.remove('oculto');
+}
+function confirmarSi() {
+  if (tempProducto) { carrito.push(tempProducto); actualizarUI(); tempProducto = null; }
+  document.getElementById('modalConfirm').classList.add('oculto');
+}
+function confirmarNo() {
+  tempProducto = null;
+  document.getElementById('modalConfirm').classList.add('oculto');
+}
+function actualizarUI() {
+  const cant = carrito.length;
+  const total = carrito.reduce((sum, p) => sum + p.precio, 0);
+  document.getElementById('carritoCant').textContent = cant;
+  document.getElementById('totalBadge').textContent = `Total: $${total.toLocaleString()}`;
+  const editarBtn = document.getElementById('editarBtn');
+  if (cant > 0) { editarBtn.style.display = 'block'; editarBtn.classList.add('visible'); editarBtn.style.zIndex = '1000'; }
+  else { editarBtn.style.display = 'none'; editarBtn.classList.remove('visible'); }
+}
+function enviarWhatsApp() {
+  if (carrito.length === 0) { alert('El carrito está vacío'); return; }
+  let texto = `Hola, quiero hacer este pedido:\n`; let total = 0;
+  carrito.forEach(p => { texto += `· ${p.nombre} $${p.precio.toLocaleString()}\n`; total += p.precio; });
+  texto += `\nTotal: $${total.toLocaleString()}`;
+  window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(texto)}`);
+}
+function mostrarEditor() {
+  const editor = document.getElementById('editorModal');
+  const lista = document.getElementById('editorLista');
+  lista.innerHTML = '';
+  if (carrito.length === 0) lista.innerHTML = '<p>El carrito está vacío</p>';
+  else carrito.forEach((p, i) => {
+    const div = document.createElement('div');
+    div.className = 'editorItem';
+    div.innerHTML = `<span>${p.nombre} - $${p.precio.toLocaleString()}</span><button onclick="quitarDelCarrito(${i})">Quitar</button>`;
+    lista.appendChild(div);
+  });
+  editor.classList.remove('oculto');
+}
+function quitarDelCarrito(index) {
+  carrito.splice(index, 1); actualizarUI(); mostrarEditor();
+}
+function cerrarEditor() {
+  document.getElementById('editorModal').classList.add('oculto');
+}
 actualizarUI();
 </script>
 </body>
