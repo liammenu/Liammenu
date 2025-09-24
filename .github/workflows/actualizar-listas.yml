@@ -28,9 +28,16 @@ jobs:
       - name: Actualizar listas
         run: node .github/scripts/actualizar-listas.js
 
-      - name: Commit y push si hay cambios
+      - name: Commit y push solo si cambió alguna lista
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+          git fetch origin main
+          git reset origin/main
           git add data/*-lista.json
-          git diff --cached --quiet || (git commit -m "Actualiza listas de productos" && git push)
+          if ! git diff --cached --quiet; then
+            git commit -m "Actualiza listas de productos"
+            git push
+          else
+            echo "No hay cambios en las listas"
+          fi
