@@ -14,6 +14,7 @@
     --rojo:#e4002b;
     --fuente-tit:'Special Elite',serif;
     --fuente-cuerpo:'Oswald',sans-serif;
+    --mpago:#009EE3;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--fondo);color:var(--letra);font-family:var(--fuente-cuerpo);font-weight:700;letter-spacing:.5px;}
@@ -23,6 +24,32 @@
   @keyframes slideInfinito{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
   header h1{position:relative;z-index:1;font-family:var(--fuente-tit);font-size:4.5rem;color:var(--rojo);text-transform:uppercase;letter-spacing:3px;text-shadow:3px 3px 0 #000;font-weight:900;}
   header p{position:relative;z-index:1;margin-top:.5rem;font-size:1.2rem;}
+
+  /* BOTÓN MERCADOPAGO: pegado justo debajo del header, sin márgenes */
+  .botonPago{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--mpago);
+    color:#fff;
+    font-family:var(--fuente-tit);
+    font-size:1.5rem;
+    font-weight:900;
+    text-decoration:none;
+    padding:1rem;
+    border-bottom:4px solid var(--rojo);
+    cursor:pointer;
+    margin:0; /* aseguramos que no haya espacio extra */
+  }
+  .botonPago img{
+    width:28px;
+    height:auto;
+    margin-right:.6rem;
+    display:inline-block;
+    vertical-align:middle;
+  }
+  .botonPago:hover{background:#007bb8;}
+
   .accordion{width:100%;max-width:100%;margin:auto;padding:0 0 1rem;position:relative;}
   .accordion.ofertas-accordion{padding:0 0 1rem;}
   .accordion input{position:absolute;opacity:0;z-index:-1;}
@@ -106,6 +133,11 @@
   <h1>LIAM BURGER</h1>
   <p>Pedidos: (383) 461-9831</p>
 </header>
+
+<!-- BOTÓN MERCADOPAGO (pegado justo debajo del header) -->
+<a href="https://mpago.la/11ovC58" target="_blank" rel="noopener noreferrer" class="botonPago" id="btnMpago">
+  <img src="https://img.icons8.com/color/48/mercado-pago.png" alt="MercadoPago"> Quiero Pagar
+</a>
 
 <!-- OFERTAS -->
 <div class="accordion ofertas-accordion">
@@ -228,49 +260,68 @@ let tempProducto = null;
 // ---------- CARRUSEL E IMÁGENES ----------
 async function imagenExiste(url) {
   return new Promise(resolve => {
-    const img = new Image(); img.onload = () => resolve(true); img.onerror = () => resolve(false); img.src = url;
+    const img = new Image();
+    img.onload = () => resolve(true);
+    img.onerror = () => resolve(false);
+    img.src = url;
   });
 }
 async function cargarImagenesCarrusel(contenedorId, prefijo, max = 6) {
   const contenedor = document.getElementById(contenedorId);
+  if (!contenedor) return;
   const imagenesValidas = [];
-  for (let i = 1; i <= max; i++) if (await imagenExiste(`images/${prefijo}_${i}.jpg`)) imagenesValidas.push(`images/${prefijo}_${i}.jpg`);
+  for (let i = 1; i <= max; i++) {
+    if (await imagenExiste(`images/${prefijo}_${i}.jpg`)) imagenesValidas.push(`images/${prefijo}_${i}.jpg`);
+  }
   if (imagenesValidas.length === 0) { contenedor.style.display = 'none'; return; }
   if (contenedorId === 'headerCarrusel') {
+    // duplicamos secuencia para loop suave
     imagenesValidas.forEach(url => { const img = document.createElement('img'); img.src = url; img.alt = url.split('/').pop().split('.')[0]; contenedor.appendChild(img); });
     imagenesValidas.forEach(url => { const img = document.createElement('img'); img.src = url; img.alt = url.split('/').pop().split('.')[0]; contenedor.appendChild(img); });
     const porcentaje = 100 / imagenesValidas.length;
     contenedor.style.animation = `slideInfinito ${13.68 * imagenesValidas.length / 6}s infinite linear`;
     document.documentElement.style.setProperty('--slide-distance', `-${porcentaje}%`);
   } else {
-    imagenesValidas.forEach((url, index) => { const img = document.createElement('img'); img.src = url; img.alt = url.split('/').pop().split('.')[0]; img.style.animationDelay = `${index * 3}s`; contenedor.appendChild(img); });
-    const duracion = 3 * imagenesValidas.length; Array.from(contenedor.children).forEach(img => img.style.animationDuration = `${duracion}s`);
+    imagenesValidas.forEach((url, index) => {
+      const img = document.createElement('img');
+      img.src = url;
+      img.alt = url.split('/').pop().split('.')[0];
+      img.style.animationDelay = `${index * 3}s`;
+      contenedor.appendChild(img);
+    });
+    const duracion = 3 * imagenesValidas.length;
+    Array.from(contenedor.children).forEach(img => img.style.animationDuration = `${duracion}s`);
   }
 }
 
 // ---------- FUNCIÓN UNIVERSAL: CARGA CUALQUIER SECCIÓN ----------
 async function cargarSeccion(carpeta, listaFile, contenedorId) {
   const cont = document.getElementById(contenedorId);
+  if (!cont) return;
   cont.innerHTML = '';
 
   // 1. Intentamos leer la lista
-  const listaRes = await fetch(listaFile);
   let archivos = [];
-
-  if (listaRes.ok) {
-    archivos = await listaRes.json();
-  } else {
-    // 2. Si no existe, listamos la carpeta desde GitHub
-    const githubIndex = await fetch(`https://api.github.com/repos/liammenu/Liammenu/contents/${carpeta}?ref=main`);
-    if (githubIndex.ok) {
-      const data = await githubIndex.json();
-      archivos = data
-        .filter(item => item.type === 'file' && item.name.endsWith('.json'))
-        .map(item => item.name);
+  try {
+    const listaRes = await fetch(listaFile);
+    if (listaRes.ok) {
+      archivos = await listaRes.json();
     } else {
-      console.warn(`No se pudo obtener lista para ${carpeta}`);
-      return;
+      // 2. Si no existe, listamos la carpeta desde GitHub (fallback)
+      const githubIndex = await fetch(`https://api.github.com/repos/liammenu/Liammenu/contents/${carpeta}?ref=main`);
+      if (githubIndex.ok) {
+        const data = await githubIndex.json();
+        archivos = data
+          .filter(item => item.type === 'file' && item.name.endsWith('.json'))
+          .map(item => item.name);
+      } else {
+        console.warn(`No se pudo obtener lista para ${carpeta}`);
+        return;
+      }
     }
+  } catch (err) {
+    console.warn('Error al obtener lista de archivos:', err);
+    return;
   }
 
   // 3. Leemos cada archivo
@@ -286,17 +337,26 @@ async function cargarSeccion(carpeta, listaFile, contenedorId) {
     .forEach(p => {
       const item = document.createElement('div');
       item.className = 'item';
+      // Protegemos contra propiedades faltantes
+      const title = p.title || 'Sin título';
+      const price = (typeof p.price === 'number') ? p.price : Number(p.price) || 0;
+      const descriptionHtml = p.description ? `<div class="itemDesc">${p.description}</div>` : '';
       item.innerHTML = `
         <div>
-          <span class="itemNombre">${p.title}</span>
-          ${p.description ? `<div class="itemDesc">${p.description}</div>` : ''}
+          <span class="itemNombre">${title}</span>
+          ${descriptionHtml}
         </div>
         <span class="puntos"></span>
-        <span class="precioBox">$${p.price.toLocaleString()}</span>
-        <button class="btnAgregar" onclick="confirmar('${p.title}', ${p.price})">+</button>
+        <span class="precioBox">$${price.toLocaleString()}</span>
+        <button class="btnAgregar" onclick="confirmar('${escapeQuotes(title)}', ${price})">+</button>
       `;
       cont.appendChild(item);
     });
+}
+
+// Helper para escapar comillas en titles al insertar en onclick
+function escapeQuotes(str) {
+  return String(str).replace(/'/g, "\\'").replace(/"/g, '\\"');
 }
 
 // ---------- CARGAR CADA SECCIÓN ----------
@@ -307,6 +367,7 @@ window.addEventListener('DOMContentLoaded', () => {
   cargarSeccion('data/zappin', 'data/zappin-lista.json', 'zappin-content');
   cargarSeccion('data/patys', 'data/patys-lista.json', 'patys-content');
 });
+// cargamos ofertas por separado (puede ser útil que cargue antes)
 cargarSeccion('data/ofertas', 'data/ofertas-lista.json', 'ofertas-content');
 
 // ---------- INICIALIZAR CARRUSELES ----------
@@ -323,40 +384,49 @@ window.addEventListener('DOMContentLoaded', async () => {
 // ---------- CARRITO ----------
 function confirmar(nombre, precio) {
   tempProducto = { nombre, precio };
-  document.getElementById('modalConfirm').classList.remove('oculto');
+  const modal = document.getElementById('modalConfirm');
+  if (modal) modal.classList.remove('oculto');
 }
 function confirmarSi() {
   if (tempProducto) { carrito.push(tempProducto); actualizarUI(); tempProducto = null; }
-  document.getElementById('modalConfirm').classList.add('oculto');
+  const modal = document.getElementById('modalConfirm');
+  if (modal) modal.classList.add('oculto');
 }
 function confirmarNo() {
   tempProducto = null;
-  document.getElementById('modalConfirm').classList.add('oculto');
+  const modal = document.getElementById('modalConfirm');
+  if (modal) modal.classList.add('oculto');
 }
 function actualizarUI() {
   const cant = carrito.length;
-  const total = carrito.reduce((sum, p) => sum + p.precio, 0);
-  document.getElementById('carritoCant').textContent = cant;
-  document.getElementById('totalBadge').textContent = `Total: $${total.toLocaleString()}`;
+  const total = carrito.reduce((sum, p) => sum + (p.precio || 0), 0);
+  const carritoCantEl = document.getElementById('carritoCant');
+  const totalBadgeEl = document.getElementById('totalBadge');
+  if (carritoCantEl) carritoCantEl.textContent = cant;
+  if (totalBadgeEl) totalBadgeEl.textContent = `Total: $${total.toLocaleString()}`;
   const editarBtn = document.getElementById('editarBtn');
-  if (cant > 0) { editarBtn.style.display = 'block'; editarBtn.classList.add('visible'); editarBtn.style.zIndex = '1000'; }
-  else { editarBtn.style.display = 'none'; editarBtn.classList.remove('visible'); }
+  if (editarBtn) {
+    if (cant > 0) { editarBtn.style.display = 'block'; editarBtn.classList.add('visible'); editarBtn.style.zIndex = '1000'; }
+    else { editarBtn.style.display = 'none'; editarBtn.classList.remove('visible'); }
+  }
 }
 function enviarWhatsApp() {
   if (carrito.length === 0) { alert('El carrito está vacío'); return; }
-  let texto = `Hola, quiero hacer este pedido:\n`; let total = 0;
-  carrito.forEach(p => { texto += `· ${p.nombre} $${p.precio.toLocaleString()}\n`; total += p.precio; });
+  let texto = `Hola, quiero hacer este pedido:\n`;
+  let total = 0;
+  carrito.forEach(p => { texto += `· ${p.nombre} $${(p.precio || 0).toLocaleString()}\n`; total += (p.precio || 0); });
   texto += `\nTotal: $${total.toLocaleString()}`;
   window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(texto)}`);
 }
 function mostrarEditor() {
   const editor = document.getElementById('editorModal');
   const lista = document.getElementById('editorLista');
+  if (!editor || !lista) return;
   lista.innerHTML = '';
   if (carrito.length === 0) lista.innerHTML = '<p>El carrito está vacío</p>';
   else carrito.forEach((p, i) => {
     const div = document.createElement('div'); div.className = 'editorItem';
-    div.innerHTML = `<span>${p.nombre} - $${p.precio.toLocaleString()}</span><button onclick="quitarDelCarrito(${i})">Quitar</button>`;
+    div.innerHTML = `<span>${p.nombre} - $${(p.precio || 0).toLocaleString()}</span><button onclick="quitarDelCarrito(${i})">Quitar</button>`;
     lista.appendChild(div);
   });
   editor.classList.remove('oculto');
@@ -365,7 +435,8 @@ function quitarDelCarrito(index) {
   carrito.splice(index, 1); actualizarUI(); mostrarEditor();
 }
 function cerrarEditor() {
-  document.getElementById('editorModal').classList.add('oculto');
+  const editor = document.getElementById('editorModal');
+  if (editor) editor.classList.add('oculto');
 }
 actualizarUI();
 </script>
