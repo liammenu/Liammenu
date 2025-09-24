@@ -1,14 +1,25 @@
+# ---------- BACKEND ----------
 backend:
   name: git-gateway
   repo: liammenu/Liammenu
   branch: main
   identity_url: https://auth.decapbridge.com/sites/f73a5bd9-5d5a-456d-88ce-5fc9e282b117
   gateway_url: https://gateway.decapbridge.com
+  commit_messages:
+    create: 'Crear {{collection}}: {{slug}}'
+    update: 'Actualizar {{collection}}: {{slug}}'
+    delete: 'Eliminar {{collection}}: {{slug}}'
+    uploadMedia: 'Subir imagen: {{path}}'
+    deleteMedia: 'Eliminar imagen: {{path}}'
 
-publish_mode: editorial_workflow
+# ---------- CONFIGURACIÓN GENERAL ----------
 media_folder: "images"
 public_folder: "/images"
+locale: es
+show_preview_links: false
+display_url: https://liammenu.github.io/Liammenu
 
+# ---------- COLECCIONES (ESPAÑOL) ----------
 collections:
 
   # ---------- OFERTAS ----------
