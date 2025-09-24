@@ -41,3 +41,4 @@ jobs:
           else
             echo "No hay cambios en las listas"
           fi
+          exit 0
