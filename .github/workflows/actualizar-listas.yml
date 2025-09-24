@@ -1,0 +1,36 @@
+name: Actualizar listas de productos
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'data/**'
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Instalar dependencias mínimas
+        run: npm install fs-extra
+
+      - name: Actualizar listas
+        run: node .github/scripts/actualizar-listas.js
+
+      - name: Commit y push si hay cambios
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/*-lista.json
+          git diff --cached --quiet || (git commit -m "Actualiza listas de productos" && git push)
