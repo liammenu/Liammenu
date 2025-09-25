@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Descargar Carta - LIAM BURGER</title>
+  <style>
+    body{font-family:system-ui,Arial,Helvetica,sans-serif;background:#f5f5f5;padding:2rem;}
+    h1{color:#e4002b;margin-bottom:1rem;}
+    button{background:#009ee3;color:#fff;border:none;padding:.8rem 1.4rem;font-size:1.1rem;border-radius:6px;cursor:pointer;}
+    button:hover{background:#007bb5;}
+    #output{background:#fff;border:1px solid #ccc;padding:1rem;margin-top:1rem;white-space:pre-wrap;font-family:monospace;max-height:400px;overflow:auto;}
+  </style>
+</head>
+<body>
+  <h1>Descargar Carta Completa</h1>
+  <button onclick="descargarCarta()">Descargar .txt</button>
+  <pre id="output"></pre>
+
+  <script>
+    async function descargarCarta() {
+      const secciones = [
+        { nombre: 'OFERTAS',    carpeta: 'data/ofertas',    lista: 'data/ofertas-lista.json' },
+        { nombre: 'PIZZAS',     carpeta: 'data/pizzas',     lista: 'data/pizzas-lista.json' },
+        { nombre: 'LOMOS',      carpeta: 'data/lomos',      lista: 'data/lomos-lista.json' },
+        { nombre: 'MILANESAS',  carpeta: 'data/milanesas',  lista: 'data/milanesas-lista.json' },
+        { nombre: 'ZAPPIN Y PAPAS', carpeta: 'data/zappin', lista: 'data/zappin-lista.json' },
+        { nombre: 'PATYS',      carpeta: 'data/patys',      lista: 'data/patys-lista.json' }
+      ];
+
+      let texto = 'CARTA LIAM BURGER - ACTUALIZADA AL ' + new Date().toLocaleString('es-AR') + '\n\n';
+
+      for (const sec of secciones) {
+        texto += `▶ ${sec.nombre}\n`;
+        try {
+          const listaRes = await fetch(sec.lista);
+          if (!listaRes.ok) throw new Error('No lista');
+          const archivos = await listaRes.json();
+          for (const file of archivos) {
+            const prodRes = await fetch(`${sec.carpeta}/${file}`);
+            if (!prodRes.ok) continue;
+            const p = await prodRes.json();
+            if (!p.disponible) continue;
+            texto += `  • ${p.title}: $${p.price.toLocaleString('es-AR')}${p.description ? ' - ' + p.description : ''}\n`;
+          }
+        } catch (e) {
+          texto += '  (sin productos)\n';
+        }
+        texto += '\n';
+      }
+
+      // Mostrar preview
+      document.getElementById('output').textContent = texto;
+
+      // Descargar archivo
+      const blob = new Blob([texto], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'carta-liam-burger.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>
