@@ -136,12 +136,13 @@ collections:
       - { label: "Categoría", name: "categoria", widget: "hidden", default: "PATYS" }
       - { label: "¿Disponible?", name: "disponible", widget: "boolean", default: true }
 
-  # ---------- HERRAMIENTAS EXTRA ----------
+    # ---------- HERRAMIENTAS ----------
   - name: "herramientas"
     label: "Herramientas"
     files:
-      - label: "Descargar Carta"
+      - label: "📥 Descargar Carta Actualizada"
         name: "descargar-carta"
-        file: "admin/descargar-carta.html"
+        file: "admin/descargar-carta-button.md"
         fields:
-          - { label: "Enlace", name: "enlace", widget: "hidden", default: "/admin/descargar-carta.html" }
+          - { label: "Instrucciones", name: "body", widget: "markdown", default: "Hacé clic en el botón de abajo para descargar un archivo .txt con toda la carta actualizada (productos + precios)." }
+          - { label: "Botón", name: "boton", widget: "markdown", default: "[📥 Descargar Carta Completa](/admin/descargar-carta.html){:target=\"_blank\"}" }
