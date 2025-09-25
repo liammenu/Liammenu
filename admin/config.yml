@@ -135,3 +135,13 @@ collections:
       - { label: "Descripción", name: "description", widget: "text", required: false }
       - { label: "Categoría", name: "categoria", widget: "hidden", default: "PATYS" }
       - { label: "¿Disponible?", name: "disponible", widget: "boolean", default: true }
+
+  # ---------- HERRAMIENTAS EXTRA ----------
+  - name: "herramientas"
+    label: "Herramientas"
+    files:
+      - label: "Descargar Carta"
+        name: "descargar-carta"
+        file: "admin/descargar-carta.html"
+        fields:
+          - { label: "Enlace", name: "enlace", widget: "hidden", default: "/admin/descargar-carta.html" }
