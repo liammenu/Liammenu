@@ -1,10 +1,9 @@
 # ---------- BACKEND ----------
 backend:
-  name: git-gateway
+  name: github
   repo: liammenu/Liammenu
   branch: main
-  identity_url: https://auth.decapbridge.com/sites/f73a5bd9-5d5a-456d-88ce-5fc9e282b117
-  gateway_url: https://gateway.decapbridge.com
+
   commit_messages:
     create: 'Crear {{collection}}: {{slug}}'
     update: 'Actualizar {{collection}}: {{slug}}'
