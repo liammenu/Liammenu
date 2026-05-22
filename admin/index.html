@@ -2,12 +2,34 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin – LiamMenu</title>
+
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
 </head>
 <body>
-  <!-- Decap CMS -->
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-  <!-- Tu configuración -->
-  <link href="config.yml" type="text/yaml" rel="cms-config-url">
+
+  <script src="https://unpkg.com/decap-cms@^3.8.3/dist/decap-cms.js"></script>
+
+  <script>
+    window.CMS_MANUAL_INIT = true;
+
+    CMS.init({
+      config: {
+        backend: {
+          name: "github",
+          repo: "liammenu/Liammenu",
+          branch: "main"
+        },
+
+        media_folder: "images",
+        public_folder: "/images",
+
+        collections: []
+      }
+    });
+  </script>
+
 </body>
 </html>
